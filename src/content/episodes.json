@@ -1,0 +1,148 @@
+{
+  "episodes": [
+    {
+      "id": "ep_main_001",
+      "title": "Bourbon 101: Understanding the Basics",
+      "description": "Your comprehensive guide to bourbon whiskey. Learn what makes bourbon unique, from the mash bill requirements to the aging process.",
+      "youtubeId": "dQw4w9WgXcQ",
+      "playlistId": "main",
+      "thumbnailUrl": "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+      "duration": "45:32",
+      "publishedAt": "2026-01-15T10:00:00Z",
+      "popularity": 95,
+      "tags": ["bourbon", "basics", "education"]
+    },
+    {
+      "id": "ep_main_002",
+      "title": "The Art of Tasting: Developing Your Palate",
+      "description": "Master the techniques of whiskey tasting. From nosing to finish, learn how to identify flavors and appreciate complexity.",
+      "youtubeId": "abc123xyz",
+      "playlistId": "main",
+      "thumbnailUrl": "https://i.ytimg.com/vi/abc123xyz/maxresdefault.jpg",
+      "duration": "38:15",
+      "publishedAt": "2026-01-08T10:00:00Z",
+      "popularity": 92,
+      "tags": ["tasting", "palate", "technique"]
+    },
+    {
+      "id": "ep_main_003",
+      "title": "Kentucky's Finest: A Distillery Tour",
+      "description": "Virtual tour of Kentucky's legendary bourbon distilleries. Discover the history and craft behind your favorite bottles.",
+      "youtubeId": "def456uvw",
+      "playlistId": "main",
+      "thumbnailUrl": "https://i.ytimg.com/vi/def456uvw/maxresdefault.jpg",
+      "duration": "52:48",
+      "publishedAt": "2026-01-01T10:00:00Z",
+      "popularity": 88,
+      "tags": ["kentucky", "distillery", "tour"]
+    },
+    {
+      "id": "ep_edu_001",
+      "title": "The History of American Whiskey",
+      "description": "Journey through time as we explore the origins of American whiskey, from colonial rye to modern craft distilling.",
+      "youtubeId": "hist001abc",
+      "playlistId": "education",
+      "thumbnailUrl": "https://i.ytimg.com/vi/hist001abc/maxresdefault.jpg",
+      "duration": "48:22",
+      "publishedAt": "2025-12-15T10:00:00Z",
+      "popularity": 94,
+      "tags": ["history", "american whiskey", "origins"]
+    },
+    {
+      "id": "ep_edu_002",
+      "title": "Understanding Mash Bills",
+      "description": "Deep dive into mash bill composition. Learn how different grain ratios create distinct flavor profiles.",
+      "youtubeId": "mash002def",
+      "playlistId": "education",
+      "thumbnailUrl": "https://i.ytimg.com/vi/mash002def/maxresdefault.jpg",
+      "duration": "35:45",
+      "publishedAt": "2025-12-08T10:00:00Z",
+      "popularity": 89,
+      "tags": ["mash bill", "grains", "production"]
+    },
+    {
+      "id": "ep_edu_003",
+      "title": "The Science of Barrel Aging",
+      "description": "Explore the chemistry behind barrel aging. Understand how time, temperature, and wood transform whiskey.",
+      "youtubeId": "barrel003ghi",
+      "playlistId": "education",
+      "thumbnailUrl": "https://i.ytimg.com/vi/barrel003ghi/maxresdefault.jpg",
+      "duration": "42:18",
+      "publishedAt": "2025-12-01T10:00:00Z",
+      "popularity": 86,
+      "tags": ["barrel", "aging", "science"]
+    },
+    {
+      "id": "ep_tst_001",
+      "title": "Blind Tasting: Buffalo Trace vs Four Roses",
+      "description": "Head-to-head comparison of two bourbon giants. Can you tell them apart in a blind tasting?",
+      "youtubeId": "tast001jkl",
+      "playlistId": "tastings",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tast001jkl/maxresdefault.jpg",
+      "duration": "28:35",
+      "publishedAt": "2025-11-20T10:00:00Z",
+      "popularity": 91,
+      "tags": ["blind tasting", "buffalo trace", "four roses"]
+    },
+    {
+      "id": "ep_tst_002",
+      "title": "Single Barrel Showdown",
+      "description": "Exploring the world of single barrel bourbon. Each bottle tells a unique story.",
+      "youtubeId": "tast002mno",
+      "playlistId": "tastings",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tast002mno/maxresdefault.jpg",
+      "duration": "32:22",
+      "publishedAt": "2025-11-15T10:00:00Z",
+      "popularity": 87,
+      "tags": ["single barrel", "comparison", "tasting"]
+    },
+    {
+      "id": "ep_tst_003",
+      "title": "Budget Bourbon Battle",
+      "description": "Finding great value in budget-friendly bourbon. Proof that quality doesn't always mean expensive.",
+      "youtubeId": "tast003pqr",
+      "playlistId": "tastings",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tast003pqr/maxresdefault.jpg",
+      "duration": "25:48",
+      "publishedAt": "2025-11-10T10:00:00Z",
+      "popularity": 84,
+      "tags": ["budget", "value", "tasting"]
+    },
+    {
+      "id": "ep_season_001",
+      "title": "Winter Warmers: Best Bourbons for Cold Nights",
+      "description": "Our top picks for cozy winter sipping. Rich, warming bourbons perfect for the season.",
+      "youtubeId": "winter001stu",
+      "playlistId": "seasonal",
+      "thumbnailUrl": "https://i.ytimg.com/vi/winter001stu/maxresdefault.jpg",
+      "duration": "36:15",
+      "publishedAt": "2026-01-20T10:00:00Z",
+      "popularity": 93,
+      "tags": ["winter", "seasonal", "recommendations"]
+    },
+    {
+      "id": "ep_top_001",
+      "title": "The Greatest Bourbon We've Ever Tasted",
+      "description": "After years of tasting, this bourbon stands above the rest. Our all-time favorite revealed.",
+      "youtubeId": "top001vwx",
+      "playlistId": "top10",
+      "thumbnailUrl": "https://i.ytimg.com/vi/top001vwx/maxresdefault.jpg",
+      "duration": "44:30",
+      "publishedAt": "2025-10-01T10:00:00Z",
+      "popularity": 98,
+      "tags": ["best", "top pick", "recommendation"]
+    },
+    {
+      "id": "ep_top_002",
+      "title": "Hidden Gems: Underrated Bourbons",
+      "description": "Discovering overlooked bottles that deserve more attention. These hidden gems deliver exceptional value.",
+      "youtubeId": "top002yza",
+      "playlistId": "top10",
+      "thumbnailUrl": "https://i.ytimg.com/vi/top002yza/maxresdefault.jpg",
+      "duration": "38:45",
+      "publishedAt": "2025-09-15T10:00:00Z",
+      "popularity": 96,
+      "tags": ["hidden gems", "underrated", "value"]
+    }
+  ]
+}

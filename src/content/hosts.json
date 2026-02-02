@@ -1,0 +1,59 @@
+{
+  "hosts": [
+    {
+      "id": "host_001",
+      "name": "Andrew Lathers",
+      "role": "host",
+      "bio": "Bourbon enthusiast and podcast host with over a decade of experience exploring American whiskey. Andrew's journey began in Kentucky, where he developed a deep appreciation for the craft and tradition behind every bottle. When not tasting, he's exploring distilleries and sharing stories of bourbon's rich heritage.",
+      "photoUrl": "/images/hosts/andrew-lathers.webp",
+      "socialLinks": [
+        { "platform": "twitter", "url": "https://twitter.com/bottlebond" },
+        { "platform": "instagram", "url": "https://instagram.com/bottlebond" },
+        { "platform": "youtube", "url": "https://youtube.com/@BottleBond" }
+      ],
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": "host_002",
+      "name": "Sarah Mitchell",
+      "role": "cohost",
+      "bio": "Certified bourbon steward and co-host bringing a scientific perspective to whiskey appreciation. Sarah's background in chemistry gives her unique insights into the art and science of distillation. She believes great bourbon tells a story that begins in the grain fields and ends in your glass.",
+      "photoUrl": "/images/hosts/sarah-mitchell.webp",
+      "socialLinks": [
+        { "platform": "instagram", "url": "https://instagram.com/sarahmitchellwhiskey" }
+      ],
+      "featured": true,
+      "order": 2
+    }
+  ],
+  "guests": [
+    {
+      "id": "guest_001",
+      "name": "Master Distiller James",
+      "role": "guest",
+      "bio": "Award-winning master distiller with 30 years of experience crafting bourbon at some of Kentucky's most prestigious distilleries.",
+      "photoUrl": "/images/guests/master-distiller-james.webp",
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": "guest_002",
+      "name": "Whiskey Historian Dr. Chen",
+      "role": "guest",
+      "bio": "Academic expert on American whiskey history, author of 'The Bourbon Trail: A Journey Through Time'.",
+      "photoUrl": "/images/guests/dr-chen.webp",
+      "featured": true,
+      "order": 2
+    },
+    {
+      "id": "guest_003",
+      "name": "Sommelier Kate Williams",
+      "role": "guest",
+      "bio": "Certified sommelier who bridges the gap between wine and whiskey appreciation, bringing fresh perspectives to tasting.",
+      "photoUrl": "/images/guests/kate-williams.webp",
+      "featured": false,
+      "order": 3
+    }
+  ]
+}
