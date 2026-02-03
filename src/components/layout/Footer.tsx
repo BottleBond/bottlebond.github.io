@@ -12,9 +12,14 @@ const socialLinks = [
     icon: 'instagram',
   },
   {
-    name: 'Twitter',
-    href: 'https://twitter.com/bottlebond',
-    icon: 'twitter',
+    name: 'Facebook',
+    href: 'https://facebook.com/bottlebond',
+    icon: 'facebook',
+  },
+  {
+    name: 'Patreon',
+    href: 'https://patreon.com/bottlebond',
+    icon: 'patreon',
   },
 ];
 

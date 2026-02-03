@@ -21,7 +21,7 @@ export type ContactMessageStatus = 'new' | 'read' | 'replied';
 
 export type FAQCategory = 'Basics' | 'Production' | 'Tasting' | 'Podcast' | 'General';
 
-// Era categories ordered from oldest to newest
+// Era categories ordered from oldest to newest (plus special categories)
 export const ERA_ORDER = [
   'Colonial Era',
   'Early American',
@@ -29,6 +29,7 @@ export const ERA_ORDER = [
   'Post-War Revival',
   'Modern Craft',
   'Contemporary',
+  'Homework',
 ] as const;
 
 export type Era = (typeof ERA_ORDER)[number];

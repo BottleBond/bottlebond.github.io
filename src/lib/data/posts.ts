@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import type { BlogPost, BlogPostMeta, PostsByEra, Era } from '@/types';
+import type { BlogPost, BlogPostMeta, PostsByEra } from '@/types';
 import { ERA_ORDER } from '@/types';
-import { parseFrontmatter, markdownToHtml, generateSlug } from '@/lib/utils/markdown';
+import { parseFrontmatter, markdownToHtml } from '@/lib/utils/markdown';
 
 const POSTS_DIRECTORY = path.join(process.cwd(), 'src/content/glass-room');
 
@@ -16,13 +16,14 @@ function getEraFromPath(filePath: string): string {
 
   if (parts.length > 1 && folderName) {
     // Convert folder name to era name
-    const eraMap: Record<string, Era> = {
+    const eraMap: Record<string, string> = {
       'colonial-era': 'Colonial Era',
       'early-american': 'Early American',
       'prohibition-era': 'Prohibition Era',
       'post-war-revival': 'Post-War Revival',
       'modern-craft': 'Modern Craft',
       'contemporary': 'Contemporary',
+      'homework': 'Homework',
     };
     return eraMap[folderName] ?? folderName;
   }

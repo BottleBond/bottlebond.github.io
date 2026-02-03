@@ -18,6 +18,12 @@ BottleBond is a premium podcast website showcasing bourbon and whiskey education
 
 - Q: How should era categorization work for Glass Room blog posts? → A: Era determined by folder structure (`/glass-room/prohibition/`, `/glass-room/modern-era/`, etc.) — no hashtags needed in content
 - Q: How many episodes should "Top Tastings of the Season" display? → A: 5 episodes (Top 5)
+- Q: How should episode popularity be determined for "most popular" sections? → A: Use display order in YouTube playlist — first 3 videos in each playlist are considered most popular. Offloads curation to YouTube playlist management.
+- Q: What is the YouTube playlist ID for the Tastings section? → A: No dedicated playlist exists. Use manually curated individual video IDs in episodes.json (e.g., `DLLu3lj4TYE` from https://youtu.be/DLLu3lj4TYE).
+- Q: What unique visual elements should distinguish BottleBond? → A: Vintage Distillery Aesthetic — aged paper textures, copper/brass accent colors, vintage typography flourishes, barrel-wood grain patterns.
+- Q: What are the valid era categories for Glass Room blog content? → A: Flexible/open system — any folder name becomes an era. Initial suggested eras: Prohibition (1920-1933), Post-Prohibition (1933-1960), Bourbon Renaissance (1960-2000), Craft Era (2000-present).
+- Q: What backend service should handle contact form submissions? → A: Replace contact form with mailto link popup to `website@bottle.bond`. No form backend needed.
+- Q: What social media links should be included? → A: YouTube, Instagram, Facebook, and Patreon (no Twitter).
 
 ---
 

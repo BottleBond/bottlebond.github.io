@@ -2,14 +2,15 @@
   "hosts": [
     {
       "id": "host_001",
-      "name": "Andrew Lathers",
+      "name": "Adam Lathers",
       "role": "host",
       "bio": "Bourbon enthusiast and podcast host with over a decade of experience exploring American whiskey. Andrew's journey began in Kentucky, where he developed a deep appreciation for the craft and tradition behind every bottle. When not tasting, he's exploring distilleries and sharing stories of bourbon's rich heritage.",
       "photoUrl": "/images/hosts/andrew-lathers.webp",
       "socialLinks": [
-        { "platform": "twitter", "url": "https://twitter.com/bottlebond" },
+        { "platform": "youtube", "url": "https://youtube.com/@BottleBond" },
         { "platform": "instagram", "url": "https://instagram.com/bottlebond" },
-        { "platform": "youtube", "url": "https://youtube.com/@BottleBond" }
+        { "platform": "facebook", "url": "https://facebook.com/bottlebond" },
+        { "platform": "patreon", "url": "https://patreon.com/bottlebond" }
       ],
       "featured": true,
       "order": 1
