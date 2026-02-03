@@ -1,0 +1,77 @@
+{{/*
+  FAQs Shortcode
+  Displays FAQs from data/faqs.json grouped by category
+
+  Usage: {{< faqs >}}
+         {{< faqs category="Basics" >}}
+
+  Parameters:
+    - category: Filter by specific category (optional, shows all if not specified)
+*/}}
+
+{{ $filterCategory := .Get "category" | default "" }}
+{{ $faqs := site.Data.faqs.faqs }}
+
+{{/* Group FAQs by category */}}
+{{ $categories := slice }}
+{{ range $faqs }}
+  {{ if not (in $categories .category) }}
+    {{ $categories = $categories | append .category }}
+  {{ end }}
+{{ end }}
+
+{{/* Sort categories in a logical order */}}
+{{ $categoryOrder := slice "Basics" "Production" "Tasting" "Podcast" "General" }}
+{{ $sortedCategories := slice }}
+{{ range $categoryOrder }}
+  {{ if in $categories . }}
+    {{ $sortedCategories = $sortedCategories | append . }}
+  {{ end }}
+{{ end }}
+
+{{ if $filterCategory }}
+  {{ $sortedCategories = slice $filterCategory }}
+{{ end }}
+
+<div class="faq-container">
+{{ range $sortedCategories }}
+  {{ $category := . }}
+  {{ $categoryFaqs := where $faqs "category" $category }}
+  {{ $categoryFaqs = sort $categoryFaqs "order" "asc" }}
+
+  {{ if $categoryFaqs }}
+  <div class="faq-category" style="margin-bottom: 40px;">
+    <h3 style="color: #8B4513; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 20px;">{{ $category }}</h3>
+
+    <div class="panel-group" id="faq-{{ $category | urlize }}" role="tablist" aria-multiselectable="true">
+      {{ range $index, $faq := $categoryFaqs }}
+      <div class="panel panel-default" style="border-color: #D4AF37; margin-bottom: 10px;">
+        <div class="panel-heading" role="tab" id="heading-{{ $faq.id }}" style="background: linear-gradient(135deg, #f5f5f0 0%, #ede9e2 100%);">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#faq-{{ $category | urlize }}" href="#collapse-{{ $faq.id }}" aria-expanded="{{ if eq $index 0 }}true{{ else }}false{{ end }}" aria-controls="collapse-{{ $faq.id }}" style="color: #654321; text-decoration: none; display: block; padding: 15px;">
+              <i class="fas fa-chevron-right" style="margin-right: 10px; transition: transform 0.2s;"></i>
+              {{ $faq.question }}
+            </a>
+          </h4>
+        </div>
+        <div id="collapse-{{ $faq.id }}" class="panel-collapse collapse{{ if eq $index 0 }} in{{ end }}" role="tabpanel" aria-labelledby="heading-{{ $faq.id }}">
+          <div class="panel-body" style="padding: 20px; line-height: 1.7; color: #555;">
+            {{ $faq.answer | markdownify }}
+          </div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+{{ end }}
+</div>
+
+<style>
+.panel-title a[aria-expanded="true"] .fa-chevron-right {
+  transform: rotate(90deg);
+}
+.panel-title a:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+</style>

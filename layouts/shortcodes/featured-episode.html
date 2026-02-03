@@ -1,0 +1,48 @@
+{{/*
+  Featured Episode Shortcode
+  Displays a randomly selected episode from the main playlist
+
+  Usage: {{< featured-episode >}}
+*/}}
+
+{{ $episodes := site.Data.episodes.episodes }}
+{{ $mainEpisodes := where $episodes "playlistId" "main" }}
+
+{{/* Prepare episode data for JavaScript */}}
+{{ $episodeData := slice }}
+{{ range $mainEpisodes }}
+  {{ $ep := dict "youtubeId" .youtubeId "title" .title "description" .description "duration" .duration "thumbnailUrl" .thumbnailUrl }}
+  {{ $episodeData = $episodeData | append $ep }}
+{{ end }}
+
+<div id="featured-episode" data-episodes='{{ $episodeData | jsonify }}' style="margin-bottom: 40px;">
+  {{/* Fallback content while JavaScript loads */}}
+  <noscript>
+    {{ $firstEpisode := index $mainEpisodes 0 }}
+    {{ if $firstEpisode }}
+    <div class="featured-episode-card" style="background: #2c2c2c; border-radius: 12px; overflow: hidden;">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="youtube-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/{{ $firstEpisode.youtubeId }}?rel=0"
+              title="{{ $firstEpisode.title }}"
+              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="featured-info" style="padding: 30px; color: #fff;">
+            <h3>{{ $firstEpisode.title }}</h3>
+            <p style="color: #ccc;">{{ $firstEpisode.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ end }}
+  </noscript>
+</div>
+
+<script src="/js/featured-episode.js" defer></script>

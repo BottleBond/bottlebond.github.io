@@ -5,7 +5,7 @@ era: "Homework"
 author: "Adam Lathers"
 description: "Exploring the question of whether all spirits start as essentially the same neutral base before aging and flavoring."
 featured: false
-tags: ["education", "distillation", "vodka", "spirits"]
+tags: ["education", "distillation", "vodka", "spirits", "homework"]
 ---
 
 # Is All Base Distillate Vodka?

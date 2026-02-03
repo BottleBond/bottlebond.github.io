@@ -1,249 +1,271 @@
-# Data Model: BottleBond Podcast Website
+# Data Model: BottleBond Hugo Site
 
 **Date**: 2026-02-02 | **Branch**: `001-bottlebond-podcast-site`
 
 ---
 
-## Entity Relationship Overview
+## Content Structure Overview
 
 ```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Episode   │────▶│   Playlist  │     │   Person    │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                                       │
-       │                                       │
-       ▼                                       ▼
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│ TopTasting  │     │  BlogPost   │     │    FAQ      │
-└─────────────┘     └─────────────┘     └─────────────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │    Era      │
-                    └─────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                        Hugo Site                                 │
+├─────────────────────┬───────────────────────────────────────────┤
+│   content/          │   data/                                    │
+│   (Markdown)        │   (JSON)                                   │
+├─────────────────────┼───────────────────────────────────────────┤
+│ _index.md           │ hosts.json → Person entities               │
+│ about.md            │ episodes.json → Episode entities           │
+│ contact.md          │ faqs.json → FAQ entities                   │
+│ episodes.md         │ playlists.json → Playlist config           │
+│ faq.md              │ toptastings.json → Curated lists           │
+│ glass-room/         │                                            │
+│   └─ [era]/[post]   │                                            │
+└─────────────────────┴───────────────────────────────────────────┘
 ```
 
 ---
 
-## Core Entities
+## Content Files (Markdown)
 
-### Episode
+### Page Content Structure
 
-Represents a single podcast episode from YouTube.
+All pages use markdown with YAML frontmatter.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| id | string | Yes | Unique identifier (e.g., `ep_001`) |
-| title | string | Yes | Episode title |
-| description | string | No | Episode description/summary |
-| youtubeId | string | Yes | YouTube video ID |
-| playlistId | string | Yes | Reference to parent Playlist |
-| thumbnailUrl | string | Yes | Episode thumbnail URL |
-| duration | string | Yes | Duration in `MM:SS` or `HH:MM:SS` format |
-| publishedAt | string (ISO 8601) | Yes | Publication date |
-| popularity | number | No | Popularity score (0-100) for sorting |
-| tags | string[] | No | Content tags for filtering |
+| File | Type | Purpose | Shortcodes |
+|------|------|---------|------------|
+| `_index.md` | Home | Homepage intro | (theme-controlled) |
+| `about.md` | Page | About page | `{{< hosts >}}` |
+| `contact.md` | Page | Contact info | (mailto link) |
+| `episodes.md` | Page | Episode listing | `{{< episodes >}}` |
+| `faq.md` | Page | FAQ content | (markdown headers) |
+| `glass-room/_index.md` | Section | Blog listing | (theme-controlled) |
+| `glass-room/[era]/[slug].md` | Post | Blog posts | `{{< youtube >}}` |
 
-**Validation Rules:**
-- `youtubeId` must be 11 characters (YouTube video ID format)
-- `duration` must match pattern `^\d{1,2}:\d{2}(:\d{2})?$`
-- `popularity` must be between 0 and 100
+### Frontmatter Schema
+
+**Standard Page**:
+```yaml
+---
+title: "Page Title"           # Required
+description: "SEO description" # Optional
+type: "page"                   # Required for theme
+---
+```
+
+**Blog Post**:
+```yaml
+---
+title: "Post Title"           # Required
+date: 2026-02-02              # Required (YYYY-MM-DD)
+description: "Brief summary"   # Optional (used for cards)
+draft: false                   # Optional (hide from build)
+---
+```
 
 ---
 
-### Playlist
+## Data Files (JSON)
 
-Categorizes episodes by content type.
+### hosts.json
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| id | string | Yes | Unique identifier |
-| name | string | Yes | Display name |
-| slug | string | Yes | URL-friendly identifier |
-| youtubePlaylistId | string | Yes | YouTube playlist ID |
-| description | string | No | Playlist description |
-| category | enum | Yes | `main` \| `education` \| `tastings` \| `seasonal` \| `top10` |
+Stores host and guest information.
 
-**Predefined Playlists:**
-- `main` - All episodes (featured selection source)
-- `education` - History & Education episodes
-- `tastings` - Tasting episodes
-- `seasonal` - Top Tastings of the Season
-- `top10` - Top 10 of All Time
-
----
-
-### Person
-
-Represents hosts, co-hosts, and recurring guests.
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| id | string | Yes | Unique identifier |
-| name | string | Yes | Display name |
-| role | enum | Yes | `host` \| `cohost` \| `guest` |
-| bio | string | Yes | Biographical text |
-| photoUrl | string | Yes | Profile photo URL |
-| socialLinks | SocialLink[] | No | Social media links |
-| featured | boolean | No | Show on About page |
-| order | number | No | Display order |
-
-**SocialLink:**
-```typescript
-interface SocialLink {
-  platform: 'twitter' | 'instagram' | 'linkedin' | 'youtube' | 'website';
-  url: string;
+```json
+{
+  "hosts": [
+    {
+      "name": "Adam Lathers",
+      "role": "host",
+      "bio": "Biographical text...",
+      "photo": "/images/hosts/adam.jpg",
+      "social": {
+        "instagram": "https://instagram.com/...",
+        "youtube": "https://youtube.com/..."
+      }
+    }
+  ],
+  "guests": [
+    {
+      "name": "Guest Name",
+      "role": "guest",
+      "bio": "Biographical text...",
+      "photo": "/images/hosts/guest.jpg"
+    }
+  ]
 }
 ```
 
----
+**Access in templates**: `.Site.Data.hosts.hosts`, `.Site.Data.hosts.guests`
 
-### BlogPost (The Glass Room)
+### episodes.json
 
-Represents a blog post stored as Markdown.
+Stores episode metadata.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| slug | string | Yes | URL-friendly identifier (derived from filename) |
-| title | string | Yes | Post title (from frontmatter) |
-| date | string (ISO 8601) | Yes | Publication date |
-| era | string | Yes | Era category (e.g., "Prohibition") |
-| author | string | Yes | Author name |
-| description | string | No | Post summary/excerpt |
-| featured | boolean | No | Featured post flag |
-| tags | string[] | No | Content tags |
-| content | string | N/A | Markdown content (not stored, loaded at build) |
-
-**Era Categories (ordered oldest to newest):**
-1. Colonial Era
-2. Early American
-3. Prohibition Era
-4. Post-War Revival
-5. Modern Craft
-6. Contemporary
-
-**File Location:** `src/content/glass-room/{slug}.md`
-
----
-
-### TopTasting
-
-Represents a curated top-rated episode.
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| episodeId | string | Yes | Reference to Episode |
-| rank | number | Yes | Position in list (1-10) |
-| listType | enum | Yes | `season` \| `alltime` |
-| season | string | No | Season identifier (e.g., "Winter 2026") |
-| addedAt | string (ISO 8601) | Yes | When added to list |
-| note | string | No | Editor's note about selection |
-
-**Validation:**
-- `rank` must be 1-10 for `alltime`, 1-5 for `season`
-- `season` required when `listType` is `season`
-
----
-
-### FAQ
-
-Represents a frequently asked question.
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| id | string | Yes | Unique identifier |
-| question | string | Yes | The question text |
-| answer | string | Yes | The answer (supports Markdown) |
-| category | string | No | Category for grouping |
-| order | number | No | Display order within category |
-
-**Categories:**
-- Basics
-- Production
-- Tasting
-- Podcast
-- General
-
----
-
-### ContactMessage
-
-Represents a submitted contact form.
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| id | string | Yes | Unique identifier |
-| name | string | Yes | Sender name |
-| email | string | Yes | Sender email |
-| subject | string | Yes | Message subject |
-| message | string | Yes | Message body |
-| submittedAt | string (ISO 8601) | Yes | Submission timestamp |
-| status | enum | Yes | `new` \| `read` \| `replied` |
-
-**Note:** Contact messages are handled by Web3Forms service. This schema is for reference only.
-
----
-
-## State Transitions
-
-### BlogPost Lifecycle
-
-```
-Draft → Published → Updated
-  │         │          │
-  └─────────┼──────────┘
-            ▼
-        Archived (future)
+```json
+{
+  "episodes": [
+    {
+      "id": "ep_001",
+      "title": "Episode Title",
+      "description": "Episode summary...",
+      "youtubeId": "xxxxxxxxxxx",
+      "category": "education",
+      "thumbnailUrl": "https://i.ytimg.com/vi/xxxxxxxxxxx/hqdefault.jpg",
+      "duration": "45:30",
+      "publishedAt": "2026-01-15"
+    }
+  ]
+}
 ```
 
-### ContactMessage Flow
+**Valid categories**: `main`, `education`, `tastings`, `seasonal`, `top10`
 
+**Access in templates**: `.Site.Data.episodes.episodes`
+
+### faqs.json
+
+Stores FAQ questions and answers.
+
+```json
+{
+  "faqs": [
+    {
+      "question": "What is bourbon?",
+      "answer": "Bourbon is an American whiskey made from at least 51% corn...",
+      "category": "Basics",
+      "order": 1
+    }
+  ]
+}
 ```
-Submitted → New → Read → Replied
-              │
-              └→ Archived (after 90 days)
+
+**Access in templates**: `.Site.Data.faqs.faqs`
+
+### playlists.json
+
+Stores YouTube playlist configuration.
+
+```json
+{
+  "playlists": [
+    {
+      "id": "main",
+      "name": "All Episodes",
+      "youtubeId": "PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ"
+    },
+    {
+      "id": "education",
+      "name": "History & Education",
+      "youtubeId": "PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi"
+    }
+  ]
+}
 ```
+
+**Access in templates**: `.Site.Data.playlists.playlists`
+
+### toptastings.json
+
+Stores curated top-rated episodes.
+
+```json
+{
+  "currentSeason": "Winter 2026",
+  "seasonal": [
+    {
+      "episodeId": "ep_001",
+      "rank": 1
+    }
+  ],
+  "allTime": [
+    {
+      "episodeId": "ep_002",
+      "rank": 1
+    }
+  ]
+}
+```
+
+**Access in templates**: `.Site.Data.toptastings`
+
+---
+
+## Shortcode Data Access Patterns
+
+### hosts.html Shortcode
+
+```html
+{{ $role := .Get "role" | default "all" }}
+{{ $hosts := .Site.Data.hosts.hosts }}
+
+{{ if eq $role "guest" }}
+  {{ $hosts = .Site.Data.hosts.guests }}
+{{ else if ne $role "all" }}
+  {{ $hosts = where $hosts "role" $role }}
+{{ end }}
+
+{{ range $hosts }}
+  <!-- render person card -->
+{{ end }}
+```
+
+### episodes.html Shortcode
+
+```html
+{{ $category := .Get "category" | default "all" }}
+{{ $limit := .Get "limit" | default 3 }}
+{{ $episodes := .Site.Data.episodes.episodes }}
+
+{{ if ne $category "all" }}
+  {{ $episodes = where $episodes "category" $category }}
+{{ end }}
+
+{{ range first $limit $episodes }}
+  <!-- render episode card -->
+{{ end }}
+```
+
+---
+
+## Era Categories (Glass Room)
+
+Era is determined by folder structure, not frontmatter.
+
+| Folder Path | Era Display Name |
+|-------------|------------------|
+| `glass-room/colonial/` | Colonial Era |
+| `glass-room/early-american/` | Early American |
+| `glass-room/prohibition-era/` | Prohibition Era |
+| `glass-room/post-war/` | Post-War Revival |
+| `glass-room/modern-craft/` | Modern Craft |
+| `glass-room/contemporary/` | Contemporary |
+| `glass-room/homework/` | Homework |
+
+New eras are created by adding new folders - the system is flexible.
 
 ---
 
 ## Data Volume Assumptions
 
-| Entity | Initial Count | Expected Growth |
-|--------|---------------|-----------------|
-| Episodes | ~50 | +2-4/month |
-| Playlists | 5 | Stable |
-| Persons | 5-10 | Slow growth |
-| BlogPosts | 10 | +1-2/month |
-| FAQs | 10-20 | Slow growth |
-| TopTastings | 15 (10 alltime + 5 season) | Quarterly updates |
+| Entity | Location | Initial Count | Growth |
+|--------|----------|---------------|--------|
+| Pages | `content/*.md` | 5 | Stable |
+| Blog Posts | `content/glass-room/` | 10+ | +1-2/month |
+| Hosts | `data/hosts.json` | 2-3 | Slow |
+| Guests | `data/hosts.json` | 5-10 | Slow |
+| Episodes | `data/episodes.json` | 50+ | +2-4/month |
+| FAQs | `data/faqs.json` | 10-20 | Slow |
 
 ---
 
-## Index Strategy (for build-time queries)
+## Migration from Previous Structure
 
-### Episodes
-- By playlist (category filtering)
-- By popularity (top episodes)
-- By publication date (chronological)
-
-### BlogPosts
-- By era (grouped display)
-- By date (chronological TOC)
-- By slug (individual post lookup)
-
-### Persons
-- By role (hosts vs guests)
-- By order (display sorting)
-
----
-
-## Data Source Mapping
-
-| Entity | Initial Source | Production Source |
-|--------|----------------|-------------------|
-| Episodes | `src/content/episodes.json` | YouTube API (future) |
-| Playlists | `src/content/playlists.json` | Static config |
-| Persons | `src/content/hosts.json` | CMS (future) |
-| BlogPosts | `src/content/glass-room/*.md` | Git repository |
-| FAQs | `src/content/faqs.json` | CMS (future) |
-| TopTastings | `src/content/top-tastings.json` | Manual curation |
+| Previous (Next.js) | Current (Hugo) |
+|--------------------|----------------|
+| `src/content/episodes.json` | `data/episodes.json` |
+| `src/content/hosts.json` | `data/hosts.json` |
+| `src/content/faqs.json` | `data/faqs.json` |
+| `src/content/playlists.json` | `data/playlists.json` |
+| `src/content/glass-room/*.md` | `content/glass-room/**/*.md` |
+| React components | Hugo shortcodes |
+| TypeScript interfaces | JSON schema (implicit) |

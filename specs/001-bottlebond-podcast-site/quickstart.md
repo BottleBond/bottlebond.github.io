@@ -1,4 +1,4 @@
-# Quickstart: BottleBond Podcast Website
+# Quickstart: BottleBond Hugo Site
 
 **Date**: 2026-02-02 | **Branch**: `001-bottlebond-podcast-site`
 
@@ -6,8 +6,7 @@
 
 ## Prerequisites
 
-- Node.js 20.x or higher
-- npm 10.x or higher
+- Hugo v0.115.0 or higher (extended edition recommended)
 - Git
 
 ---
@@ -24,63 +23,18 @@ cd bottlebond.github.io
 # Switch to the feature branch
 git checkout 001-bottlebond-podcast-site
 
-# Install dependencies
-npm install
+# Verify Hugo is installed
+hugo version
 ```
 
-### 2. Create Next.js Project (if starting fresh)
+### 2. Start Development Server
 
 ```bash
-# Initialize Next.js with TypeScript
-npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir
-
-# Install additional dependencies
-npm install gray-matter unified remark-parse remark-gfm remark-rehype rehype-slug rehype-stringify
+# Start Hugo server with live reload
+hugo server -D
 ```
 
-### 3. Configure Next.js
-
-Create or update `next.config.js`:
-
-```javascript
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
-  trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
-}
-
-module.exports = nextConfig
-```
-
-### 4. Add Google Fonts
-
-Add to `src/app/layout.tsx`:
-
-```tsx
-import { Cormorant_Garamond, Inter } from 'next/font/google'
-
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-cormorant',
-})
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-})
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
-      <body>{children}</body>
-    </html>
-  )
-}
-```
+The site will be available at `http://localhost:1313`
 
 ---
 
@@ -88,47 +42,182 @@ export default function RootLayout({ children }) {
 
 ```
 bottlebond.github.io/
-├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── layout.tsx          # Root layout
-│   │   ├── page.tsx            # Homepage
-│   │   ├── about/
-│   │   ├── episodes/
-│   │   ├── glass-room/
-│   │   │   ├── page.tsx        # Blog listing
-│   │   │   └── [slug]/
-│   │   │       └── page.tsx    # Individual post
-│   │   ├── faq/
-│   │   └── contact/
-│   ├── components/
-│   │   ├── ui/                 # Reusable primitives
-│   │   ├── layout/             # Header, Footer, Nav
-│   │   ├── episodes/           # Episode-related components
-│   │   ├── blog/               # Blog-related components
-│   │   └── forms/              # Form components
-│   ├── lib/
-│   │   ├── data/               # Data fetching utilities
-│   │   └── utils/              # Helper functions
-│   ├── content/
-│   │   ├── episodes.json
-│   │   ├── playlists.json
-│   │   ├── hosts.json
-│   │   ├── faqs.json
-│   │   ├── top-tastings.json
-│   │   └── glass-room/         # Blog posts (Markdown)
-│   └── styles/
-│       └── globals.css
-├── public/
-│   ├── images/
-│   └── fonts/
-├── tests/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml
-├── next.config.js
-├── tailwind.config.js
-├── tsconfig.json
-└── package.json
+├── content/                    # Markdown content files
+│   ├── _index.md              # Homepage content
+│   ├── about.md               # About page
+│   ├── contact.md             # Contact page
+│   ├── episodes.md            # Episodes page
+│   ├── faq.md                 # FAQ page
+│   └── glass-room/            # Blog section
+│       ├── _index.md          # Blog listing
+│       └── [era]/             # Era-based folders
+│           └── [post].md      # Individual posts
+├── data/                       # JSON data files
+│   ├── episodes.json          # Episode metadata
+│   ├── hosts.json             # Host/guest info
+│   ├── faqs.json              # FAQ questions
+│   └── playlists.json         # YouTube playlists
+├── layouts/                    # Custom templates (override theme)
+│   └── shortcodes/            # Custom shortcodes
+│       ├── hosts.html         # Render hosts
+│       └── episodes.html      # Render episodes
+├── static/                     # Static assets
+│   └── images/                # Images
+├── themes/
+│   └── hugo-universal-theme/  # Theme files
+├── hugo.toml                   # Site configuration
+└── public/                     # Generated output (gitignored)
+```
+
+---
+
+## Content Management
+
+### Editing a Page
+
+Each page is a markdown file in `content/`. Edit the file and Hugo will hot-reload.
+
+**Example: Editing the About Page**
+
+```bash
+# Edit content/about.md
+```
+
+```markdown
+---
+title: "About"
+description: "Meet the BottleBond team"
+type: "page"
+---
+
+# About BottleBond
+
+Welcome to BottleBond, your premier podcast for bourbon and whiskey education.
+
+## Our Host
+
+{{< hosts role="host" >}}
+
+## Co-Host
+
+{{< hosts role="cohost" >}}
+
+## Recurring Guests
+
+{{< hosts role="guest" >}}
+```
+
+### Adding a Blog Post
+
+1. Create a folder for the era if it doesn't exist:
+
+```bash
+mkdir -p content/glass-room/modern-craft
+```
+
+2. Create a new markdown file:
+
+```bash
+touch content/glass-room/modern-craft/my-new-post.md
+```
+
+3. Add frontmatter and content:
+
+```markdown
+---
+title: "My New Post Title"
+date: 2026-02-02
+description: "A brief description"
+---
+
+Your post content here...
+```
+
+4. The post will appear at `/glass-room/modern-craft/my-new-post/`
+
+### Updating Host Information
+
+Edit `data/hosts.json`:
+
+```json
+{
+  "hosts": [
+    {
+      "name": "Adam Lathers",
+      "role": "host",
+      "bio": "Host bio here...",
+      "photo": "/images/hosts/adam.jpg"
+    }
+  ],
+  "guests": [
+    {
+      "name": "Guest Name",
+      "role": "guest",
+      "bio": "Guest bio here...",
+      "photo": "/images/hosts/guest.jpg"
+    }
+  ]
+}
+```
+
+### Updating FAQ
+
+Edit `data/faqs.json`:
+
+```json
+{
+  "faqs": [
+    {
+      "question": "What is bourbon?",
+      "answer": "Bourbon is an American whiskey...",
+      "category": "Basics"
+    }
+  ]
+}
+```
+
+Or write FAQs directly in markdown in `content/faq.md`:
+
+```markdown
+## What is bourbon?
+
+Bourbon is an American whiskey made from at least 51% corn...
+
+## How is bourbon made?
+
+Bourbon production begins with...
+```
+
+---
+
+## Available Shortcodes
+
+### `{{< hosts >}}`
+
+Renders hosts from `data/hosts.json`.
+
+```markdown
+{{< hosts role="host" >}}     # Show only hosts
+{{< hosts role="cohost" >}}   # Show only co-hosts
+{{< hosts role="guest" >}}    # Show only guests
+{{< hosts >}}                  # Show all
+```
+
+### `{{< episodes >}}`
+
+Renders episodes from `data/episodes.json`.
+
+```markdown
+{{< episodes category="education" limit="3" >}}
+{{< episodes category="tastings" limit="3" >}}
+```
+
+### `{{< youtube >}}`
+
+Embeds a YouTube video.
+
+```markdown
+{{< youtube id="dQw4w9WgXcQ" >}}
 ```
 
 ---
@@ -136,114 +225,62 @@ bottlebond.github.io/
 ## Development Commands
 
 ```bash
-# Start development server
-npm run dev
+# Start development server (includes drafts)
+hugo server -D
 
-# Build for production (generates /out directory)
-npm run build
+# Build for production
+hugo --minify
 
-# Serve production build locally
-npx serve out
+# Build and serve locally
+hugo server --minify
 
-# Run linting
-npm run lint
+# Check for broken links/references
+hugo --gc
 
-# Run tests
-npm test
+# Clean and rebuild
+rm -rf public && hugo --gc --cleanDestinationDir
 ```
 
 ---
 
-## Content Management
+## Configuration
 
-### Adding a Blog Post
+### Site Settings (`hugo.toml`)
 
-1. Create a new Markdown file in `src/content/glass-room/`:
+Key settings you might want to change:
 
-```bash
-touch src/content/glass-room/my-new-post.md
+```toml
+# Site title
+title = "BottleBond - Premium Bourbon & Whiskey Podcast"
+
+# Theme style (options: default, blue, green, marsala, pink, red, turquoise, violet)
+[params]
+  style = "marsala"
+
+# Social links
+[params.social]
+  youtube = "https://www.youtube.com/@BottleBond"
+  instagram = "https://instagram.com/bottlebond"
 ```
 
-2. Add frontmatter:
+### Navigation Menu
 
-```markdown
----
-title: "My New Post Title"
-date: "2026-02-02"
-era: "Modern Craft"
-author: "Host Name"
-description: "A brief description of the post"
-featured: false
-tags:
-  - bourbon
-  - tasting
----
+Edit the `[[menu.main]]` sections in `hugo.toml`:
 
-Your post content here...
+```toml
+[[menu.main]]
+  name = "Home"
+  url = "/"
+  weight = 10
 ```
-
-3. The post will appear at `/glass-room/my-new-post`
-
-### Adding an Episode
-
-Edit `src/content/episodes.json`:
-
-```json
-{
-  "episodes": [
-    {
-      "id": "ep_new",
-      "title": "New Episode Title",
-      "youtubeId": "xxxxxxxxxxx",
-      "playlistId": "main",
-      "thumbnailUrl": "https://i.ytimg.com/vi/xxxxxxxxxxx/hqdefault.jpg",
-      "duration": "45:30",
-      "publishedAt": "2026-02-02",
-      "popularity": 85
-    }
-  ]
-}
-```
-
-### Updating Top Tastings
-
-Edit `src/content/top-tastings.json`:
-
-```json
-{
-  "currentSeason": "Winter 2026",
-  "allTime": [
-    { "episodeId": "ep_001", "rank": 1, "listType": "alltime", "addedAt": "2026-01-01" }
-  ],
-  "seasonal": [
-    { "episodeId": "ep_002", "rank": 1, "listType": "season", "season": "Winter 2026", "addedAt": "2026-01-01" }
-  ]
-}
-```
-
----
-
-## Environment Variables
-
-Create `.env.local` for local development:
-
-```bash
-# Web3Forms access key for contact form
-NEXT_PUBLIC_WEB3FORMS_KEY=your_access_key_here
-
-# Optional: Analytics
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-```
-
-**Note:** For production, add these as GitHub repository secrets.
 
 ---
 
 ## Deployment
 
-### Automatic Deployment (Recommended)
+### Automatic Deployment (GitHub Actions)
 
-Push to `main` branch triggers GitHub Actions:
+Push to `main` branch triggers deployment:
 
 ```bash
 git checkout main
@@ -251,86 +288,16 @@ git merge 001-bottlebond-podcast-site
 git push origin main
 ```
 
-The site will deploy to `https://bottlebond.github.io`
+The site deploys to `https://bottlebond.github.io`
 
 ### Manual Deployment
 
 ```bash
 # Build the site
-npm run build
+hugo --minify
 
-# The /out directory contains the static site
+# The /public directory contains the static site
 # Upload to any static hosting provider
-```
-
-### GitHub Pages Setup
-
-1. Go to repository Settings → Pages
-2. Under "Build and deployment", select **GitHub Actions**
-3. The workflow file `.github/workflows/deploy.yml` handles the rest
-
----
-
-## Tailwind Theme Reference
-
-### Colors
-
-| Name | CSS Variable | Usage |
-|------|--------------|-------|
-| sienna-500 | `#8B4513` | Primary buttons |
-| gold-500 | `#D4AF37` | Hover states |
-| cream-200 | `#F5F5F0` | Page backgrounds |
-| charcoal-800 | `#2C2C2C` | Text |
-
-### Typography
-
-```html
-<!-- Headings (serif) -->
-<h1 class="font-serif text-5xl tracking-luxury-tight">Heading</h1>
-
-<!-- Body (sans-serif) -->
-<p class="font-sans text-base leading-relaxed">Body text</p>
-```
-
-### Components
-
-```html
-<!-- Primary Button -->
-<button class="btn-primary">Click Me</button>
-
-<!-- Luxury Card -->
-<div class="card-luxury">
-  <div class="card-luxury-body">Content</div>
-</div>
-
-<!-- Warm Shadow -->
-<div class="shadow-warm-md">Elevated content</div>
-```
-
----
-
-## Testing
-
-### Run Tests
-
-```bash
-# Unit tests
-npm run test:unit
-
-# Integration tests
-npm run test:integration
-
-# E2E tests
-npm run test:e2e
-```
-
-### Test File Locations
-
-```
-tests/
-├── unit/           # Unit tests for utilities
-├── integration/    # Component integration tests
-└── e2e/            # Playwright E2E tests
 ```
 
 ---
@@ -339,27 +306,35 @@ tests/
 
 ### Build Errors
 
-**"generateStaticParams is missing"**
-- All dynamic routes (`[slug]`) must export `generateStaticParams()`
+**"Page not found" after adding content**
+- Check frontmatter syntax (YAML format)
+- Ensure `type: "page"` is set for standalone pages
+- Restart Hugo server
 
-**"Image optimization unavailable"**
-- Ensure `images.unoptimized: true` in `next.config.js`
+**Shortcode not working**
+- Verify shortcode file exists in `layouts/shortcodes/`
+- Check shortcode syntax: `{{< shortcode >}}` not `{{ shortcode }}`
 
-### Development Issues
+**Styles not appearing**
+- Ensure theme is set in `hugo.toml`: `theme = "hugo-universal-theme"`
+- Check that `themes/hugo-universal-theme/` directory exists
 
-**Hot reload not working**
-- Check that `src/content/` files are saved
-- Restart dev server: `npm run dev`
+### Content Issues
 
-**Styles not applying**
-- Verify Tailwind content paths in `tailwind.config.js`
-- Check for CSS purging issues
+**Blog post not appearing in list**
+- Check that frontmatter has required fields (title, date)
+- Ensure file is in correct directory structure
+- Remove `draft: true` if present
+
+**Data not loading**
+- Verify JSON syntax in `data/*.json` files
+- Check file names match expected patterns
 
 ---
 
 ## Resources
 
-- [Next.js App Router Docs](https://nextjs.org/docs/app)
-- [Tailwind CSS Docs](https://tailwindcss.com/docs)
-- [Web3Forms Documentation](https://web3forms.com/docs)
-- [GitHub Pages Docs](https://docs.github.com/en/pages)
+- [Hugo Documentation](https://gohugo.io/documentation/)
+- [Hugo Universal Theme](https://github.com/devcows/hugo-universal-theme)
+- [Hugo Shortcodes Guide](https://gohugo.io/content-management/shortcodes/)
+- [GitHub Pages with Hugo](https://gohugo.io/hosting-and-deployment/hosting-on-github/)

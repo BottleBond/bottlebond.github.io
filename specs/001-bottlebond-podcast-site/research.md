@@ -1,289 +1,221 @@
-# Research: BottleBond Podcast Website
+# Research: Hugo Markdown Refactor
 
 **Date**: 2026-02-02 | **Branch**: `001-bottlebond-podcast-site`
 
 ---
 
-## 1. Next.js Static Export for GitHub Pages
+## 1. Hugo Shortcodes with JSON Data Files
 
-### Decision: Standard Next.js 14+ with `output: 'export'`
-
-### Configuration
-
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
-  trailingSlash: true,  // Cleaner URLs on static hosts
-  images: {
-    unoptimized: true,  // Required for static export
-  },
-}
-
-module.exports = nextConfig
-```
+### Decision: Use `.Site.Data` to access JSON files in the `data/` directory
 
 ### Rationale
-- For user/organization sites (bottlebond.github.io), **no basePath needed**
-- `trailingSlash: true` ensures consistent routing on static hosts
-- `images.unoptimized: true` is required since Image Optimization API needs a Node.js server
+Hugo provides direct access to data files through `.Site.Data.<filename>`. This is the standard approach for small to medium datasets that are frequently accessed during build time.
 
-### GitHub Actions Deployment Workflow
+### Implementation Pattern
 
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy Next.js to GitHub Pages
+```html
+<!-- layouts/shortcodes/hosts.html -->
+{{ $role := .Get "role" | default "all" }}
+{{ $hosts := .Site.Data.hosts.hosts }}
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+{{ if ne $role "all" }}
+  {{ $hosts = where $hosts "role" $role }}
+{{ end }}
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build Next.js
-        run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+{{ range $hosts }}
+<div class="media">
+  {{ with .photo }}
+  <img src="{{ . }}" alt="{{ $.name }}" class="media-object">
+  {{ end }}
+  <div class="media-body">
+    <h4 class="media-heading">{{ .name }}</h4>
+    <p class="text-muted">{{ .role }}</p>
+    <p>{{ .bio }}</p>
+  </div>
+</div>
+{{ end }}
 ```
 
 ### Alternatives Considered
-- **Astro**: More opinionated, less React ecosystem integration
-- **Hugo**: Fast but requires learning Go templates
-- **Gatsby**: Heavier, more complex for this use case
+- `resources.Get` + `transform.Unmarshal` - More flexible but overkill for our use case
+- Remote data sources - Not needed; all data is local
+- Hardcoded HTML in markdown - Less maintainable
 
 ### Key Constraints
-- All dynamic routes MUST use `generateStaticParams()`
-- No server-side API routes (static export only)
-- No Incremental Static Regeneration
-- No Server Actions
+- Data files MUST be in the `data/` directory
+- File extension determines parser (`.json` for JSON)
+- Access pattern: `.Site.Data.<filename>.<key>`
 
 ---
 
-## 2. YouTube Embed Implementation
+## 2. Shortcode Design Best Practices
 
-### Decision: Custom YouTubeEmbed component with facade pattern
+### Decision: Use named parameters with defaults; keep shortcodes simple and focused
 
 ### Rationale
-- **Facade pattern** saves ~500-800KB per embed until user clicks
-- **Privacy-enhanced mode** via youtube-nocookie.com for GDPR compliance
-- **Responsive sizing** using `aspect-ratio: 16/9` CSS
+Named parameters are self-documenting and easier to maintain. Each shortcode should do one thing well.
 
-### Key Implementation Details
+### Best Practices Applied
 
-```tsx
-// Privacy-enhanced embed URL
-const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+```html
+<!-- Parameter validation pattern -->
+{{ $category := .Get "category" | default "all" }}
+{{ $limit := .Get "limit" | default 3 }}
 
-// Responsive container
-<div style={{ aspectRatio: '16/9', position: 'relative' }}>
-  {/* Facade or iframe */}
-</div>
+<!-- Conditional rendering -->
+{{ with .Get "title" }}
+<h3>{{ . }}</h3>
+{{ end }}
+
+<!-- Range with limit -->
+{{ range first $limit $items }}
+  <!-- render item -->
+{{ end }}
 ```
 
-### Accessibility Requirements
-- `title` attribute on iframe (screen reader description)
-- `aria-label` on facade button
-- Keyboard activation (Enter/Space)
-- Visible focus indicators
+### Shortcode Calling Syntax
 
-### External Link Pattern
-```tsx
-<a
-  href={`https://www.youtube.com/watch?v=${videoId}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Watch on YouTube
-</a>
+In markdown content:
+```markdown
+## Our Hosts
+
+{{</* hosts role="host" */>}}
+
+## Co-Hosts
+
+{{</* hosts role="cohost" */>}}
+
+## Episodes
+
+{{</* episodes category="education" limit="3" */>}}
 ```
 
-### Alternatives Considered
-- **react-player**: Too heavy for simple embeds
-- **lite-youtube-embed**: Good but less customizable
-- **Direct iframe**: No performance optimization
+### Key Constraints
+- Shortcodes MUST handle missing/empty data gracefully
+- Use Bootstrap classes from hugo-universal-theme for consistent styling
+- Keep logic minimal; complex transformations belong in data files
 
 ---
 
-## 3. Markdown Blog Implementation
+## 3. Content Markdown Structure for hugo-universal-theme
 
-### Decision: Custom gray-matter + remark/rehype approach
+### Decision: Use `type: "page"` frontmatter; embed shortcodes for dynamic content
 
 ### Rationale
-1. **Maximum flexibility** for era-based categorization
-2. **Future-proof** - core libraries are industry standards
-3. **No abandoned dependencies** (Contentlayer is abandoned)
-4. **Optimal bundle size** - only include what's needed
-5. **Full control** over frontmatter schema and TOC generation
+The hugo-universal-theme expects `type: "page"` for standard pages. Markdown content is rendered via `{{ .Content }}` in the theme's templates, with shortcodes expanding inline.
 
-### Dependencies
-```json
-{
-  "gray-matter": "^4.0.3",
-  "unified": "^11.0.4",
-  "remark-parse": "^11.0.0",
-  "remark-gfm": "^4.0.0",
-  "remark-rehype": "^11.1.0",
-  "rehype-slug": "^6.0.0",
-  "rehype-stringify": "^10.0.0"
-}
-```
+### Frontmatter Pattern
 
-### Frontmatter Schema
 ```yaml
 ---
-title: "The History of Bourbon"
-date: "2026-01-15"
-era: "Prohibition"
-author: "Host Name"
-description: "Explore the origins..."
-featured: false
-tags:
-  - history
-  - bourbon
+title: "Page Title"
+description: "SEO description for the page"
+type: "page"
+---
+
+# Heading
+
+Static markdown content here.
+
+{{</* shortcode-for-dynamic-data */>}}
+
+More markdown content...
+```
+
+### Theme-Specific Features
+
+The theme's `layouts/page/single.html` has special handling:
+- If frontmatter contains `id` parameter, it renders a partial with that name
+- Otherwise, it renders `{{ .Content }}` in a full-width container
+
+Example for contact page (uses theme partial):
+```yaml
+---
+title: "Contact"
+id: "contact"
+type: "page"
 ---
 ```
 
-### Era-Based Grouping
-```typescript
-const ERA_ORDER = [
-  'Colonial Era',
-  'Early American',
-  'Prohibition Era',
-  'Post-War Revival',
-  'Modern Craft',
-  'Contemporary',
-];
-```
-
-### Alternatives Considered
-- **Contentlayer**: Abandoned, breaking with Next.js 14+
-- **next-mdx-remote**: Good but more setup for MDX features we don't need
-- **@next/mdx**: Too limited for blog with dynamic listings
+### Content Guidelines
+1. Use standard markdown headers (##, ###) for sections
+2. Embed shortcodes inline where dynamic content is needed
+3. Keep static text in markdown, dynamic data in shortcodes
+4. Use HTML sparingly (only when markdown is insufficient)
+5. Theme provides Bootstrap 3 classes for styling
 
 ---
 
-## 4. Tailwind CSS Luxury Theme
+## 4. Theme CSS Classes Reference
 
-### Decision: Custom Tailwind theme with earth tones
+### Decision: Use existing theme classes; minimize custom CSS
 
-### Color Palette
-| Name | Hex | Usage |
-|------|-----|-------|
-| Sienna (primary) | #8B4513 | Buttons, accents |
-| Brown (primary) | #654321 | Backgrounds, borders |
-| Gold (primary) | #D4AF37 | Hover states, highlights |
-| Terracotta | #CD5C5C | Accent color |
-| Slate (secondary) | #708090 | Muted accents |
-| Cream (neutral) | #F5F5F0 | Page backgrounds |
-| Charcoal (neutral) | #2C2C2C | Text, dark sections |
+### Bootstrap 3 Classes (from theme)
+```
+.container          - Standard Bootstrap container
+.row, .col-md-*     - Grid system
+.text-muted         - Muted text color
+.text-uppercase     - Uppercase text
+.text-center        - Center alignment
+.btn, .btn-template-main - Button styles
+.media, .media-body - Media object pattern (good for hosts)
+.panel, .panel-body - Panel styling (good for FAQ)
+```
 
-### Typography
-- **Headings**: Cormorant Garamond (serif, elegant)
-- **Body**: Inter (sans-serif, readable)
-- **Line height**: 1.6+ for comfortable reading
-
-### Component Styling
-- Border radius: 8-12px (`rounded-luxury`)
-- Shadows: Warm-tinted with sienna undertones
-- Hover states: Gold shift with glow effect
-- Transitions: 200-300ms with ease-luxury timing
-
-### Key CSS Utilities
-```css
-.shadow-warm-md { box-shadow: 0 4px 6px -1px rgba(139, 69, 19, 0.1); }
-.shadow-gold-glow { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-.transition-luxury { transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1); }
+### Theme Custom Classes
+```
+.heading            - Section headings
+.box-image-text     - Image + text boxes (blog posts)
+.bar                - Section bars
+.background-white   - White background sections
 ```
 
 ---
 
-## 5. Contact Form Solution
+## 5. Page Migration Strategy
 
-### Decision: Web3Forms
+### Decision: Migrate pages incrementally, starting with simplest
 
-### Rationale
-1. **Generous free tier** - 250 submissions/month (plenty for low-volume podcast site)
-2. **No branding** - Professional appearance
-3. **No account required** - Just an access key
-4. **Built-in spam protection** - Invisible honeypot + optional hCaptcha
-5. **AJAX support** - Perfect for React integration
+### Migration Order
 
-### Implementation Approach
-- React component with TypeScript
-- Client-side validation
-- Honeypot field for spam prevention
-- Success/error state handling
-- Accessible form labels and error messages
+| Priority | Page | Complexity | Approach |
+|----------|------|------------|----------|
+| 1 | Contact | Low | Markdown + mailto link |
+| 2 | FAQ | Low | Markdown with ## headers |
+| 3 | About | Medium | Markdown + hosts shortcode |
+| 4 | Episodes | High | Markdown + episodes shortcode |
+| 5 | Homepage | Theme | Configure via hugo.toml |
 
-### Setup Steps
-1. Visit web3forms.com
-2. Enter email to receive access key
-3. Use access key in form component
-4. Submit to `https://api.web3forms.com/submit`
-
-### Alternatives Considered
-| Service | Free Limit | Pros | Cons |
-|---------|------------|------|------|
-| Formspree | 50/mo | Well-established | Lower free limit |
-| FormSubmit | Unlimited | No account | No dashboard |
-| Getform | 50/mo | Good integrations | Lower free limit |
-| **Web3Forms** | **250/mo** | **Best balance** | Newer service |
+### Testing Checklist
+- [ ] `hugo server` runs without errors
+- [ ] Page renders with correct styling
+- [ ] Navigation works
+- [ ] Responsive on mobile
+- [ ] Content matches requirements
 
 ---
 
-## Summary: Technology Decisions
+## Summary: Hugo Markdown Refactor Decisions
 
 | Area | Decision | Key Reason |
 |------|----------|------------|
-| Framework | Next.js 14+ (App Router) | Best React DX, static export support |
-| Hosting | GitHub Pages | Free, version-controlled content |
-| Styling | Tailwind CSS | Rapid development, design system |
-| Blog | gray-matter + remark/rehype | Stable, flexible, future-proof |
-| YouTube | Custom facade component | Performance, privacy |
-| Forms | Web3Forms | Best free tier, no branding |
-| Images | Pre-optimized (unoptimized mode) | Static export requirement |
+| Data Access | `.Site.Data` | Built-in Hugo feature, simple |
+| Shortcodes | Named params with defaults | Self-documenting, maintainable |
+| Frontmatter | `type: "page"` | Theme requirement |
+| Styling | Bootstrap 3 classes | Theme provides them |
+| Migration | Incremental by page | Reduce risk, validate approach |
+
+---
+
+## Sources
+
+- [Hugo Data Sources Documentation](https://gohugo.io/content-management/data-sources/)
+- [Using Data in Hugo - CloudCannon Tutorial](https://cloudcannon.com/tutorials/hugo-beginner-tutorial/using-data-in-hugo/)
+- [Data Shortcode for Hugo - Yury Zhauniarovich](https://zhauniarovich.com/post/2021/2021-09-data-shortcode-for-hugo/)
+- [Hugo Shortcode Collection on GitHub](https://github.com/squidfingers/hugo-shortcodes)
 
 ---
 
 ## Next Steps
 
-All research questions resolved. Proceed to Phase 1: Design & Contracts.
+All research questions resolved. Proceed to Phase 1: Create shortcodes and update content files.

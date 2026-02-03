@@ -1,0 +1,79 @@
+{{/*
+  Hosts Shortcode
+  Usage: {{< hosts role="host" >}}
+
+  Parameters:
+    - role: Filter by role (host, cohost, guest) or "all" (optional, defaults to "all")
+    - featured: Show only featured people (optional, defaults to "false")
+*/}}
+
+{{ $role := .Get "role" | default "all" }}
+{{ $featuredOnly := .Get "featured" | default "false" }}
+
+{{/* Get hosts and guests from data */}}
+{{ $people := slice }}
+
+{{ if or (eq $role "host") (eq $role "cohost") (eq $role "all") }}
+  {{ range site.Data.hosts.hosts }}
+    {{ if or (eq $role "all") (eq .role $role) }}
+      {{ $people = $people | append . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if or (eq $role "guest") (eq $role "all") }}
+  {{ range site.Data.hosts.guests }}
+    {{ if or (eq $role "all") (eq $role "guest") }}
+      {{ $people = $people | append . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Filter by featured if specified */}}
+{{ if eq $featuredOnly "true" }}
+  {{ $people = where $people "featured" true }}
+{{ end }}
+
+{{/* Sort by order */}}
+{{ $people = sort $people "order" "asc" }}
+
+{{ if $people }}
+<div class="row hosts-grid">
+  {{ range $people }}
+  <div class="col-md-{{ if eq $role "guest" }}4{{ else }}6{{ end }} col-sm-6">
+    <div class="host-card" style="margin-bottom: 30px; text-align: center;">
+      {{ if .photoUrl }}
+      <div class="host-photo" style="margin-bottom: 15px;">
+        <img
+          src="{{ .photoUrl }}"
+          alt="{{ .name }}"
+          style="width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid #D4AF37;"
+          loading="lazy"
+        >
+      </div>
+      {{ end }}
+      <h3 style="margin: 0 0 5px 0; color: #654321;">{{ .name }}</h3>
+      <p style="margin: 0 0 15px 0; color: #8B4513; font-style: italic; text-transform: capitalize;">{{ .role }}</p>
+      <p style="margin: 0; color: #666; line-height: 1.6;">{{ .bio }}</p>
+      {{ if .socialLinks }}
+      <div class="host-social" style="margin-top: 15px;">
+        {{ range .socialLinks }}
+        <a href="{{ .url }}" target="_blank" rel="noopener" style="margin: 0 8px; color: #654321; font-size: 20px;">
+          {{ if eq .platform "youtube" }}<i class="fab fa-youtube"></i>{{ end }}
+          {{ if eq .platform "instagram" }}<i class="fab fa-instagram"></i>{{ end }}
+          {{ if eq .platform "facebook" }}<i class="fab fa-facebook"></i>{{ end }}
+          {{ if eq .platform "patreon" }}<i class="fab fa-patreon"></i>{{ end }}
+          {{ if eq .platform "twitter" }}<i class="fab fa-twitter"></i>{{ end }}
+        </a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ else }}
+<div class="alert alert-info">
+  <p>No {{ if ne $role "all" }}{{ $role }}s{{ else }}team members{{ end }} found.</p>
+</div>
+{{ end }}

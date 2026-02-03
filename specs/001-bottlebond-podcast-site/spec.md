@@ -4,7 +4,7 @@
 **Created**: 2026-01-29
 **Status**: In Progress
 **Input**: Modern podcast website for Bourbon & Whisky-focused audio/video content with luxury lounge aesthetic; migrating content from previous WordPress site (https://bottle.bond)
-**Tech Stack**: Next.js with static export for GitHub Pages hosting
+**Tech Stack**: Hugo with hugo-universal-theme for GitHub Pages hosting
 
 ## Overview
 
@@ -127,20 +127,19 @@ A visitor has questions about the podcast, hosts, or tasting topics and navigate
 
 ---
 
-### User Story 7 - Visitor Reaches Out via Contact Form (Priority: P2)
+### User Story 7 - Visitor Reaches Out via Email (Priority: P2)
 
-A listener wants to contact the hosts—to suggest a topic, propose a guest, or provide feedback—and uses the Contact page to submit a message.
+A listener wants to contact the hosts—to suggest a topic, propose a guest, or provide feedback—and uses the Contact page to initiate an email.
 
 **Why this priority**: Enables community engagement; allows business development; supports feedback loop.
 
-**Independent Test**: Contact page loads with form; form submission validates and sends/logs message.
+**Independent Test**: Contact page loads with mailto link; clicking link opens user's email client.
 
 **Acceptance Scenarios**:
 
-1. **Given** Contact page loads, **When** page displays, **Then** contact form appears with name, email, subject, and message fields
-2. **Given** form fields filled, **When** user clicks submit, **Then** form validates required fields
-3. **Given** form submitted successfully, **When** submission completes, **Then** success message displays
-4. **Given** form submitted, **When** message sent, **Then** mocked backend receives/logs contact request
+1. **Given** Contact page loads, **When** page displays, **Then** mailto link to `website@bottle.bond` is prominently displayed
+2. **Given** mailto link displays, **When** user clicks link, **Then** user's default email client opens with pre-filled recipient
+3. **Given** Contact page loads, **When** page displays, **Then** clear instructions explain how to reach hosts via email
 
 ---
 
@@ -166,8 +165,8 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **YouTube API unavailable**: Episode sections show cached thumbnails/titles; gracefully degrade to links
 - **No blog posts published**: Glass Room shows welcome message and placeholder for first post
 - **Network latency**: Skeleton loaders appear while content fetches; no content flashing
-- **Mobile viewport**: All sections remain readable; embedded players scale responsively; forms remain functional
-- **Form submission error**: Contact form shows error message and allows retry
+- **Mobile viewport**: All sections remain readable; embedded players scale responsively; mailto links remain functional
+- **Email client unavailable**: Contact page displays email address as copyable text fallback
 - **Empty FAQ section**: FAQ page shows "Coming soon" message or placeholder
 
 ---
@@ -205,9 +204,9 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **FR-014**: FAQ questions MUST expand/collapse or reveal answers on interaction
 
 **Contact Page:**
-- **FR-015**: System MUST provide Contact page with functional form (name, email, subject, message fields)
-- **FR-016**: Contact form MUST validate required fields before submission
-- **FR-017**: Contact form submission MUST log/store request in mocked data; success message MUST display
+- **FR-015**: System MUST provide Contact page with mailto link to `website@bottle.bond`
+- **FR-016**: Mailto link MUST open user's default email client with pre-filled recipient address
+- **FR-017**: Contact page MUST display clear instructions for reaching hosts via email
 
 **General:**
 - **FR-018**: System MUST render all content dynamically from data sources (mocked initially, APIs later)
@@ -224,7 +223,7 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **BlogPost**: Title, content, era (derived from folder path), publication date, author, last edited date, status (draft/published)
 - **Playlist**: Name, YouTube ID, description, category (main, education, tastings, seasonal, top10)
 - **FAQ**: Question, answer, category (optional)
-- **ContactMessage**: Sender name, email, subject, message body, timestamp, status (new/read)
+- **Contact**: Email address for host communication (website@bottle.bond)
 
 ### Design & Styling Requirements
 
@@ -235,15 +234,15 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **Aesthetic**: Minimalist, modern luxury; inspired by fireplace warmth (amber glows), overstuffed lounge chairs (comfortable spacing, rounded corners, soft shadows)
 - **Typography**: Elegant serif (e.g., Georgia, Garamond) for headings; sophisticated sans-serif (e.g., Inter, Helvetica) for body; generous whitespace (line-height 1.6+); readable at all viewport sizes
 - **Components**: Smooth transitions (200–300ms), subtle shadows (0 4px 6px rgba), warm hover states (slight color shift toward gold), rounded corners (8–12px)
-- **Unique Visual Elements**: TBD—unique design flourishes to stand out (custom illustrations, animation, etc.)
+- **Unique Visual Elements**: Vintage Distillery Aesthetic — aged paper textures, copper/brass accent colors, vintage typography flourishes, barrel-wood grain patterns
 
 ### Technical Requirements (Constitution-Aligned)
 
 - **Dynamic Content**: All user-facing content rendered from structured data (mocked initially); architecture separates content from presentation
-- **Security**: HTTPS enforced; all form inputs sanitized; contact messages logged securely; no secrets in source control
+- **Security**: HTTPS enforced; static site with no user input processing; no secrets in source control
 - **Performance**: Lazy-load blog posts; cache episode thumbnails; target <2s first-contentful-paint on 3G; <500ms page navigation
 - **Accessibility**: WCAG 2.1 AA compliance; semantic HTML; alt text on all images; keyboard navigation support; form labels associated with inputs
-- **Testing**: Unit tests for data transformations; integration tests for page loads; end-to-end test for featured episode display, blog post rendering, form submission
+- **Testing**: Unit tests for data transformations; integration tests for page loads; end-to-end test for featured episode display, blog post rendering, mailto link functionality
 - **Data Source Attribution**: Initial content pulled from https://bottle.bond (hosts, FAQs, some episode metadata) for seamless transition
 
 ---
@@ -253,11 +252,11 @@ A content editor updates an existing blog post in The Glass Room with new inform
 ### Measurable Outcomes
 
 - **SC-001**: Featured episode loads and plays within 3 seconds on 3G connection
-- **SC-002**: Episodes page displays all 3 sections (featured, education, tastings) without layout shift
+- **SC-002**: Episodes page displays all 4 sections (education, tastings, seasonal top 5, top 10 all-time) without layout shift
 - **SC-003**: About page renders all host/guest sections with images and text correctly on mobile (viewport 320px)
 - **SC-004**: Glass Room loads table of contents in under 1 second; blog posts render with full formatting and era tags
 - **SC-005**: FAQ page displays 5+ Q&As; all expand/collapse interactions work without delay
-- **SC-006**: Contact form validates and submits within 1 second; success message displays
+- **SC-006**: Contact page loads within 1 second; mailto link functions correctly across browsers
 - **SC-007**: All pages pass WCAG 2.1 AA accessibility audit (no critical issues)
 - **SC-008**: Site returns valid JSON from all mocked data endpoints; no console errors on page load
 - **SC-009**: Navigation between pages completes in under 500ms; smooth, no flashing
@@ -294,8 +293,8 @@ A content editor updates an existing blog post in The Glass Room with new inform
   ├─ Organized Q&A sections (collapsible)
 
 /contact
-  ├─ Contact form
-  ├─ Success/error messaging
+  ├─ Mailto link (website@bottle.bond)
+  ├─ Contact instructions
 
 [Header/Nav]
   ├─ Logo
@@ -362,7 +361,9 @@ A content editor updates an existing blog post in The Glass Room with new inform
     { "id": "faq_001", "question": "What is bourbon?", "answer": "...", "category": "Basics" },
     { "id": "faq_002", "question": "How is bourbon made?", "answer": "...", "category": "Production" }
   ],
-  "contactMessages": []
+  "contact": {
+    "email": "website@bottle.bond"
+  }
 }
 ```
 
@@ -387,11 +388,11 @@ A content editor updates an existing blog post in The Glass Room with new inform
   └── ...other-eras/
   ```
   Each markdown file includes frontmatter with title, date, era, author metadata.
-- **Randomization**: Featured episode selected via client-side random selection or lightweight server-side random() function
+- **Randomization**: Featured episode selected via client-side JavaScript random selection on page load
 - **Blog Editing**: Edit markdown files directly in repository; changes auto-sync to site on deployment (CI/CD build)
-- **Contact Form**: Initially logs to mocked data store; future: sends email or integrates with service (Mailgun, SendGrid, etc.)
-- **Deployment**: Next.js with static export (`output: 'export'`) deployed to GitHub Pages; build-time markdown parsing for blog posts; no CDN required initially
-- **Analytics**: Track featured episode selection distribution; monitor blog post engagement (view counts, time on page); track contact form submissions
+- **Contact**: Mailto link opens user's default email client; no server-side form processing required
+- **Deployment**: Hugo with hugo-universal-theme deployed to GitHub Pages via GitHub Actions; build-time markdown parsing for blog posts; no CDN required initially
+- **Analytics**: Track featured episode selection distribution; monitor blog post engagement (view counts, time on page); track contact page visits
 
 ---
 
