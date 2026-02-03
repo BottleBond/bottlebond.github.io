@@ -1,0 +1,74 @@
+{
+  "faqs": [
+    {
+      "id": "faq_001",
+      "question": "What is bourbon whiskey?",
+      "answer": "Bourbon is a type of American whiskey that must meet specific legal requirements: made from at least 51% corn, distilled to no more than 160 proof, aged in new charred oak containers, and bottled at 80 proof or higher. Despite popular belief, bourbon can be made anywhere in the United States, not just Kentucky.",
+      "category": "Basics",
+      "order": 1
+    },
+    {
+      "id": "faq_002",
+      "question": "What's the difference between bourbon and whiskey?",
+      "answer": "All bourbon is whiskey, but not all whiskey is bourbon. Whiskey is a broad category of distilled spirits made from fermented grain mash. Bourbon is a specific type of American whiskey with strict production requirements, including the corn content, barrel type, and proof limits.",
+      "category": "Basics",
+      "order": 2
+    },
+    {
+      "id": "faq_003",
+      "question": "How is bourbon made?",
+      "answer": "Bourbon production involves several key steps: creating a grain mash (at least 51% corn), fermenting with yeast, distilling to concentrate the alcohol, and aging in new charred oak barrels. The charred barrels impart the distinctive caramel, vanilla, and oak flavors that define bourbon's character.",
+      "category": "Production",
+      "order": 1
+    },
+    {
+      "id": "faq_004",
+      "question": "How long must bourbon be aged?",
+      "answer": "There's no minimum aging requirement for bourbon, but to be called 'straight bourbon,' it must be aged for at least two years. Bourbon aged less than four years must include an age statement on the label. Many premium bourbons are aged 6-12 years or longer.",
+      "category": "Production",
+      "order": 2
+    },
+    {
+      "id": "faq_005",
+      "question": "How should I taste bourbon?",
+      "answer": "Start by observing the color and viscosity. Nose the bourbon gently, letting the aromas reveal themselves. Take a small sip and let it coat your palate. Note the initial flavors, mid-palate development, and finish. Adding a few drops of water can help open up the flavors. Most importantly, trust your own palate!",
+      "category": "Tasting",
+      "order": 1
+    },
+    {
+      "id": "faq_006",
+      "question": "What's the best way to store bourbon?",
+      "answer": "Store bourbon upright in a cool, dark place away from direct sunlight. Unlike wine, bourbon doesn't improve with age once bottled. Keep the bottle tightly sealed to prevent oxidation. Once opened, bourbon typically stays good for 1-2 years, though the flavor may gradually change.",
+      "category": "Tasting",
+      "order": 2
+    },
+    {
+      "id": "faq_007",
+      "question": "How often do you release new episodes?",
+      "answer": "We release new episodes every week, typically on Wednesdays. Special tasting episodes and guest interviews may be released on additional days. Subscribe to our YouTube channel and newsletter to never miss an episode!",
+      "category": "Podcast",
+      "order": 1
+    },
+    {
+      "id": "faq_008",
+      "question": "Can I suggest a bourbon for you to review?",
+      "answer": "Absolutely! We love hearing from our community. Use our contact form to send your suggestions. While we can't review every bourbon suggested, we read every submission and prioritize bottles that generate the most interest.",
+      "category": "Podcast",
+      "order": 2
+    },
+    {
+      "id": "faq_009",
+      "question": "How can I support BottleBond?",
+      "answer": "The best ways to support us are: subscribe to our YouTube channel, share our content with fellow whiskey enthusiasts, leave reviews on your podcast platform, and join our community discussions. We also offer merchandise and membership options for dedicated fans.",
+      "category": "General",
+      "order": 1
+    },
+    {
+      "id": "faq_010",
+      "question": "Do you offer whiskey tours or events?",
+      "answer": "We occasionally host live tasting events and distillery tours with our community. Follow us on social media and subscribe to our newsletter to be the first to know about upcoming events in your area.",
+      "category": "General",
+      "order": 2
+    }
+  ]
+}

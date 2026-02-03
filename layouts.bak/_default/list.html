@@ -1,0 +1,29 @@
+{{ define "main" }}
+<section class="section section-default section-padding">
+  <div class="container-luxury">
+    <h1 class="text-center mb-8">{{ .Title }}</h1>
+
+    {{ if .Content }}
+    <div class="max-w-3xl mx-auto mb-12">
+      {{ .Content }}
+    </div>
+    {{ end }}
+
+    {{ if .Pages }}
+    <div class="episode-grid">
+      {{ range .Pages }}
+      <article class="card card-default card-hoverable">
+        <div class="card-padding-md">
+          <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+          <p class="episode-meta">{{ .Date.Format "January 2, 2006" }}</p>
+          {{ with .Description }}
+          <p>{{ . }}</p>
+          {{ end }}
+        </div>
+      </article>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

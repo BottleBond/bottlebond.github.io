@@ -1,0 +1,30 @@
+{{/* Episode Card Partial */}}
+{{/* Usage: {{ partial "episode-card.html" $episode }} */}}
+
+<article class="episode-card">
+  <div class="episode-thumbnail">
+    <img
+      src="https://img.youtube.com/vi/{{ .youtubeId }}/mqdefault.jpg"
+      alt="{{ .title }}"
+      loading="lazy"
+    >
+    <a
+      href="https://www.youtube.com/watch?v={{ .youtubeId }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="episode-play-btn"
+      aria-label="Play {{ .title }}"
+    >
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </a>
+  </div>
+  <div class="episode-content">
+    {{ with .category }}
+    <span class="episode-category">{{ . }}</span>
+    {{ end }}
+    <h3 class="episode-title">{{ .title }}</h3>
+    {{ with .duration }}
+    <p class="episode-meta">{{ . }}</p>
+    {{ end }}
+  </div>
+</article>

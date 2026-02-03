@@ -1,0 +1,117 @@
+{
+  "currentSeason": "Winter 2026",
+  "allTime": [
+    {
+      "episodeId": "ep_top_001",
+      "rank": 1,
+      "listType": "alltime",
+      "addedAt": "2025-10-01T00:00:00Z",
+      "note": "The bourbon that changed how we think about craft distilling"
+    },
+    {
+      "episodeId": "ep_top_002",
+      "rank": 2,
+      "listType": "alltime",
+      "addedAt": "2025-09-15T00:00:00Z",
+      "note": "Discovering hidden gems that outperform their price point"
+    },
+    {
+      "episodeId": "ep_edu_001",
+      "rank": 3,
+      "listType": "alltime",
+      "addedAt": "2025-12-15T00:00:00Z",
+      "note": "Essential viewing for understanding bourbon's roots"
+    },
+    {
+      "episodeId": "ep_tst_001",
+      "rank": 4,
+      "listType": "alltime",
+      "addedAt": "2025-11-20T00:00:00Z",
+      "note": "Our most popular blind tasting ever"
+    },
+    {
+      "episodeId": "ep_main_001",
+      "rank": 5,
+      "listType": "alltime",
+      "addedAt": "2026-01-15T00:00:00Z",
+      "note": "The perfect starting point for bourbon newcomers"
+    },
+    {
+      "episodeId": "ep_edu_002",
+      "rank": 6,
+      "listType": "alltime",
+      "addedAt": "2025-12-08T00:00:00Z",
+      "note": "Deep dive into what makes each bourbon unique"
+    },
+    {
+      "episodeId": "ep_tst_002",
+      "rank": 7,
+      "listType": "alltime",
+      "addedAt": "2025-11-15T00:00:00Z",
+      "note": "Single barrel bourbon at its finest"
+    },
+    {
+      "episodeId": "ep_main_002",
+      "rank": 8,
+      "listType": "alltime",
+      "addedAt": "2026-01-08T00:00:00Z",
+      "note": "Level up your tasting skills"
+    },
+    {
+      "episodeId": "ep_edu_003",
+      "rank": 9,
+      "listType": "alltime",
+      "addedAt": "2025-12-01T00:00:00Z",
+      "note": "The science that creates bourbon magic"
+    },
+    {
+      "episodeId": "ep_main_003",
+      "rank": 10,
+      "listType": "alltime",
+      "addedAt": "2026-01-01T00:00:00Z",
+      "note": "Virtual tour of bourbon country"
+    }
+  ],
+  "seasonal": [
+    {
+      "episodeId": "ep_season_001",
+      "rank": 1,
+      "listType": "season",
+      "season": "Winter 2026",
+      "addedAt": "2026-01-20T00:00:00Z",
+      "note": "Our top picks for warming up on cold nights"
+    },
+    {
+      "episodeId": "ep_main_001",
+      "rank": 2,
+      "listType": "season",
+      "season": "Winter 2026",
+      "addedAt": "2026-01-15T00:00:00Z",
+      "note": "Start the new year with bourbon basics"
+    },
+    {
+      "episodeId": "ep_tst_001",
+      "rank": 3,
+      "listType": "season",
+      "season": "Winter 2026",
+      "addedAt": "2025-11-20T00:00:00Z",
+      "note": "A head-to-head comparison worth watching"
+    },
+    {
+      "episodeId": "ep_edu_001",
+      "rank": 4,
+      "listType": "season",
+      "season": "Winter 2026",
+      "addedAt": "2025-12-15T00:00:00Z",
+      "note": "Learn the history behind your favorite drink"
+    },
+    {
+      "episodeId": "ep_main_002",
+      "rank": 5,
+      "listType": "season",
+      "season": "Winter 2026",
+      "addedAt": "2026-01-08T00:00:00Z",
+      "note": "Develop your palate this winter"
+    }
+  ]
+}

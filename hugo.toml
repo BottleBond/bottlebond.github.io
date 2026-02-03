@@ -1,0 +1,197 @@
+baseURL = "https://bottlebond.github.io/"
+languageCode = "en-us"
+title = "BottleBond - Premium Bourbon & Whiskey Podcast"
+theme = "hugo-universal-theme"
+defaultContentLanguage = "en"
+
+summaryLength = 70
+pluralizelisttitles = false
+
+# Enable taxonomies for blog
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+# Main menu
+[[menu.main]]
+  name = "Home"
+  identifier = "home"
+  url = "/"
+  weight = 10
+
+[[menu.main]]
+  name = "Episodes"
+  identifier = "episodes"
+  url = "/episodes/"
+  weight = 20
+
+[[menu.main]]
+  name = "About"
+  identifier = "about"
+  url = "/about/"
+  weight = 30
+
+[[menu.main]]
+  name = "The Glass Room"
+  identifier = "glass-room"
+  url = "/glass-room/"
+  weight = 40
+
+[[menu.main]]
+  name = "FAQ"
+  identifier = "faq"
+  url = "/faq/"
+  weight = 50
+
+[[menu.main]]
+  name = "Contact"
+  identifier = "contact"
+  url = "/contact/"
+  weight = 60
+
+# Top bar social links
+[[menu.topbar]]
+  weight = 1
+  name = "YouTube"
+  url = "https://www.youtube.com/@BottleBond"
+  pre = "<i class='fab fa-2x fa-youtube'></i>"
+
+[[menu.topbar]]
+  weight = 2
+  name = "Instagram"
+  url = "https://instagram.com/bottlebond"
+  pre = "<i class='fab fa-2x fa-instagram'></i>"
+
+[[menu.topbar]]
+  weight = 3
+  name = "Facebook"
+  url = "https://facebook.com/bottlebond"
+  pre = "<i class='fab fa-2x fa-facebook'></i>"
+
+[[menu.topbar]]
+  weight = 4
+  name = "Patreon"
+  url = "https://patreon.com/bottlebond"
+  pre = "<i class='fab fa-2x fa-patreon'></i>"
+
+[[menu.topbar]]
+  weight = 5
+  name = "Email"
+  url = "mailto:website@bottle.bond"
+  pre = "<i class='fas fa-2x fa-envelope'></i>"
+
+[params]
+  author = "BottleBond"
+  defaultKeywords = ["bourbon", "whiskey", "podcast", "tasting", "education"]
+  defaultDescription = "Premium bourbon and whiskey education through engaging podcast episodes, tastings, and deep-dive content."
+  description = "Premium bourbon and whiskey education through engaging podcast episodes, tastings, and deep-dive content."
+  tagline = "Premium bourbon and whiskey education"
+
+  # Blog section
+  viewMorePostLink = "/glass-room/"
+  mainSections = ["glass-room"]
+
+  # Contact
+  email = "website@bottle.bond"
+
+  # Style - using default (can be: default, blue, green, marsala, pink, red, turquoise, violet)
+  style = "marsala"
+
+  # Logo
+  disabled_logo = false
+  logo_text = "BottleBond"
+  # logo = "img/logo.png"
+  # logo_small = "img/logo-small.png"
+
+  # Footer
+  about_us = "<p>Premium bourbon and whiskey education through engaging podcast episodes, tastings, and deep-dive content.</p>"
+  copyright = "Copyright (c) 2024 BottleBond. All rights reserved."
+
+  # Date format
+  date_format = "January 2, 2006"
+
+  dropdown_mouse_over = false
+
+  # YouTube Playlists
+  [params.playlists]
+    main = "PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ"
+    education = "PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi"
+
+  # Social links (for custom use)
+  [params.social]
+    youtube = "https://www.youtube.com/@BottleBond"
+    instagram = "https://instagram.com/bottlebond"
+    facebook = "https://facebook.com/bottlebond"
+    patreon = "https://patreon.com/bottlebond"
+
+# Top bar
+[params.topbar]
+  enable = true
+  text = """<p class="hidden-sm hidden-xs">Premium bourbon and whiskey education | <a href="mailto:website@bottle.bond">website@bottle.bond</a></p>
+    <p class="hidden-md hidden-lg"><a href="mailto:website@bottle.bond" data-animate-hover="pulse"><i class="fas fa-envelope"></i></a></p>
+    """
+
+# Disable widgets we don't need
+[params.widgets]
+  categories = true
+  tags = true
+  search = true
+
+# Homepage carousel - disabled for now
+[params.carouselHomepage]
+  enable = false
+
+# Features section
+[params.features]
+  enable = false
+
+# Testimonials - disabled
+[params.testimonials]
+  enable = false
+
+# See more section - disabled
+[params.see_more]
+  enable = false
+
+# Clients section - disabled
+[params.clients]
+  enable = false
+
+# Recent posts on homepage
+[params.recent_posts]
+  enable = true
+  title = "From The Glass Room"
+  subtitle = "Deep dives into bourbon and whiskey history, production, and appreciation."
+  hide_summary = false
+
+# Footer recent posts
+[params.footer.recent_posts]
+  enable = true
+
+# Markdown rendering
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "monokai"
+
+# Output formats
+[outputs]
+  home = ["HTML"]
+  page = ["HTML"]
+  section = ["HTML"]
+
+# Build settings
+[build]
+  writeStats = false
+
+# Minify settings for production
+[minify]
+  disableCSS = false
+  disableHTML = false
+  disableJS = false
+  disableJSON = false
+  disableSVG = false
+  disableXML = false
+  minifyOutput = true

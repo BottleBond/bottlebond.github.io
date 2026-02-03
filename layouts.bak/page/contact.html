@@ -1,0 +1,56 @@
+{{ define "main" }}
+<!-- Contact Page -->
+<section class="section section-default section-padding">
+  <div class="container-luxury">
+    <div class="max-w-2xl mx-auto text-center">
+      <h1 class="mb-4">Contact Us</h1>
+      <p class="mb-8">
+        Have a question, suggestion, or just want to say hello?
+        We'd love to hear from you!
+      </p>
+
+      <div class="card card-elevated card-padding-lg">
+        <h2 class="mb-4">Get in Touch</h2>
+        <p class="mb-6">
+          Click the button below to send us an email. We do our best to respond
+          to all messages within a few days.
+        </p>
+
+        <a
+          href="mailto:{{ .Site.Params.email }}?subject=BottleBond%20Website%20Inquiry"
+          class="btn btn-primary btn-lg"
+        >
+          <svg style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          Email Us
+        </a>
+
+        <p class="mt-6 episode-meta">
+          {{ .Site.Params.email }}
+        </p>
+      </div>
+
+      <div class="mt-12">
+        <h3 class="mb-4">Follow Us</h3>
+        <p class="mb-6">Stay connected on social media for the latest updates, behind-the-scenes content, and more.</p>
+        <div class="social-links" style="justify-content: center;">
+          {{ with .Site.Params.social.youtube }}
+          <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">YouTube</a>
+          {{ end }}
+          {{ with .Site.Params.social.instagram }}
+          <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Instagram</a>
+          {{ end }}
+          {{ with .Site.Params.social.facebook }}
+          <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Facebook</a>
+          {{ end }}
+          {{ with .Site.Params.social.patreon }}
+          <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Patreon</a>
+          {{ end }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{{ end }}

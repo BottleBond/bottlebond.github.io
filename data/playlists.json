@@ -1,0 +1,44 @@
+{
+  "playlists": [
+    {
+      "id": "main",
+      "name": "All Episodes",
+      "slug": "all-episodes",
+      "youtubePlaylistId": "PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ",
+      "description": "Complete collection of BottleBond podcast episodes",
+      "category": "main"
+    },
+    {
+      "id": "education",
+      "name": "History & Education",
+      "slug": "history-education",
+      "youtubePlaylistId": "PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi",
+      "description": "Learn about bourbon history, production, and the science behind the spirit",
+      "category": "education"
+    },
+    {
+      "id": "tastings",
+      "name": "Tastings",
+      "slug": "tastings",
+      "youtubePlaylistId": "PLkEG2GQlU7uH8nK3tL4x5Z6CXg79I5abc",
+      "description": "Blind tastings, comparisons, and bourbon reviews",
+      "category": "tastings"
+    },
+    {
+      "id": "seasonal",
+      "name": "Top Tastings of the Season",
+      "slug": "seasonal-top-tastings",
+      "youtubePlaylistId": "PLkEG2GQlU7uH8nK3tL4x5Z6CXg79I5def",
+      "description": "Curated seasonal picks and recommendations",
+      "category": "seasonal"
+    },
+    {
+      "id": "top10",
+      "name": "Top 10 of All Time",
+      "slug": "top-10-all-time",
+      "youtubePlaylistId": "PLkEG2GQlU7uH8nK3tL4x5Z6CXg79I5ghi",
+      "description": "Our all-time favorite episodes and bourbon picks",
+      "category": "top10"
+    }
+  ]
+}

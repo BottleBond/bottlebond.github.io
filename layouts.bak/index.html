@@ -1,0 +1,95 @@
+{{ define "main" }}
+<!-- Hero Section -->
+<section class="section section-default section-padding-lg">
+  <div class="container-luxury">
+    <div class="hero">
+      <h1 class="hero-title">Welcome to BottleBond</h1>
+      <p class="hero-subtitle">
+        Your journey into the world of premium bourbon and whiskey education starts here.
+        Join us for tastings, history lessons, and deep dives into America's native spirit.
+      </p>
+      <div class="hero-actions">
+        <a href="/episodes" class="btn btn-primary btn-lg">Watch Episodes</a>
+        <a href="/about" class="btn btn-outline btn-lg">Meet the Hosts</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Episode Section -->
+<section class="section section-alternate section-padding">
+  <div class="container-luxury">
+    <h2 class="text-center mb-8">Featured Episode</h2>
+
+    {{ $episodes := .Site.Data.episodes.episodes }}
+    {{ if $episodes }}
+      {{ $randomIndex := mod (now.Unix) (len $episodes) }}
+      {{ $featured := index $episodes $randomIndex }}
+
+      <div class="max-w-4xl mx-auto">
+        <div class="card card-elevated card-padding-lg glow-warm">
+          <div class="youtube-embed" data-video-id="{{ $featured.youtubeId }}">
+            <img
+              src="https://img.youtube.com/vi/{{ $featured.youtubeId }}/maxresdefault.jpg"
+              alt="{{ $featured.title }}"
+              class="youtube-thumbnail"
+              loading="lazy"
+            >
+            <button class="youtube-play-btn" aria-label="Play video">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+          <div class="mt-4">
+            <span class="episode-category">{{ $featured.category }}</span>
+            <h3 class="episode-title">{{ $featured.title }}</h3>
+            <p class="episode-meta">{{ $featured.duration }}</p>
+            <p class="mt-4">{{ $featured.description }}</p>
+          </div>
+        </div>
+      </div>
+    {{ else }}
+      <p class="text-center">Check back soon for our featured episode!</p>
+    {{ end }}
+  </div>
+</section>
+
+<!-- About Teaser Section -->
+<section class="section section-default section-padding">
+  <div class="container-luxury">
+    <div class="text-center max-w-3xl mx-auto">
+      <h2 class="mb-4">About the Show</h2>
+      <p class="mb-6">
+        BottleBond is your guide to the rich world of bourbon and whiskey.
+        We explore the history, craft, and culture behind every bottle,
+        bringing you closer to the spirit that built America.
+      </p>
+      <a href="/about" class="btn btn-secondary">Learn More About Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Links Section -->
+<section class="section section-alternate section-padding">
+  <div class="container-luxury">
+    <h2 class="text-center mb-8">Explore</h2>
+    <div class="episode-grid">
+      <a href="/episodes" class="card card-default card-padding-lg card-hoverable text-center">
+        <h3>Episodes</h3>
+        <p>Watch our latest tastings and educational content</p>
+      </a>
+      <a href="/glass-room" class="card card-default card-padding-lg card-hoverable text-center">
+        <h3>The Glass Room</h3>
+        <p>Read our blog posts on whiskey history and culture</p>
+      </a>
+      <a href="/faq" class="card card-default card-padding-lg card-hoverable text-center">
+        <h3>FAQ</h3>
+        <p>Get answers to common bourbon questions</p>
+      </a>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ define "scripts" }}
+<script src="/js/youtube-facade.js"></script>
+{{ end }}
