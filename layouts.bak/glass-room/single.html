@@ -1,0 +1,29 @@
+{{ define "main" }}
+<!-- Glass Room Blog Post -->
+<article class="section section-default section-padding">
+  <div class="container-luxury">
+    <div class="blog-post">
+      <header class="blog-post-header">
+        {{ with .Params.era }}
+        <span class="blog-post-era">{{ . }}</span>
+        {{ end }}
+        <h1 class="blog-post-title">{{ .Title }}</h1>
+        <p class="blog-post-meta">
+          {{ with .Params.author }}By {{ . }} | {{ end }}
+          {{ .Date.Format "January 2, 2006" }}
+        </p>
+      </header>
+
+      <div class="blog-post-content">
+        {{ .Content }}
+      </div>
+
+      <footer class="mt-12 text-center">
+        <a href="/glass-room" class="btn btn-outline">
+          &larr; Back to The Glass Room
+        </a>
+      </footer>
+    </div>
+  </div>
+</article>
+{{ end }}

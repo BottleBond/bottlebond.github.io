@@ -1,0 +1,32 @@
+{{ define "main" }}
+<article class="section section-default section-padding">
+  <div class="container-luxury">
+    {{ if eq .Type "glass-room" }}
+      <!-- Blog Post Layout -->
+      <div class="blog-post">
+        <header class="blog-post-header">
+          {{ with .Params.era }}
+          <span class="blog-post-era">{{ . }}</span>
+          {{ end }}
+          <h1 class="blog-post-title">{{ .Title }}</h1>
+          <p class="blog-post-meta">
+            {{ with .Params.author }}By {{ . }} | {{ end }}
+            {{ .Date.Format "January 2, 2006" }}
+          </p>
+        </header>
+        <div class="blog-post-content">
+          {{ .Content }}
+        </div>
+      </div>
+    {{ else }}
+      <!-- Standard Page Layout -->
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-center mb-8">{{ .Title }}</h1>
+        <div class="blog-post-content">
+          {{ .Content }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</article>
+{{ end }}

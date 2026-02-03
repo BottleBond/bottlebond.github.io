@@ -24,28 +24,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
         with:
-          node-version: '20'
-          cache: 'npm'
+          hugo-version: 'latest'
+          extended: true
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run linting
-        run: npm run lint
-
-      - name: Run tests
-        run: npm test -- --passWithNoTests
-
-      - name: Build with Next.js
-        run: npm run build
+      - name: Build with Hugo
+        run: hugo --minify
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: ./public
 
   # Deployment job
   deploy:

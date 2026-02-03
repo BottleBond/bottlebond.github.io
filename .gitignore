@@ -1,33 +1,10 @@
-# Dependencies
-node_modules/
-.pnp/
-.pnp.js
+# Hugo build output
+public/
+resources/_gen/
 
-# Next.js
-.next/
-out/
-
-# Production
-build/
-dist/
-
-# Testing
-coverage/
-.nyc_output/
-playwright-report/
-test-results/
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# OS files
+.DS_Store
+Thumbs.db
 
 # IDE
 .vscode/
@@ -35,15 +12,9 @@ yarn-error.log*
 *.swp
 *.swo
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Misc
+# Logs
 *.log
-*.tmp
-*.tsbuildinfo
-next-env.d.ts
 
-# Vercel
-.vercel/
+# Environment
+.env
+.env.local
