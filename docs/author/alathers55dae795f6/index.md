@@ -1,0 +1,68 @@
+Adam Lathers – Bottle Bond
+
+
+
+* [The Show](https://bottle.bond/the-show/)
+* [Recent Episodes](https://bottle.bond/recent-episodes/)
+
+* [The Show](https://bottle.bond/the-show/)
+* [Recent Episodes](https://bottle.bond/recent-episodes/)
+
+[![Bottle Bond Logo](https://bottle.bond/wp-content/uploads/2024/10/social-logo.png)](https://bottle.bond/)
+
+[Bottle Bond](https://bottle.bond)
+
+* [The Show](https://bottle.bond/the-show/)
+* [Recent Episodes](https://bottle.bond/recent-episodes/)
+
+
+
+# Adam Lathers
+
+* October 27, 2024
+
+  ### [The Show](https://bottle.bond/2024/10/27/the-show/)
+
+  Youtube TikTok Insta [Read More](https://bottle.bond/2024/10/27/the-show/)
+
+[![Bottle Bond Logo](https://bottle.bond/wp-content/uploads/2024/10/social-logo.png)](https://bottle.bond/)
+
+[Bottle Bond](https://bottle.bond)
+
+* [Facebook](https://www.facebook.com/profile.php?id=61560172679969)
+* [Instagram](https://instagram.com/)
+* [TikTok](https://tiktok.com/)
+
+
+
+
+
+
+
+
+* Subscribe
+  Subscribed
+
+  + [![](https://bottle.bond/wp-content/uploads/2024/10/social-logo.png?w=50) Bottle Bond](https://bottle.bond)
+
+  Sign me up
+
+  + Already have a WordPress.com account? [Log in now.](https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fbottle.bond%252F2024%252F10%252F27%252Fthe-show%252F)
+* + [![](https://bottle.bond/wp-content/uploads/2024/10/social-logo.png?w=50) Bottle Bond](https://bottle.bond)
+  + Subscribe
+    Subscribed
+  + [Sign up](https://wordpress.com/start/)
+  + [Log in](https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Fbottle.bond%252F2024%252F10%252F27%252Fthe-show%252F)
+  + [Report this content](https://wordpress.com/abuse/?report_url=https://bottle.bond)
+  + [View site in Reader](https://wordpress.com/reader/feeds/159219540)
+  + [Manage subscriptions](https://subscribe.wordpress.com/)
+  + Collapse this bar
+
+
+
+
+
+ 
+![](https://pixel.wp.com/b.gif?v=noscript)
+
+ 

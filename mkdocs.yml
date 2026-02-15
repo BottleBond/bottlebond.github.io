@@ -1,0 +1,5 @@
+site_name: Bottle Bond
+nav:
+  - Home: index.md
+  - Videos: videos.md
+docs_dir: docs

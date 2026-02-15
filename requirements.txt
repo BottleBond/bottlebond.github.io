@@ -1,0 +1,8 @@
+markdownify
+requests
+pathlib
+python-dateutil
+bs4
+playwright 
+markdownify
+beautifulsoup4
