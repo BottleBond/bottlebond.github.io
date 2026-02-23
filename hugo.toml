@@ -100,8 +100,8 @@ pluralizelisttitles = false
   # Logo
   disabled_logo = false
   logo_text = "BottleBond"
-  # logo = "img/logo.png"
-  # logo_small = "img/logo-small.png"
+  logo = "img/BB_Gold.png"
+  logo_small = "img/Icon - Gold.png"
 
   # Footer
   about_us = "<p>Premium bourbon and whiskey education through engaging podcast episodes, tastings, and deep-dive content.</p>"
@@ -137,21 +137,55 @@ pluralizelisttitles = false
   tags = true
   search = true
 
-# Homepage carousel - disabled for now
+# Homepage carousel for featured episode
 [params.carouselHomepage]
-  enable = false
+  enable = true
+  auto_play = false
 
-# Features section
+[[params.carouselHomepage.item]]
+  weight = 1
+  title = "Welcome to BottleBond"
+  description = "Premium bourbon and whiskey education through engaging podcast episodes, tastings, and expert insights. Join us on a journey through America's native spirit."
+  image = "img/carousel/bourbon-hero.jpg"
+  btn_text = "Watch Latest Episodes"
+  btn_url = "/episodes/"
+
+# Features section - highlights our content categories
 [params.features]
-  enable = false
+  enable = true
 
-# Testimonials - disabled
+[[params.features.item]]
+  weight = 1
+  name = "History & Education"
+  description = "Deep dives into bourbon history, production methods, and the science behind your favorite spirits."
+  icon = "fa-book"
+
+[[params.features.item]]
+  weight = 2
+  name = "Tastings & Reviews"
+  description = "Expert tasting notes, blind comparisons, and honest reviews to help you discover your next favorite bottle."
+  icon = "fa-glass-whiskey"
+
+[[params.features.item]]
+  weight = 3
+  name = "The Glass Room"
+  description = "Long-form articles exploring the stories, personalities, and eras that shaped American whiskey."
+  icon = "fa-feather-alt"
+
+# Testimonials - repurposed as host teaser on homepage
 [params.testimonials]
-  enable = false
+  enable = true
+  title = "Meet Your Hosts"
+  subtitle = "The voices behind BottleBond — passionate bourbon enthusiasts dedicated to sharing the art of American whiskey."
 
-# See more section - disabled
+# See more section - newsletter CTA placeholder
 [params.see_more]
-  enable = false
+  enable = true
+  icon = "fas fa-envelope-open-text"
+  title = "Stay in the Loop"
+  subtitle = "Join the BottleBond community for bourbon insights, new episode alerts, and exclusive tasting notes delivered to your inbox."
+  link_url = "mailto:website@bottle.bond"
+  link_text = "Get in Touch"
 
 # Clients section - disabled
 [params.clients]

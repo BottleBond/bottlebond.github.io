@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+
+  <head>
+    {{ partial "headers.html" . }}
+    {{ partial "custom_headers.html" . }}
+  </head>
+
+  <body>
+
+    <div id="all">
+
+        {{ partial "top.html" . }}
+
+        {{ partial "nav.html" . }}
+
+        {{ partial "breadcrumbs.html" . }}
+
+        <div id="content">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-9" id="blog-post">
+
+                        {{/* Breadcrumb navigation */}}
+                        <div class="glass-room-breadcrumb">
+                          <a href="/glass-room/">The Glass Room</a> ›
+                          {{ with .Parent }}
+                          <a href="{{ .Permalink }}">{{ .Title }}</a> ›
+                          {{ end }}
+                          <span>{{ .Title }}</span>
+                        </div>
+
+                        <h1>{{ .Title }}</h1>
+
+                        <p class="glass-room-post-meta" style="margin-bottom: 30px;">
+                          {{ if .Params.era }}
+                          <span class="label" style="background: var(--bb-burnt-sienna); color: #fff; padding: 3px 10px; border-radius: 4px; font-size: 12px; margin-right: 10px;">{{ .Params.era }}</span>
+                          {{ end }}
+                          {{ if .Params.author }}
+                          <i class="fas fa-user" style="margin-right: 4px;"></i> {{ .Params.author }}
+                          {{ end }}
+                          {{ if .Params.date }}
+                          · <i class="far fa-calendar" style="margin-right: 4px;"></i> {{ .Date.Format .Site.Params.date_format }}
+                          {{ end }}
+                        </p>
+
+                        <div id="post-content">
+                          {{ .Content }}
+                        </div>
+
+                        {{/* Tags */}}
+                        {{ if .Params.tags }}
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(212,175,55,0.3);">
+                          {{ range .Params.tags }}
+                          <a href="{{ "tags/" | absURL }}{{ . | urlize }}" class="btn btn-default btn-sm" style="margin: 3px;">{{ . }}</a>
+                          {{ end }}
+                        </div>
+                        {{ end }}
+
+                        {{/* Navigation back */}}
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(212,175,55,0.3);">
+                          {{ with .Parent }}
+                          <a href="{{ .Permalink }}" class="btn btn-template-main">
+                            <i class="fas fa-arrow-left"></i> Back to {{ .Title }}
+                          </a>
+                          {{ end }}
+                          <a href="/glass-room/" class="btn btn-default">
+                            <i class="fas fa-book-open"></i> All Glass Room Posts
+                          </a>
+                        </div>
+
+                    </div>
+                    <!-- /#blog-post -->
+
+                    <div class="col-md-3">
+                        {{ partial "sidebar.html" . }}
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
+
+        {{ partial "footer.html" . }}
+
+    </div>
+    <!-- /#all -->
+
+    {{ partial "scripts.html" . }}
+
+  </body>
+</html>

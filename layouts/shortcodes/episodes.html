@@ -1,0 +1,63 @@
+{{/*
+  Episodes Shortcode
+  Usage: {{< episodes category="education" limit="3" >}}
+
+  Parameters:
+    - category: Filter by playlistId (main, education, tastings, seasonal, top10) or "all" (optional, defaults to "all")
+    - limit: Maximum number of episodes to show (optional, defaults to 3)
+    - showDescription: Show episode description (optional, defaults to true)
+*/}}
+
+{{ $category := .Get "category" | default "all" }}
+{{ $limit := .Get "limit" | default "3" | int }}
+{{ $showDescription := .Get "showDescription" | default "true" }}
+{{ $episodes := site.Data.episodes.episodes }}
+
+{{/* Filter by category/playlistId if specified */}}
+{{ if ne $category "all" }}
+  {{ $episodes = where $episodes "playlistId" $category }}
+{{ end }}
+
+{{/* Sort by popularity (descending) and limit */}}
+{{ $episodes = sort $episodes "popularity" "desc" }}
+{{ $episodes = first $limit $episodes }}
+
+{{ if $episodes }}
+<div class="row episodes-grid">
+  {{ range $episodes }}
+  <div class="col-md-4 col-sm-6">
+    <div class="episode-card" style="margin-bottom: 30px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+      <a href="https://www.youtube.com/watch?v={{ .youtubeId }}" target="_blank" rel="noopener" style="display: block;">
+        <div class="episode-thumbnail" style="position: relative; padding-bottom: 56.25%; background: #eee;">
+          <img
+            src="{{ .thumbnailUrl }}"
+            alt="{{ .title }}"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+            loading="lazy"
+          >
+          <span class="episode-duration" style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+            {{ .duration }}
+          </span>
+        </div>
+      </a>
+      <div class="episode-info" style="padding: 15px;">
+        <h4 style="margin: 0 0 10px 0; font-size: 16px; line-height: 1.3;">
+          <a href="https://www.youtube.com/watch?v={{ .youtubeId }}" target="_blank" rel="noopener" style="color: #333; text-decoration: none;">
+            {{ .title }}
+          </a>
+        </h4>
+        {{ if eq $showDescription "true" }}
+        <p style="margin: 0; font-size: 13px; color: #666; line-height: 1.5;">
+          {{ .description | truncate 100 }}
+        </p>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ else }}
+<div class="alert alert-info">
+  <p>No episodes found{{ if ne $category "all" }} in the {{ $category }} category{{ end }}. Check back soon!</p>
+</div>
+{{ end }}

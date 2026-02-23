@@ -4,7 +4,7 @@
 **Created**: 2026-01-29
 **Status**: In Progress
 **Input**: Modern podcast website for Bourbon & Whisky-focused audio/video content with luxury lounge aesthetic; migrating content from previous WordPress site (https://bottle.bond)
-**Tech Stack**: Next.js with static export for GitHub Pages hosting
+**Tech Stack**: Hugo with hugo-universal-theme for GitHub Pages hosting
 
 ## Overview
 
@@ -24,6 +24,14 @@ BottleBond is a premium podcast website showcasing bourbon and whiskey education
 - Q: What are the valid era categories for Glass Room blog content? → A: Flexible/open system — any folder name becomes an era. Initial suggested eras: Prohibition (1920-1933), Post-Prohibition (1933-1960), Bourbon Renaissance (1960-2000), Craft Era (2000-present).
 - Q: What backend service should handle contact form submissions? → A: Replace contact form with mailto link popup to `website@bottle.bond`. No form backend needed.
 - Q: What social media links should be included? → A: YouTube, Instagram, Facebook, and Patreon (no Twitter).
+
+### Session 2026-02-15
+
+- Q: Should the homepage include additional content sections beyond the featured episode? → A: Full showcase — featured episode + latest Glass Room blog post preview + host teaser + social links + newsletter CTA
+- Q: How should Glass Room blog post navigation work? → A: Individual post pages with unique URLs. Two-tier TOC: top-level `/glass-room/` lists ALL posts across eras; each era has its own landing page (e.g., `/glass-room/prohibition/`) with a focused TOC and a link back to the top-level Glass Room page.
+- Q: What content should appear in the site footer? → A: Standard footer — social media icons (YouTube, Instagram, Facebook, Patreon) + key navigation links (Home, About, Episodes, Contact) + copyright notice.
+- Q: How are "Top 10 of All Time" and "Top Tastings of the Season" episode lists curated? → A: Hybrid — "Top Tastings of the Season" is manually curated (editor picks and ranks in data file); "Top 10 of All Time" is computed from popularity scores across all episodes.
+- Q: How should blog post draft/publish status be managed? → A: Use Hugo's built-in draft system (`draft: true` in frontmatter; visible locally with `hugo server -D`, hidden in production builds).
 
 ---
 
@@ -127,20 +135,19 @@ A visitor has questions about the podcast, hosts, or tasting topics and navigate
 
 ---
 
-### User Story 7 - Visitor Reaches Out via Contact Form (Priority: P2)
+### User Story 7 - Visitor Reaches Out via Email (Priority: P2)
 
-A listener wants to contact the hosts—to suggest a topic, propose a guest, or provide feedback—and uses the Contact page to submit a message.
+A listener wants to contact the hosts—to suggest a topic, propose a guest, or provide feedback—and uses the Contact page to initiate an email.
 
 **Why this priority**: Enables community engagement; allows business development; supports feedback loop.
 
-**Independent Test**: Contact page loads with form; form submission validates and sends/logs message.
+**Independent Test**: Contact page loads with mailto link; clicking link opens user's email client.
 
 **Acceptance Scenarios**:
 
-1. **Given** Contact page loads, **When** page displays, **Then** contact form appears with name, email, subject, and message fields
-2. **Given** form fields filled, **When** user clicks submit, **Then** form validates required fields
-3. **Given** form submitted successfully, **When** submission completes, **Then** success message displays
-4. **Given** form submitted, **When** message sent, **Then** mocked backend receives/logs contact request
+1. **Given** Contact page loads, **When** page displays, **Then** mailto link to `website@bottle.bond` is prominently displayed
+2. **Given** mailto link displays, **When** user clicks link, **Then** user's default email client opens with pre-filled recipient
+3. **Given** Contact page loads, **When** page displays, **Then** clear instructions explain how to reach hosts via email
 
 ---
 
@@ -166,8 +173,8 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **YouTube API unavailable**: Episode sections show cached thumbnails/titles; gracefully degrade to links
 - **No blog posts published**: Glass Room shows welcome message and placeholder for first post
 - **Network latency**: Skeleton loaders appear while content fetches; no content flashing
-- **Mobile viewport**: All sections remain readable; embedded players scale responsively; forms remain functional
-- **Form submission error**: Contact form shows error message and allows retry
+- **Mobile viewport**: All sections remain readable; embedded players scale responsively; mailto links remain functional
+- **Email client unavailable**: Contact page displays email address as copyable text fallback
 - **Empty FAQ section**: FAQ page shows "Coming soon" message or placeholder
 
 ---
@@ -180,12 +187,16 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **FR-001**: System MUST render landing page with one randomly selected featured episode from main YouTube feed (https://www.youtube.com/playlist?list=PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ)
 - **FR-002**: Featured episode MUST include embedded YouTube player inline with option to open in new window
 - **FR-003**: Featured episode selection MUST randomize on each page load; at least 3 distinct episodes appear across multiple reloads
+- **FR-003a**: Homepage MUST display a preview of the latest Glass Room blog post (title, excerpt, link to full post)
+- **FR-003b**: Homepage MUST include a brief "About the Hosts" teaser section with host photos and short tagline, linking to the About page
+- **FR-003c**: Homepage MUST display social media links (YouTube, Instagram, Facebook, Patreon)
+- **FR-003d**: Homepage MUST include a newsletter signup CTA section (visual placeholder; integration deferred to future feature)
 
 **Episodes Page:**
 - **FR-004**: System MUST display Episodes page with "History & Education" section showing 3 most popular episodes from educational playlist (https://www.youtube.com/playlist?list=PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi)
 - **FR-005**: System MUST display Episodes page with "Tastings" section showing 3 most popular episodes from tastings playlist
-- **FR-005a**: System MUST display "Top Tastings of the Season" section featuring 5 curated seasonal tasting highlights
-- **FR-005b**: System MUST display "Top 10 of All Time" section showcasing the all-time best episodes across all categories
+- **FR-005a**: System MUST display "Top Tastings of the Season" section featuring 5 manually curated seasonal tasting highlights (editor picks and ranks episodes with explicit `rank` and `season` fields in data file)
+- **FR-005b**: System MUST display "Top 10 of All Time" section computed by sorting all episodes by `popularity` score descending and selecting the top 10
 - **FR-006**: Each episode card MUST display title, thumbnail, duration, and link to YouTube
 - **FR-006a**: Episode cards MUST include embedded YouTube player with click-to-open-in-new-window functionality
 
@@ -195,19 +206,22 @@ A content editor updates an existing blog post in The Glass Room with new inform
 
 **The Glass Room (Blog):**
 - **FR-009**: System MUST support The Glass Room blog section by reading static markdown files from repository
+- **FR-009a**: Each blog post MUST have its own individual page with a unique URL (e.g., `/glass-room/prohibition/the-history-of-bourbon/`)
 - **FR-010**: System MUST order Glass Room posts by era (derived from folder structure) or publication date (oldest first, configurable)
-- **FR-011**: System MUST display table of contents in Glass Room for easy post discovery and navigation
+- **FR-011**: Top-level Glass Room page (`/glass-room/`) MUST display a table of contents listing ALL posts across all eras
+- **FR-011a**: Each era MUST have its own landing page (e.g., `/glass-room/prohibition/`) with a focused table of contents listing only posts in that era
+- **FR-011b**: Era landing pages MUST include a navigation link back to the top-level Glass Room page
 - **FR-012**: Blog post MUST support formatted text (markdown), images, and era hashtags
-- **FR-012a**: System MUST parse blog post frontmatter (metadata: title, date, era, author) from markdown files
+- **FR-012a**: System MUST parse blog post frontmatter (metadata: title, date, era, author, draft) from markdown files; draft posts use Hugo's built-in `draft: true` mechanism (hidden in production, visible with `hugo server -D`)
 
 **FAQ Page:**
 - **FR-013**: System MUST provide FAQ page with organized questions and answers
 - **FR-014**: FAQ questions MUST expand/collapse or reveal answers on interaction
 
 **Contact Page:**
-- **FR-015**: System MUST provide Contact page with functional form (name, email, subject, message fields)
-- **FR-016**: Contact form MUST validate required fields before submission
-- **FR-017**: Contact form submission MUST log/store request in mocked data; success message MUST display
+- **FR-015**: System MUST provide Contact page with mailto link to `website@bottle.bond`
+- **FR-016**: Mailto link MUST open user's default email client with pre-filled recipient address
+- **FR-017**: Contact page MUST display clear instructions for reaching hosts via email
 
 **General:**
 - **FR-018**: System MUST render all content dynamically from data sources (mocked initially, APIs later)
@@ -215,16 +229,17 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **FR-020**: System MUST support mobile-responsive design; all pages render correctly on viewport widths 320px–1920px
 - **FR-021**: System MUST implement graceful error handling when data unavailable (show placeholders, fallback text)
 - **FR-022**: System MUST include navigation menu/header linking to all pages (Home, About, Episodes, FAQ, Contact, The Glass Room)
+- **FR-022a**: System MUST include a site footer on every page containing: social media icons (YouTube, Instagram, Facebook, Patreon), key navigation links (Home, About, Episodes, Contact), and a copyright notice
 - **FR-023**: Initial content pull: System MAY reference existing bottle.bond website (https://bottle.bond) for biographical and FAQ content to seed mocked data
 
 ### Key Entities
 
 - **Episode**: Title, description, YouTube video ID, playlist category (main, education, tastings, seasonal, top10), popularity score, thumbnail URL, duration, rank (for curated lists), season (for seasonal content)
 - **Person**: Name, role (host, cohost, guest), bio, photo URL, social links (optional)
-- **BlogPost**: Title, content, era (derived from folder path), publication date, author, last edited date, status (draft/published)
+- **BlogPost**: Title, content, era (derived from folder path), publication date, author, last edited date, draft (boolean; Hugo built-in `draft: true` hides from production, visible with `-D` flag)
 - **Playlist**: Name, YouTube ID, description, category (main, education, tastings, seasonal, top10)
 - **FAQ**: Question, answer, category (optional)
-- **ContactMessage**: Sender name, email, subject, message body, timestamp, status (new/read)
+- **Contact**: Email address for host communication (website@bottle.bond)
 
 ### Design & Styling Requirements
 
@@ -235,15 +250,15 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **Aesthetic**: Minimalist, modern luxury; inspired by fireplace warmth (amber glows), overstuffed lounge chairs (comfortable spacing, rounded corners, soft shadows)
 - **Typography**: Elegant serif (e.g., Georgia, Garamond) for headings; sophisticated sans-serif (e.g., Inter, Helvetica) for body; generous whitespace (line-height 1.6+); readable at all viewport sizes
 - **Components**: Smooth transitions (200–300ms), subtle shadows (0 4px 6px rgba), warm hover states (slight color shift toward gold), rounded corners (8–12px)
-- **Unique Visual Elements**: TBD—unique design flourishes to stand out (custom illustrations, animation, etc.)
+- **Unique Visual Elements**: Vintage Distillery Aesthetic — aged paper textures, copper/brass accent colors, vintage typography flourishes, barrel-wood grain patterns
 
 ### Technical Requirements (Constitution-Aligned)
 
 - **Dynamic Content**: All user-facing content rendered from structured data (mocked initially); architecture separates content from presentation
-- **Security**: HTTPS enforced; all form inputs sanitized; contact messages logged securely; no secrets in source control
+- **Security**: HTTPS enforced; static site with no user input processing; no secrets in source control
 - **Performance**: Lazy-load blog posts; cache episode thumbnails; target <2s first-contentful-paint on 3G; <500ms page navigation
 - **Accessibility**: WCAG 2.1 AA compliance; semantic HTML; alt text on all images; keyboard navigation support; form labels associated with inputs
-- **Testing**: Unit tests for data transformations; integration tests for page loads; end-to-end test for featured episode display, blog post rendering, form submission
+- **Testing**: Unit tests for data transformations; integration tests for page loads; end-to-end test for featured episode display, blog post rendering, mailto link functionality
 - **Data Source Attribution**: Initial content pulled from https://bottle.bond (hosts, FAQs, some episode metadata) for seamless transition
 
 ---
@@ -253,11 +268,11 @@ A content editor updates an existing blog post in The Glass Room with new inform
 ### Measurable Outcomes
 
 - **SC-001**: Featured episode loads and plays within 3 seconds on 3G connection
-- **SC-002**: Episodes page displays all 3 sections (featured, education, tastings) without layout shift
+- **SC-002**: Episodes page displays all 4 sections (education, tastings, seasonal top 5, top 10 all-time) without layout shift
 - **SC-003**: About page renders all host/guest sections with images and text correctly on mobile (viewport 320px)
 - **SC-004**: Glass Room loads table of contents in under 1 second; blog posts render with full formatting and era tags
 - **SC-005**: FAQ page displays 5+ Q&As; all expand/collapse interactions work without delay
-- **SC-006**: Contact form validates and submits within 1 second; success message displays
+- **SC-006**: Contact page loads within 1 second; mailto link functions correctly across browsers
 - **SC-007**: All pages pass WCAG 2.1 AA accessibility audit (no critical issues)
 - **SC-008**: Site returns valid JSON from all mocked data endpoints; no console errors on page load
 - **SC-009**: Navigation between pages completes in under 500ms; smooth, no flashing
@@ -270,7 +285,11 @@ A content editor updates an existing blog post in The Glass Room with new inform
 
 ```
 / (Home/Landing)
-  ├─ Featured Episode Section
+  ├─ Featured Episode Section (randomly selected, embedded player)
+  ├─ Latest Glass Room Blog Post Preview (title, excerpt, link)
+  ├─ About the Hosts Teaser (photos, tagline, link to /about)
+  ├─ Social Media Links (YouTube, Instagram, Facebook, Patreon)
+  ├─ Newsletter Signup CTA (placeholder for future integration)
   ├─ Call-to-action to Episodes page
 
 /about
@@ -286,21 +305,28 @@ A content editor updates an existing blog post in The Glass Room with new inform
   ├─ [Optional] View all episodes / playlist link
 
 /glass-room (Blog)
-  ├─ Table of Contents (posts listed by era or date, generated from markdown files)
-  ├─ Blog Post Archive (scanned from repository markdown directory)
-  ├─ Individual post pages (rendered from markdown files)
+  ├─ Top-Level Table of Contents (ALL posts across all eras, listed by era or date)
+  ├─ /glass-room/<era>/ (Era Landing Pages)
+  │   ├─ Focused Table of Contents (posts in this era only)
+  │   ├─ Back-link to /glass-room/
+  ├─ /glass-room/<era>/<post-slug>/ (Individual Post Pages)
+  │   ├─ Full post content (rendered from markdown)
 
 /faq
   ├─ Organized Q&A sections (collapsible)
 
 /contact
-  ├─ Contact form
-  ├─ Success/error messaging
+  ├─ Mailto link (website@bottle.bond)
+  ├─ Contact instructions
 
 [Header/Nav]
   ├─ Logo
   ├─ Navigation menu (Home, About, Episodes, FAQ, Contact, The Glass Room)
-  ├─ Social links (optional)
+
+[Footer] (all pages)
+  ├─ Social media icons (YouTube, Instagram, Facebook, Patreon)
+  ├─ Key navigation links (Home, About, Episodes, Contact)
+  ├─ Copyright notice
 ```
 
 ---
@@ -362,7 +388,9 @@ A content editor updates an existing blog post in The Glass Room with new inform
     { "id": "faq_001", "question": "What is bourbon?", "answer": "...", "category": "Basics" },
     { "id": "faq_002", "question": "How is bourbon made?", "answer": "...", "category": "Production" }
   ],
-  "contactMessages": []
+  "contact": {
+    "email": "website@bottle.bond"
+  }
 }
 ```
 
@@ -387,11 +415,11 @@ A content editor updates an existing blog post in The Glass Room with new inform
   └── ...other-eras/
   ```
   Each markdown file includes frontmatter with title, date, era, author metadata.
-- **Randomization**: Featured episode selected via client-side random selection or lightweight server-side random() function
+- **Randomization**: Featured episode selected via client-side JavaScript random selection on page load
 - **Blog Editing**: Edit markdown files directly in repository; changes auto-sync to site on deployment (CI/CD build)
-- **Contact Form**: Initially logs to mocked data store; future: sends email or integrates with service (Mailgun, SendGrid, etc.)
-- **Deployment**: Next.js with static export (`output: 'export'`) deployed to GitHub Pages; build-time markdown parsing for blog posts; no CDN required initially
-- **Analytics**: Track featured episode selection distribution; monitor blog post engagement (view counts, time on page); track contact form submissions
+- **Contact**: Mailto link opens user's default email client; no server-side form processing required
+- **Deployment**: Hugo with hugo-universal-theme deployed to GitHub Pages via GitHub Actions; build-time markdown parsing for blog posts; no CDN required initially
+- **Analytics**: Track featured episode selection distribution; monitor blog post engagement (view counts, time on page); track contact page visits
 
 ---
 

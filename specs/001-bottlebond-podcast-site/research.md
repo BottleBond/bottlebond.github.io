@@ -1,289 +1,128 @@
 # Research: BottleBond Podcast Website
 
-**Date**: 2026-02-02 | **Branch**: `001-bottlebond-podcast-site`
+**Date**: 2026-02-15 | **Branch**: `001-bottlebond-podcast-site`
 
 ---
 
-## 1. Next.js Static Export for GitHub Pages
+## 1. Hugo Theme Installation
 
-### Decision: Standard Next.js 14+ with `output: 'export'`
+**Decision**: Install hugo-universal-theme as a Git submodule at `themes/hugo-universal-theme/`
 
-### Configuration
+**Rationale**: The theme directory exists but is empty (no `.gitmodules` file). Git submodules are the standard Hugo theme installation method, keep theme code separate, and allow pinning to a specific commit. The CI workflow uses `actions/checkout@v4` which supports `submodules: true`.
 
-```js
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
-  trailingSlash: true,  // Cleaner URLs on static hosts
-  images: {
-    unoptimized: true,  // Required for static export
-  },
-}
+**Alternatives considered**:
+- Hugo Modules (go mod): Adds Go dependency complexity; theme doesn't officially support it
+- Direct copy: Bloats repo and makes updates harder
 
-module.exports = nextConfig
-```
+**Action**: `git submodule add https://github.com/devcows/hugo-universal-theme.git themes/hugo-universal-theme` + update `deploy.yml` with `submodules: true`
 
-### Rationale
-- For user/organization sites (bottlebond.github.io), **no basePath needed**
-- `trailingSlash: true` ensures consistent routing on static hosts
-- `images.unoptimized: true` is required since Image Optimization API needs a Node.js server
+## 2. Theme Widget System for Homepage
 
-### GitHub Actions Deployment Workflow
+**Decision**: Leverage theme's built-in widget system + repurpose disabled widgets for new homepage sections
 
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy Next.js to GitHub Pages
+**Rationale**: The hugo-universal-theme provides homepage widgets controlled via `hugo.toml`:
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+| Widget | Current State | Use For |
+|--------|---------------|---------|
+| `carouselHomepage` | Enabled | Hero banner / welcome |
+| `features` | Enabled | Content category highlights (Education, Tastings, Glass Room) |
+| `recent_posts` | Enabled | Latest Glass Room blog post preview |
+| `testimonials` | Disabled | **Repurpose** for host teaser section |
+| `see_more` | Disabled | **Repurpose** for newsletter CTA |
+| `clients` | Disabled | Not needed |
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+Additional homepage content (featured episode) already handled by existing shortcode in `content/_index.md`.
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+**Alternatives considered**:
+- Custom homepage template from scratch: More work, loses theme's responsive grid system
+- Only shortcodes in markdown: Limits layout control
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+## 3. Glass Room Two-Tier Navigation
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+**Decision**: Hugo nested sections with `_index.md` at each level + `.RegularPagesRecursive`
 
-      - name: Install dependencies
-        run: npm ci
+**Rationale**: Hugo natively supports nested content sections:
+- `/content/glass-room/_index.md` → top-level listing ALL posts via `.RegularPagesRecursive`
+- `/content/glass-room/<era>/_index.md` → era listing via `.RegularPages`
+- `/content/glass-room/<era>/post.md` → individual post pages
 
-      - name: Build Next.js
-        run: npm run build
+**Template strategy**:
+- `layouts/glass-room/list.html` — handles both levels; detects top-level vs. era via `.CurrentSection` / `.IsHome` / depth check
+- `.Sections` provides era index for top-level page
+- Breadcrumb navigation via `.Ancestors` for era → Glass Room back-link
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
+**Alternatives considered**:
+- Taxonomy-based eras: Less intuitive folder structure, separate taxonomy templates needed
+- Single flat list with frontmatter filtering: Loses Hugo's section hierarchy benefits
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-```
+## 4. Vintage Distillery CSS
 
-### Alternatives Considered
-- **Astro**: More opinionated, less React ecosystem integration
-- **Hugo**: Fast but requires learning Go templates
-- **Gatsby**: Heavier, more complex for this use case
+**Decision**: `static/css/bottlebond.css` with CSS custom properties, Google Fonts, CSS-only textures — layered on marsala theme
 
-### Key Constraints
-- All dynamic routes MUST use `generateStaticParams()`
-- No server-side API routes (static export only)
-- No Incremental Static Regeneration
-- No Server Actions
+**Rationale**: Marsala theme base provides warm tones. Custom CSS adds:
 
----
-
-## 2. YouTube Embed Implementation
-
-### Decision: Custom YouTubeEmbed component with facade pattern
-
-### Rationale
-- **Facade pattern** saves ~500-800KB per embed until user clicks
-- **Privacy-enhanced mode** via youtube-nocookie.com for GDPR compliance
-- **Responsive sizing** using `aspect-ratio: 16/9` CSS
-
-### Key Implementation Details
-
-```tsx
-// Privacy-enhanced embed URL
-const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-
-// Responsive container
-<div style={{ aspectRatio: '16/9', position: 'relative' }}>
-  {/* Facade or iframe */}
-</div>
-```
-
-### Accessibility Requirements
-- `title` attribute on iframe (screen reader description)
-- `aria-label` on facade button
-- Keyboard activation (Enter/Space)
-- Visible focus indicators
-
-### External Link Pattern
-```tsx
-<a
-  href={`https://www.youtube.com/watch?v=${videoId}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Watch on YouTube
-</a>
-```
-
-### Alternatives Considered
-- **react-player**: Too heavy for simple embeds
-- **lite-youtube-embed**: Good but less customizable
-- **Direct iframe**: No performance optimization
-
----
-
-## 3. Markdown Blog Implementation
-
-### Decision: Custom gray-matter + remark/rehype approach
-
-### Rationale
-1. **Maximum flexibility** for era-based categorization
-2. **Future-proof** - core libraries are industry standards
-3. **No abandoned dependencies** (Contentlayer is abandoned)
-4. **Optimal bundle size** - only include what's needed
-5. **Full control** over frontmatter schema and TOC generation
-
-### Dependencies
-```json
-{
-  "gray-matter": "^4.0.3",
-  "unified": "^11.0.4",
-  "remark-parse": "^11.0.0",
-  "remark-gfm": "^4.0.0",
-  "remark-rehype": "^11.1.0",
-  "rehype-slug": "^6.0.0",
-  "rehype-stringify": "^10.0.0"
-}
-```
-
-### Frontmatter Schema
-```yaml
----
-title: "The History of Bourbon"
-date: "2026-01-15"
-era: "Prohibition"
-author: "Host Name"
-description: "Explore the origins..."
-featured: false
-tags:
-  - history
-  - bourbon
----
-```
-
-### Era-Based Grouping
-```typescript
-const ERA_ORDER = [
-  'Colonial Era',
-  'Early American',
-  'Prohibition Era',
-  'Post-War Revival',
-  'Modern Craft',
-  'Contemporary',
-];
-```
-
-### Alternatives Considered
-- **Contentlayer**: Abandoned, breaking with Next.js 14+
-- **next-mdx-remote**: Good but more setup for MDX features we don't need
-- **@next/mdx**: Too limited for blog with dynamic listings
-
----
-
-## 4. Tailwind CSS Luxury Theme
-
-### Decision: Custom Tailwind theme with earth tones
-
-### Color Palette
-| Name | Hex | Usage |
-|------|-----|-------|
-| Sienna (primary) | #8B4513 | Buttons, accents |
-| Brown (primary) | #654321 | Backgrounds, borders |
-| Gold (primary) | #D4AF37 | Hover states, highlights |
-| Terracotta | #CD5C5C | Accent color |
-| Slate (secondary) | #708090 | Muted accents |
-| Cream (neutral) | #F5F5F0 | Page backgrounds |
-| Charcoal (neutral) | #2C2C2C | Text, dark sections |
-
-### Typography
-- **Headings**: Cormorant Garamond (serif, elegant)
-- **Body**: Inter (sans-serif, readable)
-- **Line height**: 1.6+ for comfortable reading
-
-### Component Styling
-- Border radius: 8-12px (`rounded-luxury`)
-- Shadows: Warm-tinted with sienna undertones
-- Hover states: Gold shift with glow effect
-- Transitions: 200-300ms with ease-luxury timing
-
-### Key CSS Utilities
+**Design tokens**:
 ```css
-.shadow-warm-md { box-shadow: 0 4px 6px -1px rgba(139, 69, 19, 0.1); }
-.shadow-gold-glow { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-.transition-luxury { transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1); }
+:root {
+  --bb-burnt-sienna: #8B4513;
+  --bb-deep-brown: #654321;
+  --bb-gold: #D4AF37;
+  --bb-copper: #B87333;
+  --bb-brass: #C9AE5D;
+  --bb-cream: #F5F5F0;
+  --bb-charcoal: #2C2C2C;
+  --bb-radius: 8px;
+  --bb-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  --bb-transition: 200ms ease;
+}
 ```
 
----
+**Typography**: Playfair Display (headings) + Lora (body) via Google Fonts
+**Textures**: CSS-only patterns/gradients — no large image files (preserves <2s FCP)
 
-## 5. Contact Form Solution
+**Alternatives considered**:
+- Full theme fork: Maintenance burden
+- Heavy texture images: Hurts mobile performance
 
-### Decision: Web3Forms
+## 5. Featured Episode Randomization
 
-### Rationale
-1. **Generous free tier** - 250 submissions/month (plenty for low-volume podcast site)
-2. **No branding** - Professional appearance
-3. **No account required** - Just an access key
-4. **Built-in spam protection** - Invisible honeypot + optional hCaptcha
-5. **AJAX support** - Perfect for React integration
+**Decision**: Keep existing client-side JavaScript approach (already implemented)
 
-### Implementation Approach
-- React component with TypeScript
-- Client-side validation
-- Honeypot field for spam prevention
-- Success/error state handling
-- Accessible form labels and error messages
+**Rationale**: Current implementation (`featured-episode.html` + `featured-episode.js`) correctly: passes episode data as JSON data attribute, uses `Math.random()` per page load, includes `<noscript>` fallback. Satisfies FR-003.
 
-### Setup Steps
-1. Visit web3forms.com
-2. Enter email to receive access key
-3. Use access key in form component
-4. Submit to `https://api.web3forms.com/submit`
+## 6. Top 10 Computation
 
-### Alternatives Considered
-| Service | Free Limit | Pros | Cons |
-|---------|------------|------|------|
-| Formspree | 50/mo | Well-established | Lower free limit |
-| FormSubmit | Unlimited | No account | No dashboard |
-| Getform | 50/mo | Good integrations | Lower free limit |
-| **Web3Forms** | **250/mo** | **Best balance** | Newer service |
+**Decision**: Hybrid — seasonal from `toptastings.json` (manual); all-time computed from `episodes.json` popularity in template
 
----
+**Rationale**: Per spec clarification. Update `top-tastings.html` shortcode: for `type="alltime"`, sort all episodes by `popularity` descending, take top 10 (ignore `toptastings.json` all-time list).
 
-## Summary: Technology Decisions
+## 7. Draft System
 
-| Area | Decision | Key Reason |
-|------|----------|------------|
-| Framework | Next.js 14+ (App Router) | Best React DX, static export support |
-| Hosting | GitHub Pages | Free, version-controlled content |
-| Styling | Tailwind CSS | Rapid development, design system |
-| Blog | gray-matter + remark/rehype | Stable, flexible, future-proof |
-| YouTube | Custom facade component | Performance, privacy |
-| Forms | Web3Forms | Best free tier, no branding |
-| Images | Pre-optimized (unoptimized mode) | Static export requirement |
+**Decision**: Hugo's built-in `draft: true` frontmatter
 
----
+**Rationale**: Zero custom code. Hugo excludes drafts from production builds; `hugo server -D` shows them locally.
 
-## Next Steps
+## 8. CI/CD
 
-All research questions resolved. Proceed to Phase 1: Design & Contracts.
+**Decision**: Add `submodules: true` to checkout step in `deploy.yml`
+
+**Rationale**: Required for fetching theme submodule during GitHub Actions build.
+
+## 9. Footer
+
+**Decision**: Use theme's built-in footer with existing `hugo.toml` configuration
+
+**Rationale**: Theme footer renders social links (from `topbar` menu), `about_us` blurb, `copyright`, and `recent_posts`. All are already configured in `hugo.toml`. Override footer partial only if explicit page navigation links are needed beyond what the theme provides.
+
+## 10. Content Data Strategy
+
+**Decision**: Existing JSON data files (`data/`) are well-structured and match the spec entities
+
+**Rationale**: Reviewed all 5 data files. They already contain:
+- `episodes.json`: 12 episodes with all required fields (id, title, youtubeId, playlistId, popularity, duration, etc.)
+- `hosts.json`: 2 hosts + 3 guests with bios, photos, social links, ordering
+- `faqs.json`: 10 FAQs across 5 categories with ordering
+- `playlists.json`: 5 playlist definitions with YouTube IDs
+- `toptastings.json`: 10 all-time + 5 seasonal rankings with curator notes
+
+All entities have canonical IDs and timestamps per constitution requirements. No data model changes needed — the existing data files satisfy the spec.

@@ -1,177 +1,52 @@
 # Implementation Plan: BottleBond Podcast Website
 
-**Branch**: `001-bottlebond-podcast-site` | **Date**: 2026-02-02 | **Spec**: [spec.md](./spec.md)
+**Branch**: `001-bottlebond-podcast-site` | **Date**: 2026-02-15 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `/specs/001-bottlebond-podcast-site/spec.md`
 
 ## Summary
 
-Premium bourbon podcast website using Next.js 16 with static export for GitHub Pages. Features YouTube video embeds, era-organized blog (The Glass Room), FAQ, About, and Contact pages with a luxury lounge aesthetic using earth tone colors.
+Build a premium bourbon & whiskey podcast website using Hugo with the hugo-universal-theme, deployed to GitHub Pages. The site features 6 content pages (Home, Episodes, About, Glass Room blog, FAQ, Contact) with data-driven content from JSON files and markdown blog posts. Key technical challenges: installing and customizing the hugo-universal-theme with a vintage distillery aesthetic, implementing client-side featured episode randomization, building a two-tier blog navigation system with era-based landing pages, and computing Top 10 rankings from popularity scores. Significant scaffolding already exists (shortcodes, data files, content pages, CI/CD) but the theme is missing and no custom styling has been applied.
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x with Next.js 16.x (App Router)
-**Primary Dependencies**: React 19, Tailwind CSS v4, gray-matter, remark/rehype, Web3Forms
-**Storage**: Static JSON files + Markdown blog posts (no database)
-**Testing**: Jest + React Testing Library (unit/integration), Playwright (E2E)
-**Target Platform**: Static site on GitHub Pages (bottlebond.github.io)
-**Project Type**: Web application (frontend only, static export)
-**Performance Goals**: <2s FCP on 3G, <500ms page navigation
-**Constraints**: No server-side rendering, no API routes, images unoptimized
-**Scale/Scope**: ~8 pages, 12+ episodes, 2 hosts, 10 FAQs, 2+ blog posts
+**Language/Version**: Hugo (Go-based static site generator); HTML templates (Go template language); CSS; JavaScript (vanilla ES6)
+**Primary Dependencies**: Hugo (extended edition, latest via GitHub Actions); hugo-universal-theme (Git submodule); Font Awesome (icons, bundled with theme)
+**Storage**: Filesystem — JSON data files (`data/`), Markdown content files (`content/`), static assets (`static/`)
+**Testing**: Hugo build validation (`hugo --minify` exit code); HTML validation; WCAG 2.1 AA audit (Lighthouse); manual browser testing
+**Target Platform**: Static website on GitHub Pages; all modern browsers (Chrome, Firefox, Safari, Edge); viewports 320px–1920px
+**Project Type**: Static site (Hugo)
+**Performance Goals**: <2s first-contentful-paint on 3G; <500ms page navigation; <1s Glass Room TOC load
+**Constraints**: No server-side processing; no user input handling; no secrets in source; HTTPS enforced by GitHub Pages; all content from structured data files
+**Scale/Scope**: ~6 pages; ~12 episodes; ~3 blog posts initial; ~10 FAQs; 2 hosts + 3 guests
 
 ## Constitution Check
 
-*GATE: All checks pass ✅*
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-| Principle | Status | Implementation |
-|-----------|--------|----------------|
-| I. Dynamic Content First | ✅ | Content from JSON/Markdown, separated from presentation |
-| II. Security By Default | ✅ | HTTPS (GitHub Pages), form input sanitization, no secrets in repo |
-| III. Testable & Continuous | ✅ | Jest unit tests, Playwright E2E, GitHub Actions CI/CD |
-| IV. Observability | ⚠️ | User-friendly errors; analytics deferred to Phase 2.5 |
-| V. Accessibility & Performance | ✅ | WCAG 2.1 AA target, lazy loading, performance budget |
+| Principle | Status | Notes |
+|-----------|--------|-------|
+| **I. Dynamic Content First** | PASS | All content rendered from JSON data files and markdown; content separated from presentation via Hugo templates and shortcodes |
+| **II. Security By Default** | PASS | HTTPS enforced by GitHub Pages; static site with no user input processing; no secrets in source control |
+| **III. Testable & Continuous Delivery** | PASS | CI/CD via GitHub Actions (`deploy.yml`) already configured; Hugo build validates templates; accessibility testing via Lighthouse |
+| **IV. Observability & Error Handling** | PASS (with note) | Static site limits observability to client-side; graceful fallbacks defined in edge cases; GitHub Pages provides 99.9% uptime |
+| **V. Accessibility & Performance** | PASS | WCAG 2.1 AA compliance targeted; semantic HTML via Hugo templates; performance budget defined (<2s FCP, <500ms nav); lazy loading planned |
+| **Additional: SSR/SEO** | PASS | Hugo generates fully server-side rendered static HTML; optimal for SEO |
+| **Additional: No secrets in source** | PASS | No secrets needed; YouTube embeds use public video IDs |
+| **Workflow: CI Gates** | PASS | GitHub Actions runs `hugo --minify`; deploy only on push to main |
 
----
+**Gate Result: PASS** — No violations.
 
-## CRITICAL GAP ANALYSIS: Content Data Population
+## Post-Design Constitution Re-Check
 
-### Current State (NEEDS ATTENTION)
+| Principle | Status | Notes |
+|-----------|--------|-------|
+| **I. Dynamic Content First** | PASS | Data model uses JSON files with canonical IDs and timestamps; Hugo templates render from structured data |
+| **II. Security By Default** | PASS | No new attack vectors; YouTube embeds use privacy-enhanced nocookie domain |
+| **III. Testable & Continuous Delivery** | PASS | CI workflow updated with submodule checkout; Hugo build validates all templates and data |
+| **IV. Observability & Error Handling** | PASS | Shortcodes include fallback states for missing data; noscript fallback for featured episode |
+| **V. Accessibility & Performance** | PASS | Semantic HTML structure; lazy loading on images; CSS-only textures (no heavy image assets) |
 
-After reviewing the implementation and source data, the following gaps were identified:
-
-#### 1. YouTube Video IDs - ALL PLACEHOLDERS ❌
-
-The current `episodes.json` uses **placeholder YouTube IDs**:
-```json
-"youtubeId": "dQw4w9WgXcQ"  // This is the Rick Roll video!
-"youtubeId": "abc123xyz"    // Fake ID
-"youtubeId": "hist001abc"   // Fake ID
-```
-
-**Required Action**: Populate with real video IDs from the specified playlists:
-- Main feed: `PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ`
-- History & Education: `PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi`
-
-#### 2. Playlist IDs - PARTIALLY CORRECT ⚠️
-
-| Playlist | Status | Current ID |
-|----------|--------|------------|
-| Main (All Episodes) | ✅ Correct | `PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ` |
-| History & Education | ✅ Correct | `PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi` |
-| Tastings | ❌ Placeholder | `PLkEG2GQlU7uH8nK3tL4x5Z6CXg79I5abc` |
-| Seasonal | ❌ Placeholder | `PLkEG2GQlU7uH8nK3tL4x5Z6CXg79I5def` |
-| Top 10 | ❌ Placeholder | `PLkEG2GQlU7uH8nK3tL4x5Z6CXg79I5ghi` |
-
-**Required Action**: Get actual playlist IDs from YouTube channel owner or create playlists.
-
-#### 3. Host/Bio Information - NEEDS VERIFICATION ⚠️
-
-Current `hosts.json`:
-- Primary host: "Adam Lathers" ✅ (matches user context)
-- Co-host: "Sarah Mitchell" ❓ (need to verify if accurate)
-
-**bottle.bond website finding**: The original site only says "Welcome from the guys" with no individual bios.
-
-**Required Action**: Confirm host names and get actual bios/photos from site owner.
-
-#### 4. Social Links - MISMATCH ❌
-
-| Platform | Current Mock | Actual bottle.bond |
-|----------|--------------|-------------------|
-| Twitter/X | ✅ Included | ❌ Not on site |
-| Instagram | ✅ Included | ✅ Present |
-| YouTube | ✅ Included | ❌ Not linked |
-| TikTok | ❌ Missing | ✅ Present |
-| Facebook | ❌ Missing | ✅ Present |
-
-**Required Action**: Update social links to match actual platforms used.
-
-#### 5. Blog Content - NOT MIGRATED ❌
-
-The bottle.bond site has actual content:
-- "Stitzel-Weller and How it Survived Prohibition" (Jan 20, 2025)
-- "The Show" post with platform links
-
-Current blog posts are placeholders.
-
-**Required Action**: Migrate actual blog content from bottle.bond.
-
----
-
-## Recommended Design Updates
-
-### 1. YouTube Data Sync Strategy
-
-**Option A: Manual Population (Recommended for MVP)**
-- Content editor manually enters video IDs from YouTube playlists
-- Provides full control over which videos appear in each section
-- No API costs or rate limits
-
-**Option B: Build-Time YouTube API Sync**
-- Use YouTube Data API v3 to fetch playlist contents at build time
-- Requires API key (env variable)
-- Auto-updates on each deploy
-- May exceed API quotas with frequent deploys
-
-**Recommendation**: Start with Option A, migrate to Option B in Phase 2.5.
-
-### 2. Content Migration Checklist (Phase 2.5)
-
-```markdown
-## CM: Content Migration Tasks
-
-### YouTube Data (Priority: HIGH)
-- [ ] CM-YT01: Extract video IDs from main playlist PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ
-- [ ] CM-YT02: Extract video IDs from education playlist PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi
-- [ ] CM-YT03: Get or create actual Tastings playlist ID
-- [ ] CM-YT04: Curate Top 10 All Time list (manual selection)
-- [ ] CM-YT05: Curate Seasonal Top 5 list (manual selection)
-- [ ] CM-YT06: Update episodes.json with real video metadata
-
-### Host Data (Priority: HIGH)
-- [ ] CM-HOST01: Confirm primary host name and bio
-- [ ] CM-HOST02: Confirm co-host name and bio (if applicable)
-- [ ] CM-HOST03: Obtain host photos (webp format, optimized)
-- [ ] CM-HOST04: Update social links (Facebook, Instagram, TikTok)
-
-### Blog Migration (Priority: MEDIUM)
-- [ ] CM-BLOG01: Export "Stitzel-Weller" post from WordPress
-- [ ] CM-BLOG02: Convert to Markdown with proper frontmatter
-- [ ] CM-BLOG03: Place in prohibition-era folder
-- [ ] CM-BLOG04: Migrate any images to public/images/blog/
-
-### Asset Migration (Priority: MEDIUM)
-- [ ] CM-ASSET01: Download logo from bottle.bond
-- [ ] CM-ASSET02: Extract any usable images from WordPress media
-```
-
-### 3. Architecture Enhancement: Episode Data Script
-
-Create a utility script to help populate episode data:
-
-```typescript
-// scripts/fetch-playlist.ts (for future Phase 2.5)
-// Usage: YOUTUBE_API_KEY=xxx npx ts-node scripts/fetch-playlist.ts PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ
-
-async function fetchPlaylistVideos(playlistId: string) {
-  // Fetch from YouTube Data API v3
-  // Transform to Episode format
-  // Output to episodes.json
-}
-```
-
-### 4. Design Consistency Updates
-
-Based on the luxury lounge aesthetic:
-
-| Element | Current | Recommendation |
-|---------|---------|----------------|
-| Logo | Text only | Add bottle.bond logo from WordPress |
-| Social Icons | Generic SVG | Match actual platforms (add TikTok, Facebook) |
-| Featured Episode | Random selection | Consider "Editor's Pick" with manual curation |
-| Color Scheme | On-brand | Verified correct (earth tones) |
-
----
+**Post-Design Gate: PASS**
 
 ## Project Structure
 
@@ -179,117 +54,75 @@ Based on the luxury lounge aesthetic:
 
 ```text
 specs/001-bottlebond-podcast-site/
-├── plan.md              # This file ✅
-├── research.md          # Technology decisions ✅
-├── data-model.md        # Entity definitions ✅
-├── quickstart.md        # Developer guide ✅
-├── contracts/           # TypeScript interfaces ✅
-└── tasks.md             # Implementation tasks ✅
+├── plan.md              # This file
+├── research.md          # Phase 0 output
+├── data-model.md        # Phase 1 output
+├── quickstart.md        # Phase 1 output
+└── tasks.md             # Phase 2 output (/speckit.tasks command)
 ```
 
 ### Source Code (repository root)
 
 ```text
-src/
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx          # Root layout with Header/Footer
-│   ├── page.tsx            # Homepage with featured episode
-│   ├── about/page.tsx      # Host bios
-│   ├── episodes/page.tsx   # Episode sections
-│   ├── glass-room/         # Blog
-│   │   ├── page.tsx        # Blog listing
-│   │   └── [slug]/page.tsx # Individual posts
-│   ├── faq/page.tsx        # FAQ accordion
-│   └── contact/page.tsx    # Contact form
-├── components/
-│   ├── ui/                 # Button, Card, Section, Skeleton
-│   ├── layout/             # Header, Footer, Navigation
-│   ├── episodes/           # YouTubeEmbed, EpisodeCard, FeaturedEpisode
-│   ├── about/              # PersonCard, HostSection, GuestGrid
-│   ├── blog/               # BlogCard, TableOfContents, MarkdownRenderer
-│   ├── faq/                # FAQItem, FAQCategory
-│   └── forms/              # ContactForm
-├── lib/
-│   ├── data/               # Data fetching utilities
-│   └── utils/              # markdown.ts helpers
-├── content/
-│   ├── episodes.json       # ⚠️ NEEDS REAL DATA
-│   ├── playlists.json      # ⚠️ NEEDS VERIFICATION
-│   ├── hosts.json          # ⚠️ NEEDS VERIFICATION
-│   ├── faqs.json           # Generic content OK for MVP
-│   ├── top-tastings.json   # ⚠️ NEEDS CURATION
-│   └── glass-room/         # Blog posts (Markdown)
-├── styles/
-│   └── globals.css         # Tailwind v4 theme
-└── types/
-    └── index.ts            # TypeScript interfaces
+hugo.toml                        # Hugo configuration (exists)
+content/
+├── _index.md                    # Homepage (exists, needs enhancement for full showcase)
+├── episodes.md                  # Episodes page (exists)
+├── about.md                     # About page (exists)
+├── contact.md                   # Contact page (exists)
+├── faq.md                       # FAQ page (exists)
+└── glass-room/
+    ├── _index.md                # Glass Room top-level TOC (exists, needs two-tier TOC)
+    ├── prohibition-era/
+    │   ├── _index.md            # Era landing page (NEW)
+    │   └── *.md                 # Blog posts (partially exists)
+    ├── modern-craft/
+    │   ├── _index.md            # Era landing page (NEW)
+    │   └── *.md                 # Blog posts (partially exists)
+    └── homework/
+        ├── _index.md            # Era landing page (NEW)
+        └── *.md                 # Blog posts (partially exists)
 
-tests/
-├── unit/                   # Jest unit tests
-├── integration/            # React Testing Library
-└── e2e/                    # Playwright specs
+data/
+├── episodes.json                # Episode data (exists, 12 episodes)
+├── hosts.json                   # Host/guest data (exists, 2 hosts + 3 guests)
+├── faqs.json                    # FAQ data (exists, 10 FAQs)
+├── playlists.json               # Playlist metadata (exists, 5 playlists)
+└── toptastings.json             # Top tastings rankings (exists, 10 all-time + 5 seasonal)
 
-public/
-├── images/
-│   ├── hosts/              # Host photos (need real images)
-│   ├── guests/             # Guest photos
-│   ├── logo/               # Site logo (need from bottle.bond)
-│   └── blog/               # Blog post images
-└── favicon.ico
+layouts/
+├── shortcodes/                  # All 6 shortcodes exist
+├── _default/
+│   ├── baseof.html              # Base template with footer (NEW)
+│   ├── list.html                # Default list template (NEW)
+│   └── single.html              # Default single template (NEW)
+├── partials/
+│   ├── footer-custom.html       # Custom footer (NEW)
+│   └── head-custom.html         # Custom CSS includes (NEW)
+├── glass-room/
+│   ├── list.html                # Glass Room / era section list (NEW)
+│   └── single.html              # Individual blog post template (NEW)
+└── index.html                   # Homepage template override (NEW)
+
+static/
+├── css/
+│   └── bottlebond.css           # Custom vintage distillery styles (NEW)
+├── img/                         # Images (NEW — hosts, textures, carousel)
+└── js/
+    └── featured-episode.js      # Client-side randomization (exists)
+
+themes/
+└── hugo-universal-theme/        # Theme (needs installation via git submodule)
+
+.github/
+└── workflows/
+    └── deploy.yml               # CI/CD pipeline (exists, needs submodule checkout step)
 ```
 
-**Structure Decision**: Frontend-only static site using Next.js App Router with JSON/Markdown content sources.
-
----
+**Structure Decision**: Hugo static site using convention-based layout. Template overrides in `layouts/` customize the theme. Custom CSS in `static/css/`. Theme installed as Git submodule.
 
 ## Complexity Tracking
 
-No constitution violations requiring justification. Design follows minimum viable complexity.
+> No constitution violations to justify.
 
----
-
-## Implementation Status
-
-### Completed Phases ✅
-
-- **Phase 1**: Setup & Infrastructure
-- **Phase 2**: Foundational Components
-- **Phase 3**: US1 - Homepage with Featured Episode
-- **Phase 4**: US2 - Educational Episodes
-- **Phase 5**: US3 - Tasting Episodes
-- **Phase 6**: US4 - About the Hosts
-- **Phase 7**: US5 - The Glass Room Blog
-- **Phase 8**: US6 - FAQ Page
-- **Phase 9**: US7 - Contact Form
-- **Phase 10**: US8 - Content Editor Workflow
-
-### Pending: Phase 2.5 - Content Migration
-
-**CRITICAL**: Before production deployment, the following must be completed:
-
-1. **Replace placeholder YouTube IDs** with real video IDs from channel
-2. **Verify host information** accuracy
-3. **Update social links** to match actual platforms
-4. **Migrate blog content** from WordPress
-
-### Pending: Phase 11 - Polish
-
-- Accessibility audit
-- Performance optimization
-- Cross-browser testing
-- Final deployment verification
-
----
-
-## Next Steps (Priority Order)
-
-1. **Immediate**: Content owner provides real YouTube video IDs
-2. **Immediate**: Verify host names/bios with content owner
-3. **Short-term**: Migrate "Stitzel-Weller" blog post from bottle.bond
-4. **Short-term**: Update social links (add TikTok, Facebook; verify Instagram)
-5. **Medium-term**: Implement YouTube API sync script (Phase 2.5)
-6. **Medium-term**: Complete accessibility audit
-
----
-
-**Version**: 2.0.0 | **Last Updated**: 2026-02-02 | **Status**: Implementation Complete, Content Migration Required
+No entries needed — all gates pass.

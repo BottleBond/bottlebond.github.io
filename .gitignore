@@ -18,3 +18,8 @@ Thumbs.db
 # Environment
 .env
 .env.local
+.env.*
+
+# Node.js (sync tool)
+node_modules/
+*.tmp
