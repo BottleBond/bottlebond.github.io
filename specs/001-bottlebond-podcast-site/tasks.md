@@ -1,260 +1,171 @@
-# Tasks: BottleBond Podcast Website (Hugo)
+# Tasks: BottleBond Podcast Website
 
 **Input**: Design documents from `/specs/001-bottlebond-podcast-site/`
-**Prerequisites**: plan.md (complete), spec.md (complete), research.md (complete), data-model.md (complete), quickstart.md (complete)
+**Prerequisites**: plan.md (required), spec.md (required), research.md, data-model.md, quickstart.md
 
-**Tech Stack**: Hugo with hugo-universal-theme, deployed to GitHub Pages
-**Tests**: Build validation via `hugo build`; manual verification via `hugo server`; optional Playwright E2E
+**Tests**: No automated tests requested in spec. Verification tasks use `hugo server -D` and `hugo --minify` to confirm rendering.
 
-**Organization**: Tasks grouped by user story for independent implementation and testing
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: User story this task belongs to (US1-US8)
-- Exact file paths included in descriptions
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- Include exact file paths in descriptions
 
 ---
 
-## Phase 1: Hugo Setup ✅ COMPLETE
+## Phase 1: Setup
 
-**Purpose**: Hugo project initialization with theme configuration
+**Purpose**: Install theme and configure CI/CD for submodule checkout
 
-- [x] T001 Install Hugo and verify version (v0.115.0+)
-- [x] T002 Initialize Hugo project structure in repository root
-- [x] T003 [P] Add hugo-universal-theme to `themes/` directory
-- [x] T004 [P] Configure `hugo.toml` with site metadata, menu, and theme settings
-- [x] T005 [P] Configure social links in hugo.toml (YouTube, Instagram, Facebook, Patreon)
-- [x] T006 [P] Create GitHub Actions workflow for Hugo build and Pages deployment in `.github/workflows/deploy.yml`
+- [x] T001 Install hugo-universal-theme as a Git submodule at themes/hugo-universal-theme/ by running `git submodule add https://github.com/devcows/hugo-universal-theme.git themes/hugo-universal-theme`
+- [x] T002 [P] Add `submodules: true` to the `actions/checkout@v4` step in .github/workflows/deploy.yml so CI fetches the theme during builds
+- [x] T003 Verify Hugo builds successfully with the installed theme by running `hugo --minify` and confirming zero errors
 
 ---
 
-## Phase 2: Content Structure ✅ COMPLETE
+## Phase 2: Foundational (Styling & Base Templates)
 
-**Purpose**: Create data files and content structure for all pages
+**Purpose**: Custom CSS and template infrastructure that ALL user stories depend on
 
-### Data Files
+**⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [x] T007 Create episodes data file in `data/episodes.json` with episode metadata schema
-- [x] T008 [P] Create playlists data file in `data/playlists.json` with YouTube playlist IDs
-- [x] T009 [P] Create hosts data file with host/cohost/guest structure in `data/hosts.json`
-- [x] T010 [P] Create FAQs data file in `data/faqs.json` with question/answer/category schema
-- [x] T011 [P] Create top-tastings data file in `data/toptastings.json` with seasonal and all-time selections
+- [x] T004 Create static/css/bottlebond.css with: CSS custom properties (design tokens: `--bb-burnt-sienna: #8B4513`, `--bb-deep-brown: #654321`, `--bb-gold: #D4AF37`, `--bb-copper: #B87333`, `--bb-brass: #C9AE5D`, `--bb-cream: #F5F5F0`, `--bb-charcoal: #2C2C2C`, `--bb-radius: 8px`, `--bb-shadow: 0 4px 6px rgba(0,0,0,0.1)`, `--bb-transition: 200ms ease`), Google Fonts imports (Playfair Display for headings, Lora for body), typography rules (serif headings, line-height 1.6+), and component styles for episode cards, host cards, FAQ accordion panels, top-tasting cards, navigation bar, and footer; apply vintage distillery aesthetic with CSS-only textures/gradients, warm hover states (shift toward gold), rounded corners (8px), and subtle shadows
+- [x] T005 [P] Create layouts/partials/custom_headers.html to include `<link>` to /css/bottlebond.css so custom styles load on all pages (hugo-universal-theme supports this partial hook)
+- [x] T006 Verify theme renders with custom vintage distillery styling by running `hugo server -D` and confirming design tokens, typography, and component styles apply correctly
 
-### Content Pages
-
-- [x] T012 Create homepage content in `content/_index.md` with frontmatter
-- [x] T013 [P] Create about page content in `content/about.md` with frontmatter
-- [x] T014 [P] Create episodes page content in `content/episodes.md` with frontmatter
-- [x] T015 [P] Create FAQ page content in `content/faq.md` with frontmatter
-- [x] T016 [P] Create contact page content in `content/contact.md` with frontmatter
-- [x] T017 [P] Create Glass Room section index in `content/glass-room/_index.md`
-
-**Checkpoint**: All content files created with proper frontmatter
+**Checkpoint**: Foundation ready — all pages render with theme + custom styling
 
 ---
 
-## Phase 2.5: Content Migration (WordPress to Static)
+## Phase 3: User Story 1 — Visitor Discovers Featured Episode on Landing Page (Priority: P1) 🎯 MVP
 
-**Purpose**: Migrate content and assets from bottle.bond WordPress site
+**Goal**: Homepage displays full showcase: randomly selected featured episode, carousel hero, content features, latest Glass Room post, host teaser, social links, and newsletter CTA
 
-### Image Assets Migration
-
-- [ ] CM01 [P] Create image directory structure in `static/images/` (hosts/, guests/, blog/, logo/)
-- [ ] CM02 [P] Download and optimize host photos from bottle.bond to `static/images/hosts/`
-- [ ] CM03 [P] Download and optimize guest photos from bottle.bond to `static/images/guests/`
-- [ ] CM04 [P] Download and optimize site logo (SVG preferred) to `static/images/logo/`
-
-### Content Data Migration
-
-- [ ] CM05 Extract host bios from bottle.bond About page and populate `data/hosts.json`
-- [ ] CM06 [P] Extract cohost bio and populate `data/hosts.json`
-- [ ] CM07 [P] Extract recurring guest bios and populate `data/hosts.json`
-- [ ] CM08 Extract FAQ content from bottle.bond FAQ page and populate `data/faqs.json`
-- [ ] CM09 Fetch episode metadata from YouTube playlists and populate `data/episodes.json`
-- [ ] CM10 [P] Configure playlist metadata in `data/playlists.json` with YouTube playlist IDs
-- [ ] CM11 [P] Curate and populate `data/toptastings.json` with seasonal and all-time selections
-
-### Blog Content Migration
-
-- [ ] CM12 Identify existing blog posts on bottle.bond for migration
-- [ ] CM13 [P] Convert blog posts to Markdown format with proper frontmatter (title, date)
-- [ ] CM14 [P] Download and optimize blog post images to `static/images/blog/`
-- [ ] CM15 Place converted blog posts in appropriate era folders under `content/glass-room/`
-
-### Validation
-
-- [ ] CM16 Verify all JSON files are valid and data loads in templates
-- [ ] CM17 [P] Verify all image paths are correct and images load properly
-- [ ] CM18 Run `hugo build` to ensure all content integrates correctly
-
-**Checkpoint**: All content migrated and validated
-
----
-
-## Phase 3: Shortcodes for Dynamic Content ✅ COMPLETE
-
-**Purpose**: Create Hugo shortcodes to render data from JSON files
-
-- [x] T018 Create YouTube embed shortcode with privacy-enhanced mode in `layouts/shortcodes/youtube.html`
-- [x] T019 [P] Create episodes shortcode with category/limit filters in `layouts/shortcodes/episodes.html`
-- [x] T020 [P] Create hosts shortcode with role filter in `layouts/shortcodes/hosts.html`
-
-**Checkpoint**: Shortcodes render data correctly in markdown content
-
----
-
-## Phase 4: User Story 1 - Featured Episode on Homepage (Priority: P1) ✅ COMPLETE
-
-**Goal**: New visitor sees engaging featured episode with embedded player on homepage
-
-**Independent Test**: Homepage loads with featured episode section; theme renders correctly
+**Independent Test**: Homepage loads at `/` with all 7 showcase sections rendering; featured episode changes across page reloads
 
 ### Implementation for User Story 1
 
-- [x] T021 [US1] Configure hugo.toml params for homepage featured content and carousel settings
-- [x] T022 [US1] Add hero section content to `content/_index.md` with featured episode reference
-- [x] T023 [US1] Create client-side JavaScript for random episode selection in `static/js/featured-episode.js`
-- [x] T024 [US1] Enable recent_posts section in hugo.toml for Glass Room preview
-- [x] T025 [US1] Verify homepage renders with theme styling via `hugo server`
+- [x] T007 [US1] Configure homepage widgets in hugo.toml: enable `[params.testimonials]` with host/cohost entries (name, tagline, photo from data/hosts.json) for the host teaser section; enable `[params.see_more]` with newsletter CTA placeholder text, icon, and subtitle (integration deferred per FR-003d)
+- [x] T008 [US1] Verify complete homepage showcase by running `hugo server -D` and confirming: (1) carousel hero banner renders, (2) featured episode loads with random selection and YouTube embed, (3) features section shows 3 content category highlights, (4) recent Glass Room post preview appears, (5) host teaser section shows host photos and taglines, (6) newsletter CTA placeholder displays, (7) social links visible in topbar
 
-**Checkpoint**: Homepage displays with theme layout and featured content with randomization
+**Checkpoint**: Homepage fully functional with all showcase sections
 
 ---
 
-## Phase 5: User Story 2 & 3 - Episodes Page (Priority: P1) ✅ COMPLETE
+## Phase 4: User Story 2 — Listener Browses Educational Episodes (Priority: P1)
 
-**Goal**: Listener browses History & Education and Tastings sections
+**Goal**: Episodes page displays History & Education section with 3 most popular education episodes, plus correctly computed Top 10 of All Time
 
-**Independent Test**: Episodes page loads with all 4 episode sections
+**Independent Test**: Episodes page loads with education section showing 3 episodes sorted by popularity; Top 10 section shows 10 episodes computed from popularity scores
 
-### Implementation for User Stories 2 & 3
+### Implementation for User Story 2
 
-- [x] T026 [US2] Update `content/episodes.md` with History & Education section using episodes shortcode
-- [x] T027 [US2] Add Tastings section to episodes page using episodes shortcode with category="tastings"
-- [x] T028 [US3] Add "Top Tastings of the Season" section with 5 episodes from toptastings data
-- [x] T029 [US3] Add "Top 10 of All Time" section using toptastings data
-- [x] T030 [US2] Add YouTube playlist link for "View All Episodes" below each section
-- [x] T031 [US2] Verify episodes page renders correctly via `hugo server`
+- [x] T009 [US2] Update layouts/shortcodes/top-tastings.html: when `type="alltime"`, compute the ranked list by sorting ALL episodes from `site.Data.episodes.episodes` by `popularity` descending and taking the top N, instead of reading from `$toptastings.allTime`; assign rank dynamically (1-based index); preserve existing seasonal behavior unchanged (FR-005b)
+- [x] T010 [US2] Verify Episodes page History & Education section renders 3 popular episodes with title, thumbnail, duration, and YouTube link by running `hugo server -D` and loading /episodes/
 
-**Checkpoint**: Episodes page shows all 4 sections with episode cards
+**Checkpoint**: Education episodes display correctly; Top 10 computed from popularity
 
 ---
 
-## Phase 6: User Story 4 - About the Hosts (Priority: P2) ✅ COMPLETE
+## Phase 5: User Story 3 — Listener Discovers Tasting Episodes (Priority: P1)
 
-**Goal**: Visitor learns about hosts and recurring guests on About page
+**Goal**: Episodes page displays Tastings section with 3 popular tasting episodes, Top Tastings of the Season (5 curated), and Top 10 of All Time (10 computed)
 
-**Independent Test**: About page displays host, cohost, and guest sections with photos and bios
+**Independent Test**: All 4 episode sections render on /episodes/ with correct data and YouTube links
+
+### Implementation for User Story 3
+
+- [x] T011 [US3] Verify Episodes page renders all 4 sections: History & Education (3 episodes), Tastings (3 episodes), Top Tastings of the Season (5 curated from toptastings.json seasonal), and Top 10 of All Time (10 computed from episodes.json popularity) by loading /episodes/ in `hugo server -D`
+
+**Checkpoint**: Full episodes page functional with all sections
+
+---
+
+## Phase 6: User Story 4 — Visitor Learns About the Hosts (Priority: P2)
+
+**Goal**: About page displays distinct sections for host, cohost, and recurring guests with photos, names, roles, and bios
+
+**Independent Test**: About page loads at /about/ with 3 sections populated from data/hosts.json
 
 ### Implementation for User Story 4
 
-- [x] T032 [US4] Update `content/about.md` with host section using hosts shortcode with role="host"
-- [x] T033 [US4] Add cohost section using hosts shortcode with role="cohost"
-- [x] T034 [US4] Add recurring guests section using hosts shortcode with role="guest"
-- [x] T035 [US4] Verify about page renders correctly with photos and bios
+- [x] T012 [US4] Verify About page renders host section (1 host), cohost section (1 cohost), and recurring guests section (3 guests) with photos, names, roles, bios, and social links from data/hosts.json by loading /about/ in `hugo server -D`
 
-**Checkpoint**: About page shows all host/guest sections
+**Checkpoint**: About page fully functional with all host/guest data
 
 ---
 
-## Phase 7: User Story 5 - The Glass Room Blog (Priority: P2) ✅ COMPLETE
+## Phase 7: User Story 5 — Reader Discovers Blog Posts in "The Glass Room" (Priority: P2)
 
-**Goal**: Reader explores era-organized blog posts
+**Goal**: Glass Room section provides two-tier navigation: top-level TOC listing all posts across eras, era landing pages with focused TOC and back-link, and individual blog post pages
 
-**Independent Test**: Glass Room page loads with posts grouped by era folder
+**Independent Test**: /glass-room/ shows all-posts TOC grouped by era; /glass-room/prohibition-era/ shows era posts with back-link; /glass-room/prohibition-era/the-whiskey-rebellion/ renders full blog post
 
 ### Implementation for User Story 5
 
-- [x] T036 [US5] Create era folder structure: `content/glass-room/prohibition-era/`, `content/glass-room/modern-craft/`, `content/glass-room/homework/`
-- [x] T037 [US5] Create sample blog post in `content/glass-room/prohibition-era/` with proper frontmatter
-- [x] T038 [US5] Create sample blog post in `content/glass-room/modern-craft/` with proper frontmatter
-- [x] T039 [US5] Create sample blog post in `content/glass-room/homework/` with proper frontmatter
-- [x] T040 [US5] Verify Glass Room listing shows posts from all eras
-- [x] T041 [US5] Verify individual blog post pages render correctly with YouTube embeds
-- [x] T042 [US5] Add placeholder content when no blog posts exist
+- [x] T013 [P] [US5] Create content/glass-room/prohibition-era/_index.md with frontmatter: title "Prohibition Era", description of the era covering whiskey during Prohibition (1920–1933)
+- [x] T014 [P] [US5] Create content/glass-room/modern-craft/_index.md with frontmatter: title "Modern Craft", description of the modern craft distilling movement
+- [x] T015 [P] [US5] Create content/glass-room/homework/_index.md with frontmatter: title "Homework", description of educational deep-dives and research topics
+- [x] T016 [US5] Create layouts/glass-room/list.html template that handles two-tier navigation: at top-level depth (section = glass-room), display all era sections via `.Sections` with links to era landing pages, then list ALL posts across eras via `.RegularPagesRecursive` sorted by date; at era depth, display era title and description, list posts within that era via `.RegularPages` sorted by date, and include a back-link to /glass-room/ (use depth check: `eq .CurrentSection.Title "The Glass Room"` or `.Parent` comparison)
+- [x] T017 [P] [US5] Create layouts/glass-room/single.html template for individual blog post pages displaying: post title, date (formatted per hugo.toml date_format), era label (from frontmatter), author name, full markdown content, and breadcrumb navigation back to era landing page and top-level Glass Room
+- [x] T018 [US5] Update content/glass-room/_index.md to remove the static "Browse by Era" text and let the new list.html template generate the dynamic TOC from section hierarchy
 
-**Checkpoint**: Glass Room displays posts organized by era folders
+**Checkpoint**: Two-tier Glass Room navigation fully functional with era landing pages and individual posts
 
 ---
 
-## Phase 8: User Story 6 - FAQ Page (Priority: P2) ✅ COMPLETE
+## Phase 8: User Story 6 — Visitor Finds Answers in FAQ Page (Priority: P2)
 
-**Goal**: Visitor finds organized Q&A content
+**Goal**: FAQ page displays organized Q&A sections grouped by category with expand/collapse accordion
 
-**Independent Test**: FAQ page loads with questions and answers that expand/collapse
+**Independent Test**: FAQ page loads at /faq/ with 10 FAQs across 5 categories; clicking questions expands answers
 
 ### Implementation for User Story 6
 
-- [x] T043 [US6] Create FAQ shortcode for rendering FAQs from data in `layouts/shortcodes/faqs.html`
-- [x] T044 [US6] Update `content/faq.md` with FAQ shortcode to render questions from `data/faqs.json`
-- [x] T045 [US6] Add at least 5 Q&A pairs in `data/faqs.json` covering Basics, Production, Tasting categories
-- [x] T046 [US6] Verify FAQ page renders correctly with theme styling and expand/collapse
+- [x] T019 [US6] Verify FAQ page renders all 10 FAQs grouped by category (Basics, Production, Tasting, Podcast, General) with collapsible accordion from data/faqs.json by loading /faq/ in `hugo server -D`; confirm first FAQ in each category is expanded by default and chevron icon rotates on toggle
 
-**Checkpoint**: FAQ page displays organized Q&As with interaction
+**Checkpoint**: FAQ page fully functional with accordion interaction
 
 ---
 
-## Phase 9: User Story 7 - Contact via Email (Priority: P2) ✅ COMPLETE
+## Phase 9: User Story 7 — Visitor Reaches Out via Email (Priority: P2)
 
-**Goal**: Visitor can contact hosts via email
+**Goal**: Contact page displays mailto link to website@bottle.bond with clear instructions
 
-**Independent Test**: Contact page displays mailto link; clicking opens email client
+**Independent Test**: Contact page loads at /contact/ with functional mailto link and social media links
 
 ### Implementation for User Story 7
 
-- [x] T047 [US7] Update `content/contact.md` with mailto link to `website@bottle.bond`
-- [x] T048 [US7] Add clear instructions for reaching hosts via email
-- [x] T049 [US7] Add email address as copyable text fallback for email client unavailable edge case
-- [x] T050 [US7] Verify contact page renders correctly with mailto link
+- [x] T020 [US7] Verify Contact page renders mailto link to website@bottle.bond, email copy fallback text, contact instructions, and social media links by loading /contact/ in `hugo server -D`; confirm mailto link opens email client
 
-**Checkpoint**: Contact page displays mailto link and instructions
+**Checkpoint**: Contact page fully functional with mailto and social links
 
 ---
 
-## Phase 10: User Story 8 - Content Editor Updates Blog (Priority: P3) ✅ COMPLETE
+## Phase 10: User Story 8 — Content Editor Updates Blog Post (Priority: P3)
 
-**Goal**: Content editor updates blog via markdown files
+**Goal**: Blog post markdown files have complete frontmatter supporting Hugo's draft system; edits render correctly after rebuild
 
-**Independent Test**: Edited markdown file rebuilds correctly with updated content
+**Independent Test**: Edit a blog post markdown file, run `hugo server -D`, verify updated content renders with correct metadata
 
 ### Implementation for User Story 8
 
-- [x] T051 [US8] Verify quickstart.md documents blog editing workflow
-- [x] T052 [US8] Test full workflow: edit markdown -> `hugo build` -> verify output
-- [x] T053 [US8] Verify frontmatter changes (title, date) propagate to rendered page
+- [x] T021 [US8] Review all blog post markdown files in content/glass-room/*/ and ensure each has complete frontmatter fields: title, date, era, author, description, tags, and draft (set to `false` for published posts); add any missing fields per the BlogPost entity in data-model.md
 
-**Checkpoint**: Blog editing workflow documented and validated
+**Checkpoint**: All blog posts have complete frontmatter and draft system works
 
 ---
 
 ## Phase 11: Polish & Cross-Cutting Concerns
 
-**Purpose**: Final improvements and validation
+**Purpose**: Responsive design, footer verification, production build validation, accessibility
 
-### Accessibility
-
-- [ ] T054 [P] Verify alt text on all images across the site
-- [ ] T055 [P] Verify keyboard navigation works on interactive elements
-- [ ] T056 [P] Test with screen reader for basic accessibility
-
-### Performance
-
-- [ ] T057 [P] Run `hugo --minify` for production build
-- [ ] T058 [P] Verify <2s page load on throttled connection
-- [ ] T059 [P] Optimize any large images in `static/images/`
-
-### Final Testing
-
-- [ ] T060 Cross-browser testing (Chrome, Firefox, Safari)
-- [ ] T061 [P] Mobile responsive testing (320px-1920px viewports)
-- [ ] T062 Verify all internal links work correctly
-
-### Deployment
-
-- [ ] T063 Verify GitHub Actions workflow deploys successfully
-- [ ] T064 [P] Configure custom domain for GitHub Pages (if applicable)
-- [ ] T065 Run quickstart.md validation to ensure developer setup works
+- [x] T022 [P] Add responsive CSS media queries to static/css/bottlebond.css for mobile (max-width: 768px), tablet (max-width: 1024px), and desktop viewports (up to 1920px); ensure episode cards stack vertically on mobile, host photos scale appropriately, and all text remains readable at 320px viewport width
+- [x] T023 [P] Verify site footer renders on all pages with social media icons (YouTube, Instagram, Facebook, Patreon), key navigation links, and copyright notice (FR-022a); if theme footer does not include explicit page nav links, create layouts/partials/footer-custom.html override to add them
+- [x] T024 Validate production build by running `hugo --minify`; confirm zero errors, all pages generate to public/ directory, and draft posts are excluded from output
+- [x] T025 Run quickstart.md validation: start `hugo server -D`, verify all 6 pages load (/, /episodes/, /about/, /glass-room/, /faq/, /contact/), verify data-driven content renders from JSON files, verify Glass Room two-tier navigation works end-to-end
 
 ---
 
@@ -262,86 +173,81 @@
 
 ### Phase Dependencies
 
-- **Phase 1 (Setup)**: No dependencies - start immediately
-- **Phase 2 (Content Structure)**: Depends on Phase 1
-- **Phase 2.5 (Content Migration)**: Can run in parallel with Phases 3-10
-- **Phase 3 (Shortcodes)**: Depends on Phase 2; BLOCKS user stories needing dynamic data
-- **Phases 4-10 (User Stories)**: Depend on Phase 3 for shortcodes
-- **Phase 11 (Polish)**: Depends on all user stories being complete
+- **Setup (Phase 1)**: No dependencies — can start immediately
+- **Foundational (Phase 2)**: Depends on Setup (theme must be installed first) — BLOCKS all user stories
+- **User Stories (Phases 3–10)**: All depend on Foundational phase completion
+  - US1, US2, US3, US4, US5, US6, US7, US8 can then proceed in parallel
+  - Recommended sequential order: US1 → US2 → US3 → US5 → US4 → US6 → US7 → US8
+- **Polish (Phase 11)**: Depends on all user stories being complete
 
 ### User Story Dependencies
 
-- **US1 (Homepage)**: Requires theme configuration, client-side JS for randomization
-- **US2-US3 (Episodes)**: Requires episodes shortcode (T019), episodes data from CM09
-- **US4 (About)**: Requires hosts shortcode (T020), host photos from CM02-CM03
-- **US5 (Blog)**: Requires blog posts from CM12-CM15
-- **US6 (FAQ)**: Requires FAQ shortcode (T043), FAQ content from CM08
-- **US7 (Contact)**: Independent (mailto only)
-- **US8 (Editor)**: Depends on US5 (blog implementation)
+- **US1 (P1)**: No dependencies on other stories — homepage widgets configured in hugo.toml
+- **US2 (P1)**: No dependencies on other stories — requires top-tastings.html shortcode update (T009)
+- **US3 (P1)**: Depends on US2's T009 (top-tastings shortcode update) for correct all-time computation
+- **US4 (P2)**: No dependencies on other stories — About page uses existing hosts.html shortcode
+- **US5 (P2)**: No dependencies on other stories — creates new templates and _index.md files
+- **US6 (P2)**: No dependencies on other stories — FAQ page uses existing faqs.html shortcode
+- **US7 (P2)**: No dependencies on other stories — Contact page already complete
+- **US8 (P3)**: Depends on US5 (Glass Room templates must exist for blog post rendering)
+
+### Within Each User Story
+
+- Configuration/data tasks before template/layout tasks
+- Template creation before content updates
+- Implementation before verification
 
 ### Parallel Opportunities
 
-- All Phase 2 data files (T007-T011) can run in parallel
-- All Phase 2 content files (T012-T017) can run in parallel
-- All Content Migration tasks marked [P] can run in parallel
-- Phase 3 shortcodes (T019, T020) can run in parallel after T018
-- User stories US4, US6, US7 can run in parallel after shortcodes complete
-- All Phase 11 tasks marked [P] can run in parallel
+- **Setup**: T001 and T002 can run in parallel (different files)
+- **Foundational**: T004 and T005 can run in parallel (CSS vs. partial template)
+- **US5 (Glass Room)**: T013, T014, T015 all parallel (different _index.md files); T016 and T017 parallel (list vs. single template)
+- **Polish**: T022 and T023 can run in parallel
+- **Cross-story**: Once Foundational completes, US1–US4 and US6–US7 can all start in parallel (independent pages)
 
 ---
 
-## Parallel Example: Phase 2 Content Structure
+## Parallel Example: User Story 5 (Glass Room)
 
 ```bash
-# Launch all data files together:
-Task: "Create episodes data file in data/episodes.json"
-Task: "Create playlists data file in data/playlists.json"
-Task: "Create hosts data file in data/hosts.json"
-Task: "Create FAQs data file in data/faqs.json"
-Task: "Create top-tastings data file in data/toptastings.json"
+# Launch all era _index.md files together (different files, no deps):
+Task: "Create content/glass-room/prohibition-era/_index.md"
+Task: "Create content/glass-room/modern-craft/_index.md"
+Task: "Create content/glass-room/homework/_index.md"
 
-# Launch all content pages together:
-Task: "Create about page content in content/about.md"
-Task: "Create episodes page content in content/episodes.md"
-Task: "Create FAQ page content in content/faq.md"
-Task: "Create contact page content in content/contact.md"
-Task: "Create Glass Room section index in content/glass-room/_index.md"
+# Launch both templates together (different files, no deps):
+Task: "Create layouts/glass-room/list.html"
+Task: "Create layouts/glass-room/single.html"
 ```
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (P1 Stories Only)
+### MVP First (User Story 1 Only)
 
-1. Complete Phase 1: Hugo Setup
-2. Complete Phase 2: Content Structure
-3. Complete Phase 3: Shortcodes (T018-T020)
-4. Complete Phase 4: US1 - Homepage
-5. Complete Phase 5: US2-US3 - Episodes Page
-6. **STOP and VALIDATE**: Test with `hugo server`
-7. Deploy to GitHub Pages for MVP review
+1. Complete Phase 1: Setup (install theme, update CI)
+2. Complete Phase 2: Foundational (CSS, head partial)
+3. Complete Phase 3: User Story 1 (homepage showcase)
+4. **STOP and VALIDATE**: Test homepage with `hugo server -D`
+5. Deploy/demo if ready — homepage is the primary landing experience
 
 ### Incremental Delivery
 
-1. Setup + Content Structure -> Foundation ready
-2. Shortcodes -> Dynamic content working
-3. US1 (Homepage) -> Deploy (MVP v0.1)
-4. US2-US3 (Episodes) -> Deploy (MVP v0.2)
-5. US4 (About) + Content Migration -> Deploy
-6. US5 (Blog) + Blog Migration -> Deploy
-7. US6 (FAQ) + FAQ Migration -> Deploy
-8. US7 (Contact) -> Deploy
-9. US8 + Polish -> Final release
+1. Setup + Foundational → Theme renders with custom styling
+2. US1 (Homepage) → Full showcase landing page (MVP!)
+3. US2 + US3 (Episodes) → Complete episodes browsing experience
+4. US5 (Glass Room) → Two-tier blog navigation
+5. US4 + US6 + US7 (About, FAQ, Contact) → Supporting pages
+6. US8 (Draft system) → Content editing workflow
+7. Polish → Responsive design, footer, production validation
 
----
+### Notes
 
-## Notes
-
-- Hugo builds are fast (<1s); iterate quickly with `hugo server`
-- Theme provides Bootstrap 3 styling - leverage existing classes
-- [P] tasks = different files, no dependencies within phase
+- [P] tasks = different files, no dependencies
 - [Story] label maps task to specific user story for traceability
+- Most content pages and shortcodes already exist — primary work is theme installation, CSS, Glass Room templates, and Top 10 computation fix
+- Existing shortcodes (episodes, hosts, faqs, featured-episode, top-tastings, youtube) are reused as-is except T009 (top-tastings all-time computation)
+- All 5 JSON data files (episodes, hosts, faqs, playlists, toptastings) are complete and require no modifications
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
-- Client-side JavaScript handles featured episode randomization (per spec clarification)

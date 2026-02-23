@@ -1,23 +1,23 @@
-# Implementation Plan: Hugo Markdown Refactor
+# Implementation Plan: BottleBond Podcast Website
 
-**Branch**: `001-bottlebond-podcast-site` | **Date**: 2026-02-02 | **Spec**: [spec.md](spec.md)
-**Input**: Refactor HTML-based pages to markdown content files using Hugo templates
+**Branch**: `001-bottlebond-podcast-site` | **Date**: 2026-02-15 | **Spec**: [spec.md](spec.md)
+**Input**: Feature specification from `/specs/001-bottlebond-podcast-site/spec.md`
 
 ## Summary
 
-Convert all page content from custom HTML layouts to markdown files that leverage the hugo-universal-theme's templating system. This simplifies content editing by moving text content into markdown files while using the theme's built-in partial system for dynamic rendering.
+Build a premium bourbon & whiskey podcast website using Hugo with the hugo-universal-theme, deployed to GitHub Pages. The site features 6 content pages (Home, Episodes, About, Glass Room blog, FAQ, Contact) with data-driven content from JSON files and markdown blog posts. Key technical challenges: installing and customizing the hugo-universal-theme with a vintage distillery aesthetic, implementing client-side featured episode randomization, building a two-tier blog navigation system with era-based landing pages, and computing Top 10 rankings from popularity scores. Significant scaffolding already exists (shortcodes, data files, content pages, CI/CD) but the theme is missing and no custom styling has been applied.
 
 ## Technical Context
 
-**Language/Version**: Hugo v0.155.2 (Go templates)
-**Primary Dependencies**: hugo-universal-theme (Bootstrap 3, Font Awesome 6, jQuery)
-**Storage**: File-based (data/*.json for structured data, content/*.md for page content)
-**Testing**: Manual verification via `hugo server`
-**Target Platform**: GitHub Pages (static HTML output)
-**Project Type**: Static site (Hugo SSG)
-**Performance Goals**: <1s build time, <2s first contentful paint
-**Constraints**: No server-side processing, all content static at build time
-**Scale/Scope**: 6 main pages + Glass Room blog section
+**Language/Version**: Hugo (Go-based static site generator); HTML templates (Go template language); CSS; JavaScript (vanilla ES6)
+**Primary Dependencies**: Hugo (extended edition, latest via GitHub Actions); hugo-universal-theme (Git submodule); Font Awesome (icons, bundled with theme)
+**Storage**: Filesystem — JSON data files (`data/`), Markdown content files (`content/`), static assets (`static/`)
+**Testing**: Hugo build validation (`hugo --minify` exit code); HTML validation; WCAG 2.1 AA audit (Lighthouse); manual browser testing
+**Target Platform**: Static website on GitHub Pages; all modern browsers (Chrome, Firefox, Safari, Edge); viewports 320px–1920px
+**Project Type**: Static site (Hugo)
+**Performance Goals**: <2s first-contentful-paint on 3G; <500ms page navigation; <1s Glass Room TOC load
+**Constraints**: No server-side processing; no user input handling; no secrets in source; HTTPS enforced by GitHub Pages; all content from structured data files
+**Scale/Scope**: ~6 pages; ~12 episodes; ~3 blog posts initial; ~10 FAQs; 2 hosts + 3 guests
 
 ## Constitution Check
 
@@ -25,11 +25,28 @@ Convert all page content from custom HTML layouts to markdown files that leverag
 
 | Principle | Status | Notes |
 |-----------|--------|-------|
-| I. Dynamic Content First | PASS | Content separated into markdown files and JSON data; rendered at build time |
-| II. Security By Default | PASS | No user input processing; static output only; mailto link replaces form |
-| III. Testable & Continuous Delivery | PASS | Hugo build validates templates; GitHub Actions for CI/CD |
-| IV. Observability & Error Handling | PASS | Build errors surface during hugo build; graceful fallbacks in templates |
-| V. Accessibility & Performance | PASS | Theme provides Bootstrap accessibility; lazy loading supported |
+| **I. Dynamic Content First** | PASS | All content rendered from JSON data files and markdown; content separated from presentation via Hugo templates and shortcodes |
+| **II. Security By Default** | PASS | HTTPS enforced by GitHub Pages; static site with no user input processing; no secrets in source control |
+| **III. Testable & Continuous Delivery** | PASS | CI/CD via GitHub Actions (`deploy.yml`) already configured; Hugo build validates templates; accessibility testing via Lighthouse |
+| **IV. Observability & Error Handling** | PASS (with note) | Static site limits observability to client-side; graceful fallbacks defined in edge cases; GitHub Pages provides 99.9% uptime |
+| **V. Accessibility & Performance** | PASS | WCAG 2.1 AA compliance targeted; semantic HTML via Hugo templates; performance budget defined (<2s FCP, <500ms nav); lazy loading planned |
+| **Additional: SSR/SEO** | PASS | Hugo generates fully server-side rendered static HTML; optimal for SEO |
+| **Additional: No secrets in source** | PASS | No secrets needed; YouTube embeds use public video IDs |
+| **Workflow: CI Gates** | PASS | GitHub Actions runs `hugo --minify`; deploy only on push to main |
+
+**Gate Result: PASS** — No violations.
+
+## Post-Design Constitution Re-Check
+
+| Principle | Status | Notes |
+|-----------|--------|-------|
+| **I. Dynamic Content First** | PASS | Data model uses JSON files with canonical IDs and timestamps; Hugo templates render from structured data |
+| **II. Security By Default** | PASS | No new attack vectors; YouTube embeds use privacy-enhanced nocookie domain |
+| **III. Testable & Continuous Delivery** | PASS | CI workflow updated with submodule checkout; Hugo build validates all templates and data |
+| **IV. Observability & Error Handling** | PASS | Shortcodes include fallback states for missing data; noscript fallback for featured episode |
+| **V. Accessibility & Performance** | PASS | Semantic HTML structure; lazy loading on images; CSS-only textures (no heavy image assets) |
+
+**Post-Design Gate: PASS**
 
 ## Project Structure
 
@@ -38,89 +55,74 @@ Convert all page content from custom HTML layouts to markdown files that leverag
 ```text
 specs/001-bottlebond-podcast-site/
 ├── plan.md              # This file
-├── research.md          # Phase 0: Hugo markdown patterns
-├── data-model.md        # Phase 1: Content structure
-├── quickstart.md        # Phase 1: Editing guide
-└── contracts/           # N/A (no APIs)
+├── research.md          # Phase 0 output
+├── data-model.md        # Phase 1 output
+├── quickstart.md        # Phase 1 output
+└── tasks.md             # Phase 2 output (/speckit.tasks command)
 ```
 
 ### Source Code (repository root)
 
 ```text
-# Hugo Static Site Structure
+hugo.toml                        # Hugo configuration (exists)
 content/
-├── _index.md            # Homepage content (theme-driven)
-├── about.md             # About page (markdown + data reference)
-├── contact.md           # Contact page (markdown + mailto)
-├── episodes.md          # Episodes page (markdown + shortcode/partial)
-├── faq.md               # FAQ page (markdown questions)
-└── glass-room/          # Blog section
-    ├── _index.md        # Blog listing
-    └── [era-folders]/   # Blog posts by era
+├── _index.md                    # Homepage (exists, needs enhancement for full showcase)
+├── episodes.md                  # Episodes page (exists)
+├── about.md                     # About page (exists)
+├── contact.md                   # Contact page (exists)
+├── faq.md                       # FAQ page (exists)
+└── glass-room/
+    ├── _index.md                # Glass Room top-level TOC (exists, needs two-tier TOC)
+    ├── prohibition-era/
+    │   ├── _index.md            # Era landing page (NEW)
+    │   └── *.md                 # Blog posts (partially exists)
+    ├── modern-craft/
+    │   ├── _index.md            # Era landing page (NEW)
+    │   └── *.md                 # Blog posts (partially exists)
+    └── homework/
+        ├── _index.md            # Era landing page (NEW)
+        └── *.md                 # Blog posts (partially exists)
 
 data/
-├── hosts.json           # Host/guest information
-├── faqs.json            # FAQ questions and answers
-├── episodes.json        # Episode metadata
-└── playlists.json       # YouTube playlist IDs
+├── episodes.json                # Episode data (exists, 12 episodes)
+├── hosts.json                   # Host/guest data (exists, 2 hosts + 3 guests)
+├── faqs.json                    # FAQ data (exists, 10 FAQs)
+├── playlists.json               # Playlist metadata (exists, 5 playlists)
+└── toptastings.json             # Top tastings rankings (exists, 10 all-time + 5 seasonal)
 
 layouts/
-└── shortcodes/          # Custom shortcodes for dynamic content
-    ├── hosts.html       # Render hosts from data
-    ├── episodes.html    # Render episodes from data
-    └── youtube.html     # YouTube embed facade
+├── shortcodes/                  # All 6 shortcodes exist
+├── _default/
+│   ├── baseof.html              # Base template with footer (NEW)
+│   ├── list.html                # Default list template (NEW)
+│   └── single.html              # Default single template (NEW)
+├── partials/
+│   ├── footer-custom.html       # Custom footer (NEW)
+│   └── head-custom.html         # Custom CSS includes (NEW)
+├── glass-room/
+│   ├── list.html                # Glass Room / era section list (NEW)
+│   └── single.html              # Individual blog post template (NEW)
+└── index.html                   # Homepage template override (NEW)
 
 static/
-└── images/              # Host photos, logos
+├── css/
+│   └── bottlebond.css           # Custom vintage distillery styles (NEW)
+├── img/                         # Images (NEW — hosts, textures, carousel)
+└── js/
+    └── featured-episode.js      # Client-side randomization (exists)
 
 themes/
-└── hugo-universal-theme/
+└── hugo-universal-theme/        # Theme (needs installation via git submodule)
+
+.github/
+└── workflows/
+    └── deploy.yml               # CI/CD pipeline (exists, needs submodule checkout step)
 ```
 
-**Structure Decision**: Hugo standard structure with custom shortcodes to bridge markdown content with JSON data files.
-
-## Design Decisions
-
-### Page Conversion Strategy
-
-| Page | Current | Target | Approach |
-|------|---------|--------|----------|
-| Homepage | Theme default | Theme default | Configure via hugo.toml params |
-| About | Empty markdown | Rich markdown | Add content + `{{< hosts >}}` shortcode |
-| Contact | Empty markdown | Rich markdown | Add content + mailto link |
-| Episodes | Empty markdown | Rich markdown | Add content + `{{< episodes >}}` shortcode |
-| FAQ | Empty markdown | Rich markdown | Add Q&A as markdown headers |
-| Glass Room | Blog posts | Blog posts | Already working (theme handles) |
-
-### Shortcode Design
-
-1. **`{{< hosts type="host" >}}`** - Renders hosts from data/hosts.json
-2. **`{{< episodes category="education" limit="3" >}}`** - Renders episodes from data/episodes.json
-3. **`{{< youtube id="VIDEO_ID" >}}`** - Privacy-enhanced YouTube embed
-
-### Content Frontmatter Pattern
-
-```yaml
----
-title: "Page Title"
-description: "SEO description"
-type: "page"
----
-
-# Markdown content here
-
-{{< shortcode-for-dynamic-data >}}
-
-More markdown content...
-```
+**Structure Decision**: Hugo static site using convention-based layout. Template overrides in `layouts/` customize the theme. Custom CSS in `static/css/`. Theme installed as Git submodule.
 
 ## Complexity Tracking
 
-No constitution violations requiring justification.
+> No constitution violations to justify.
 
-## Next Steps
-
-1. Generate research.md with Hugo shortcode best practices
-2. Create shortcodes in layouts/shortcodes/
-3. Update content/*.md files with rich markdown content
-4. Verify build and test all pages
+No entries needed — all gates pass.

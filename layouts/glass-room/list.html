@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+
+  <head>
+    {{ partial "headers.html" . }}
+    {{ partial "custom_headers.html" . }}
+  </head>
+
+  <body>
+
+    <div id="all">
+
+        {{ partial "top.html" . }}
+
+        {{ partial "nav.html" . }}
+
+        {{ partial "breadcrumbs.html" . }}
+
+        <div id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+
+                        <h1>{{ .Title }}</h1>
+
+                        {{ if .Content }}
+                        <div class="glass-room-intro">
+                            {{ .Content }}
+                        </div>
+                        {{ end }}
+
+                        {{ if .Sections }}
+                          {{/* Top-level Glass Room page: show eras + all posts */}}
+
+                          <h2>Browse by Era</h2>
+                          <div class="glass-room-toc">
+                            {{ range .Sections }}
+                            <div class="glass-room-era">
+                              <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                              <p class="text-muted">{{ .Description }}</p>
+                              <ul>
+                                {{ range .RegularPages.ByDate }}
+                                <li>
+                                  <a href="{{ .Permalink }}">{{ .Title }}</a>
+                                  <span class="glass-room-post-meta">
+                                    — {{ .Params.author }}, {{ .Date.Format $.Site.Params.date_format }}
+                                  </span>
+                                </li>
+                                {{ end }}
+                              </ul>
+                            </div>
+                            {{ end }}
+                          </div>
+
+                          <hr>
+
+                          <h2>All Posts</h2>
+                          <div class="glass-room-all-posts">
+                            {{ range .RegularPagesRecursive.ByDate }}
+                            <div class="glass-room-post-summary" style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(212,175,55,0.2);">
+                              <h3 style="margin-bottom: 5px;">
+                                <a href="{{ .Permalink }}">{{ .Title }}</a>
+                              </h3>
+                              <p class="glass-room-post-meta">
+                                {{ .Params.era }} · {{ .Params.author }} · {{ .Date.Format $.Site.Params.date_format }}
+                              </p>
+                              {{ if .Description }}
+                              <p>{{ .Description }}</p>
+                              {{ else }}
+                              <p>{{ .Summary }}</p>
+                              {{ end }}
+                              <a href="{{ .Permalink }}" class="btn btn-template-main btn-sm">Read More</a>
+                            </div>
+                            {{ end }}
+                          </div>
+
+                        {{ else }}
+                          {{/* Era landing page: show posts in this era only */}}
+
+                          <div class="glass-room-breadcrumb">
+                            <a href="/glass-room/">← Back to The Glass Room</a>
+                          </div>
+
+                          {{ if .RegularPages }}
+                          <div class="glass-room-era-posts">
+                            {{ range .RegularPages.ByDate }}
+                            <div class="glass-room-post-summary" style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(212,175,55,0.2);">
+                              <h3 style="margin-bottom: 5px;">
+                                <a href="{{ .Permalink }}">{{ .Title }}</a>
+                              </h3>
+                              <p class="glass-room-post-meta">
+                                {{ .Params.author }} · {{ .Date.Format $.Site.Params.date_format }}
+                              </p>
+                              {{ if .Description }}
+                              <p>{{ .Description }}</p>
+                              {{ else }}
+                              <p>{{ .Summary }}</p>
+                              {{ end }}
+                              <a href="{{ .Permalink }}" class="btn btn-template-main btn-sm">Read More</a>
+                            </div>
+                            {{ end }}
+                          </div>
+                          {{ else }}
+                          <div class="alert alert-info">
+                            <p>No posts in this era yet. Check back soon!</p>
+                          </div>
+                          {{ end }}
+
+                        {{ end }}
+
+                    </div>
+                    <!-- /.col-md-9 -->
+
+                    <div class="col-md-3">
+                        {{ partial "sidebar.html" . }}
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
+
+        {{ partial "footer.html" . }}
+
+    </div>
+    <!-- /#all -->
+
+    {{ partial "scripts.html" . }}
+
+  </body>
+</html>

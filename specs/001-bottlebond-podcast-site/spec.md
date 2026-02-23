@@ -25,6 +25,14 @@ BottleBond is a premium podcast website showcasing bourbon and whiskey education
 - Q: What backend service should handle contact form submissions? → A: Replace contact form with mailto link popup to `website@bottle.bond`. No form backend needed.
 - Q: What social media links should be included? → A: YouTube, Instagram, Facebook, and Patreon (no Twitter).
 
+### Session 2026-02-15
+
+- Q: Should the homepage include additional content sections beyond the featured episode? → A: Full showcase — featured episode + latest Glass Room blog post preview + host teaser + social links + newsletter CTA
+- Q: How should Glass Room blog post navigation work? → A: Individual post pages with unique URLs. Two-tier TOC: top-level `/glass-room/` lists ALL posts across eras; each era has its own landing page (e.g., `/glass-room/prohibition/`) with a focused TOC and a link back to the top-level Glass Room page.
+- Q: What content should appear in the site footer? → A: Standard footer — social media icons (YouTube, Instagram, Facebook, Patreon) + key navigation links (Home, About, Episodes, Contact) + copyright notice.
+- Q: How are "Top 10 of All Time" and "Top Tastings of the Season" episode lists curated? → A: Hybrid — "Top Tastings of the Season" is manually curated (editor picks and ranks in data file); "Top 10 of All Time" is computed from popularity scores across all episodes.
+- Q: How should blog post draft/publish status be managed? → A: Use Hugo's built-in draft system (`draft: true` in frontmatter; visible locally with `hugo server -D`, hidden in production builds).
+
 ---
 
 ## User Scenarios & Testing *(mandatory)*
@@ -179,12 +187,16 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **FR-001**: System MUST render landing page with one randomly selected featured episode from main YouTube feed (https://www.youtube.com/playlist?list=PLkEG2GQlU7uGJGHwexf0AwoUju_INoubZ)
 - **FR-002**: Featured episode MUST include embedded YouTube player inline with option to open in new window
 - **FR-003**: Featured episode selection MUST randomize on each page load; at least 3 distinct episodes appear across multiple reloads
+- **FR-003a**: Homepage MUST display a preview of the latest Glass Room blog post (title, excerpt, link to full post)
+- **FR-003b**: Homepage MUST include a brief "About the Hosts" teaser section with host photos and short tagline, linking to the About page
+- **FR-003c**: Homepage MUST display social media links (YouTube, Instagram, Facebook, Patreon)
+- **FR-003d**: Homepage MUST include a newsletter signup CTA section (visual placeholder; integration deferred to future feature)
 
 **Episodes Page:**
 - **FR-004**: System MUST display Episodes page with "History & Education" section showing 3 most popular episodes from educational playlist (https://www.youtube.com/playlist?list=PLkEG2GQlU7uFYy3tRx_YZ5CXg79I5bnhi)
 - **FR-005**: System MUST display Episodes page with "Tastings" section showing 3 most popular episodes from tastings playlist
-- **FR-005a**: System MUST display "Top Tastings of the Season" section featuring 5 curated seasonal tasting highlights
-- **FR-005b**: System MUST display "Top 10 of All Time" section showcasing the all-time best episodes across all categories
+- **FR-005a**: System MUST display "Top Tastings of the Season" section featuring 5 manually curated seasonal tasting highlights (editor picks and ranks episodes with explicit `rank` and `season` fields in data file)
+- **FR-005b**: System MUST display "Top 10 of All Time" section computed by sorting all episodes by `popularity` score descending and selecting the top 10
 - **FR-006**: Each episode card MUST display title, thumbnail, duration, and link to YouTube
 - **FR-006a**: Episode cards MUST include embedded YouTube player with click-to-open-in-new-window functionality
 
@@ -194,10 +206,13 @@ A content editor updates an existing blog post in The Glass Room with new inform
 
 **The Glass Room (Blog):**
 - **FR-009**: System MUST support The Glass Room blog section by reading static markdown files from repository
+- **FR-009a**: Each blog post MUST have its own individual page with a unique URL (e.g., `/glass-room/prohibition/the-history-of-bourbon/`)
 - **FR-010**: System MUST order Glass Room posts by era (derived from folder structure) or publication date (oldest first, configurable)
-- **FR-011**: System MUST display table of contents in Glass Room for easy post discovery and navigation
+- **FR-011**: Top-level Glass Room page (`/glass-room/`) MUST display a table of contents listing ALL posts across all eras
+- **FR-011a**: Each era MUST have its own landing page (e.g., `/glass-room/prohibition/`) with a focused table of contents listing only posts in that era
+- **FR-011b**: Era landing pages MUST include a navigation link back to the top-level Glass Room page
 - **FR-012**: Blog post MUST support formatted text (markdown), images, and era hashtags
-- **FR-012a**: System MUST parse blog post frontmatter (metadata: title, date, era, author) from markdown files
+- **FR-012a**: System MUST parse blog post frontmatter (metadata: title, date, era, author, draft) from markdown files; draft posts use Hugo's built-in `draft: true` mechanism (hidden in production, visible with `hugo server -D`)
 
 **FAQ Page:**
 - **FR-013**: System MUST provide FAQ page with organized questions and answers
@@ -214,13 +229,14 @@ A content editor updates an existing blog post in The Glass Room with new inform
 - **FR-020**: System MUST support mobile-responsive design; all pages render correctly on viewport widths 320px–1920px
 - **FR-021**: System MUST implement graceful error handling when data unavailable (show placeholders, fallback text)
 - **FR-022**: System MUST include navigation menu/header linking to all pages (Home, About, Episodes, FAQ, Contact, The Glass Room)
+- **FR-022a**: System MUST include a site footer on every page containing: social media icons (YouTube, Instagram, Facebook, Patreon), key navigation links (Home, About, Episodes, Contact), and a copyright notice
 - **FR-023**: Initial content pull: System MAY reference existing bottle.bond website (https://bottle.bond) for biographical and FAQ content to seed mocked data
 
 ### Key Entities
 
 - **Episode**: Title, description, YouTube video ID, playlist category (main, education, tastings, seasonal, top10), popularity score, thumbnail URL, duration, rank (for curated lists), season (for seasonal content)
 - **Person**: Name, role (host, cohost, guest), bio, photo URL, social links (optional)
-- **BlogPost**: Title, content, era (derived from folder path), publication date, author, last edited date, status (draft/published)
+- **BlogPost**: Title, content, era (derived from folder path), publication date, author, last edited date, draft (boolean; Hugo built-in `draft: true` hides from production, visible with `-D` flag)
 - **Playlist**: Name, YouTube ID, description, category (main, education, tastings, seasonal, top10)
 - **FAQ**: Question, answer, category (optional)
 - **Contact**: Email address for host communication (website@bottle.bond)
@@ -269,7 +285,11 @@ A content editor updates an existing blog post in The Glass Room with new inform
 
 ```
 / (Home/Landing)
-  ├─ Featured Episode Section
+  ├─ Featured Episode Section (randomly selected, embedded player)
+  ├─ Latest Glass Room Blog Post Preview (title, excerpt, link)
+  ├─ About the Hosts Teaser (photos, tagline, link to /about)
+  ├─ Social Media Links (YouTube, Instagram, Facebook, Patreon)
+  ├─ Newsletter Signup CTA (placeholder for future integration)
   ├─ Call-to-action to Episodes page
 
 /about
@@ -285,9 +305,12 @@ A content editor updates an existing blog post in The Glass Room with new inform
   ├─ [Optional] View all episodes / playlist link
 
 /glass-room (Blog)
-  ├─ Table of Contents (posts listed by era or date, generated from markdown files)
-  ├─ Blog Post Archive (scanned from repository markdown directory)
-  ├─ Individual post pages (rendered from markdown files)
+  ├─ Top-Level Table of Contents (ALL posts across all eras, listed by era or date)
+  ├─ /glass-room/<era>/ (Era Landing Pages)
+  │   ├─ Focused Table of Contents (posts in this era only)
+  │   ├─ Back-link to /glass-room/
+  ├─ /glass-room/<era>/<post-slug>/ (Individual Post Pages)
+  │   ├─ Full post content (rendered from markdown)
 
 /faq
   ├─ Organized Q&A sections (collapsible)
@@ -299,7 +322,11 @@ A content editor updates an existing blog post in The Glass Room with new inform
 [Header/Nav]
   ├─ Logo
   ├─ Navigation menu (Home, About, Episodes, FAQ, Contact, The Glass Room)
-  ├─ Social links (optional)
+
+[Footer] (all pages)
+  ├─ Social media icons (YouTube, Instagram, Facebook, Patreon)
+  ├─ Key navigation links (Home, About, Episodes, Contact)
+  ├─ Copyright notice
 ```
 
 ---

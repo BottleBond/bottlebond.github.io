@@ -100,8 +100,8 @@ pluralizelisttitles = false
   # Logo
   disabled_logo = false
   logo_text = "BottleBond"
-  # logo = "img/logo.png"
-  # logo_small = "img/logo-small.png"
+  logo = "img/BB_Gold.png"
+  logo_small = "img/Icon - Gold.png"
 
   # Footer
   about_us = "<p>Premium bourbon and whiskey education through engaging podcast episodes, tastings, and deep-dive content.</p>"
@@ -172,13 +172,20 @@ pluralizelisttitles = false
   description = "Long-form articles exploring the stories, personalities, and eras that shaped American whiskey."
   icon = "fa-feather-alt"
 
-# Testimonials - disabled
+# Testimonials - repurposed as host teaser on homepage
 [params.testimonials]
-  enable = false
+  enable = true
+  title = "Meet Your Hosts"
+  subtitle = "The voices behind BottleBond — passionate bourbon enthusiasts dedicated to sharing the art of American whiskey."
 
-# See more section - disabled
+# See more section - newsletter CTA placeholder
 [params.see_more]
-  enable = false
+  enable = true
+  icon = "fas fa-envelope-open-text"
+  title = "Stay in the Loop"
+  subtitle = "Join the BottleBond community for bourbon insights, new episode alerts, and exclusive tasting notes delivered to your inbox."
+  link_url = "mailto:website@bottle.bond"
+  link_text = "Get in Touch"
 
 # Clients section - disabled
 [params.clients]

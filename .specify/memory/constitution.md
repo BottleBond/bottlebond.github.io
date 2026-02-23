@@ -1,12 +1,16 @@
 <!--
 Sync Impact Report
 
-- Version change: template placeholder -> 1.0.0
-- Modified principles: None renamed (added minimal web-app principles)
-- Added sections: "Additional Constraints", "Development Workflow"
-- Removed sections: none
-- Templates requiring updates: .specify/templates/plan-template.md (⚠ pending), .specify/templates/spec-template.md (⚠ pending), .specify/templates/tasks-template.md (⚠ pending)
-- Follow-up TODOs: Populate `RATIFICATION_DATE`; run template consistency checks and update templates listed above.
+- Version change: 1.0.0 -> 1.1.0
+- Modified principles: None renamed
+- Added sections: Principle VI "Documentation Accompaniment"
+- Removed sections: None
+- Templates requiring updates:
+  - .specify/templates/plan-template.md (✅ no changes needed — Constitution Check is a dynamic gate)
+  - .specify/templates/spec-template.md (✅ no changes needed — no constitution references)
+  - .specify/templates/tasks-template.md (✅ already includes documentation task in Polish phase)
+- Follow-up TODOs: Populate `RATIFICATION_DATE`; ensure README.md and quickstart.md
+  are kept current per Principle VI requirements.
 -->
 
 # BottleBond Web App Constitution
@@ -37,6 +41,19 @@ configure alerts when thresholds are exceeded.
 Deliver accessible interfaces compliant with WCAG 2.1 AA where feasible. Enforce a performance budget for first-contentful
 paint and total page size; use progressive enhancement and lazy loading to meet budgets.
 
+### VI. Documentation Accompaniment
+Every change that affects user-visible behavior, content structure, or development workflow MUST include corresponding
+documentation updates. The repository MUST maintain:
+
+- A **README.md** at the project root with setup instructions, project structure overview, and common content-management
+  tasks (adding articles, updating data files, modifying configuration).
+- A **quickstart guide** (in `specs/` or `docs/`) that enables a new contributor to clone, run, and publish content
+  within a single session.
+
+Documentation MUST be treated as a deliverable, not an afterthought. When a feature adds or changes content workflows
+(e.g., new era sections, new data file formats, new shortcodes), the README and/or quickstart MUST be updated in the
+same changeset. Stale or missing documentation is treated as a defect.
+
 ## Additional Constraints
 - Technology: Use progressive web app patterns when appropriate; APIs MUST return JSON for structured content. Server-side
 	rendering is preferred for primary content to improve SEO and first-load performance, with client-side hydration if
@@ -49,6 +66,9 @@ paint and total page size; use progressive enhancement and lazy loading to meet 
 - Branching: Feature branches with pull requests; work in small, reviewable commits.
 - Reviews: Every PR MUST have at least one approving reviewer; security-sensitive changes require a second reviewer.
 - CI Gates: Linting, unit tests, and integration tests MUST pass; deploy previews are REQUIRED for significant UI changes.
+- Documentation: Every PR that modifies user-facing behavior or content workflows MUST include updated documentation
+  (README, quickstart, or inline help text as appropriate). PRs missing required documentation updates SHOULD be
+  flagged during review.
 
 ## Governance
 This constitution defines the non-negotiable requirements for the BottleBond web application. Amendments to the
@@ -59,4 +79,4 @@ or redefinition of a principle) MUST be accompanied by a migration plan and requ
 - Versioning policy: Governance changes follow semantic versioning. MAJOR for backward-incompatible governance changes;
 	MINOR for new principles or materially expanded requirements; PATCH for wording, typos, and clarifications.
 
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE) | **Last Amended**: 2026-01-29
+**Version**: 1.1.0 | **Ratified**: TODO(RATIFICATION_DATE) | **Last Amended**: 2026-02-15

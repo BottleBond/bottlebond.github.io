@@ -1,0 +1,525 @@
+/* ============================================================
+   BottleBond — Vintage Distillery Aesthetic
+   Custom styles layered on marsala theme base
+   ============================================================ */
+
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* --- Design Tokens --- */
+:root {
+  --bb-navy: #2B4F73;
+  --bb-steel-blue: #35678A;
+  --bb-slate: #2C3E50;
+  --bb-light-steel: #B8C8D8;
+  --bb-dusty-blue: #567490;
+  --bb-deep-brown: #654321;
+  --bb-gold: #D4AF37;
+  --bb-copper: #B87333;
+  --bb-brass: #C9AE5D;
+  --bb-cream: #F5F5F0;
+  --bb-charcoal: #2C2C2C;
+  /* Marsala theme overrides — neutralize pink/red tones with blue equivalents */
+  --primary-accent: #2B4F73;
+  --navbar-border-top: #2C3E50;
+  --button-border: #2C3E50;
+  --link-focus: #2C3E50;
+  --link-hover-bg: #2C3E50;
+  --pagination-bg: #B8C8D8;
+  --navbar-focus: #567490;
+  --bb-radius: 8px;
+  --bb-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --bb-transition: 200ms ease;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6,
+.heading h2 {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  color: var(--bb-deep-brown);
+}
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  line-height: 1.7;
+  color: var(--bb-charcoal);
+}
+
+/* --- Navigation --- */
+.navbar-default {
+  background-color: var(--bb-charcoal);
+  border-bottom: 3px solid var(--bb-gold);
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: var(--bb-cream);
+  font-family: 'Playfair Display', serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+  transition: color var(--bb-transition);
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: var(--bb-gold);
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: var(--bb-gold);
+  background-color: transparent;
+}
+
+.navbar-default .navbar-brand {
+  color: var(--bb-gold);
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 22px;
+  padding: 10px 15px;
+}
+
+.navbar-default .navbar-brand img {
+  max-height: 42px;
+  width: auto;
+}
+
+.navbar-default .navbar-brand img[alt]::after {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--bb-gold);
+  content: "BottleBond";
+}
+
+/* --- Top Bar --- */
+#top {
+  background: var(--bb-deep-brown);
+  border-bottom: 1px solid var(--bb-copper);
+}
+
+#top a {
+  color: var(--bb-brass);
+  transition: color var(--bb-transition);
+}
+
+#top a:hover {
+  color: var(--bb-gold);
+}
+
+/* --- Carousel / Hero --- */
+.homepage .carousel .item .carousel-caption {
+  background: linear-gradient(to top, rgba(44, 44, 44, 0.9), transparent);
+}
+
+.homepage .carousel .item .carousel-caption h1,
+.homepage .carousel .item .carousel-caption h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-cream);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Features Section --- */
+.box-simple {
+  border-radius: var(--bb-radius);
+  transition: transform var(--bb-transition), box-shadow var(--bb-transition);
+}
+
+.box-simple:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--bb-shadow);
+}
+
+.box-simple .icon {
+  color: var(--bb-copper);
+}
+
+.box-simple h3 {
+  color: var(--bb-deep-brown);
+}
+
+/* --- Episode Cards --- */
+.episode-card {
+  border-radius: var(--bb-radius) !important;
+  box-shadow: var(--bb-shadow) !important;
+  transition: transform var(--bb-transition), box-shadow var(--bb-transition);
+  overflow: hidden;
+}
+
+.episode-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.episode-card h4 a {
+  color: var(--bb-deep-brown) !important;
+  transition: color var(--bb-transition);
+}
+
+.episode-card h4 a:hover {
+  color: var(--bb-steel-blue) !important;
+}
+
+.episode-duration {
+  background: rgba(44, 44, 44, 0.85) !important;
+  font-family: 'Lora', serif;
+}
+
+/* --- Top Tasting Cards --- */
+.top-tasting-card {
+  border-radius: var(--bb-radius) !important;
+  box-shadow: var(--bb-shadow) !important;
+  transition: transform var(--bb-transition), box-shadow var(--bb-transition);
+}
+
+.top-tasting-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.rank-badge {
+  background: var(--bb-gold) !important;
+  color: var(--bb-charcoal) !important;
+  font-family: 'Playfair Display', serif !important;
+  font-weight: 700 !important;
+}
+
+/* --- Host Cards --- */
+.host-card {
+  transition: transform var(--bb-transition);
+}
+
+.host-card:hover {
+  transform: translateY(-2px);
+}
+
+.host-card img {
+  border-color: var(--bb-gold) !important;
+}
+
+.host-card h3 {
+  color: var(--bb-deep-brown) !important;
+  font-family: 'Playfair Display', serif;
+}
+
+.host-social a {
+  color: var(--bb-deep-brown) !important;
+  transition: color var(--bb-transition);
+}
+
+.host-social a:hover {
+  color: var(--bb-steel-blue) !important;
+}
+
+/* --- FAQ Accordion --- */
+.faq-category h3 {
+  color: var(--bb-navy) !important;
+  border-bottom-color: var(--bb-gold) !important;
+  font-family: 'Playfair Display', serif;
+}
+
+.panel-default {
+  border-color: var(--bb-gold) !important;
+}
+
+.panel-heading {
+  background: linear-gradient(135deg, var(--bb-cream) 0%, #ede9e2 100%) !important;
+}
+
+.panel-title a {
+  color: var(--bb-deep-brown) !important;
+  font-family: 'Lora', serif;
+  transition: background var(--bb-transition);
+}
+
+.panel-title a:hover {
+  background: rgba(212, 175, 55, 0.1) !important;
+}
+
+/* --- Testimonials / Host Teaser --- */
+.testimonial {
+  border-radius: var(--bb-radius);
+}
+
+.testimonial .text p {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--bb-charcoal);
+}
+
+.testimonial .icon i {
+  color: var(--bb-gold);
+}
+
+.testimonial h5 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-deep-brown);
+}
+
+/* --- See More / Newsletter CTA --- */
+.background-image-fixed-2 {
+  background: linear-gradient(135deg, var(--bb-deep-brown) 0%, var(--bb-charcoal) 100%) !important;
+}
+
+.background-image-fixed-2 h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-cream);
+}
+
+.background-image-fixed-2 .icon i {
+  color: var(--bb-gold);
+}
+
+.btn-template-transparent-black {
+  border-color: var(--bb-gold);
+  color: var(--bb-gold);
+  transition: all var(--bb-transition);
+}
+
+.btn-template-transparent-black:hover {
+  background: var(--bb-gold);
+  color: var(--bb-charcoal);
+}
+
+/* --- Recent Posts / Glass Room Preview --- */
+#blog-homepage .post-entry h2 a {
+  color: var(--bb-deep-brown);
+  font-family: 'Playfair Display', serif;
+  transition: color var(--bb-transition);
+}
+
+#blog-homepage .post-entry h2 a:hover {
+  color: var(--bb-steel-blue);
+}
+
+/* --- Buttons --- */
+.btn-primary,
+.btn-template-main {
+  background-color: var(--bb-navy);
+  border-color: var(--bb-deep-brown);
+  transition: all var(--bb-transition);
+}
+
+.btn-primary:hover,
+.btn-template-main:hover {
+  background-color: var(--bb-steel-blue);
+  border-color: var(--bb-navy);
+}
+
+.btn-default,
+.btn-template-transparent-primary {
+  border-color: var(--bb-navy);
+  color: var(--bb-navy);
+  transition: all var(--bb-transition);
+}
+
+.btn-default:hover,
+.btn-template-transparent-primary:hover {
+  background-color: var(--bb-navy);
+  border-color: var(--bb-deep-brown);
+  color: #fff;
+}
+
+/* --- Featured Episode --- */
+#featured-episode .featured-episode-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+#featured-episode .featured-info h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-gold);
+}
+
+/* --- Glass Room / Blog --- */
+.glass-room-toc a {
+  color: var(--bb-deep-brown);
+  transition: color var(--bb-transition);
+}
+
+.glass-room-toc a:hover {
+  color: var(--bb-steel-blue);
+}
+
+.glass-room-era {
+  border-left: 3px solid var(--bb-gold);
+  padding-left: 20px;
+  margin-bottom: 30px;
+}
+
+.glass-room-era h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-navy);
+}
+
+.glass-room-post-meta {
+  color: var(--bb-copper);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.glass-room-breadcrumb {
+  color: var(--bb-copper);
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.glass-room-breadcrumb a {
+  color: var(--bb-navy);
+  text-decoration: none;
+  transition: color var(--bb-transition);
+}
+
+.glass-room-breadcrumb a:hover {
+  color: var(--bb-gold);
+}
+
+/* --- Footer --- */
+#footer {
+  background-color: var(--bb-charcoal);
+  border-top: 3px solid var(--bb-gold);
+}
+
+#footer h4 {
+  color: var(--bb-gold);
+  font-family: 'Playfair Display', serif;
+}
+
+#footer a {
+  color: var(--bb-brass);
+  transition: color var(--bb-transition);
+}
+
+#footer a:hover {
+  color: var(--bb-gold);
+}
+
+#footer .copyright {
+  background-color: #1a1a1a;
+  border-top: 1px solid var(--bb-deep-brown);
+}
+
+/* --- Page Content --- */
+.content-page {
+  padding: 40px 0;
+}
+
+.content-page h1,
+.content-page h2,
+.content-page h3 {
+  color: var(--bb-deep-brown);
+  font-family: 'Playfair Display', serif;
+}
+
+.content-page hr {
+  border-top-color: var(--bb-gold);
+}
+
+/* --- Heading Sections --- */
+.heading h2 {
+  color: var(--bb-deep-brown);
+}
+
+.heading h2::after {
+  background: var(--bb-gold);
+}
+
+/* --- Vintage Texture Overlay --- */
+.bar.background-pentagon {
+  background: linear-gradient(135deg, var(--bb-cream) 0%, #ede9e2 50%, var(--bb-cream) 100%);
+}
+
+/* --- Links --- */
+a {
+  color: var(--bb-navy);
+  transition: color var(--bb-transition);
+}
+
+a:hover {
+  color: var(--bb-steel-blue);
+}
+
+/* --- Section Backgrounds --- */
+section.bar {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* ============================================================
+   Responsive Styles
+   ============================================================ */
+
+/* --- Tablet (max-width: 1024px) --- */
+@media (max-width: 1024px) {
+  .episodes-grid .col-md-4,
+  .top-tastings-grid .col-md-4,
+  .top-tastings-grid .col-md-6 {
+    width: 50%;
+  }
+
+  .host-card img {
+    width: 150px !important;
+    height: 150px !important;
+  }
+}
+
+/* --- Mobile (max-width: 768px) --- */
+@media (max-width: 768px) {
+  .episodes-grid .col-md-4,
+  .episodes-grid .col-sm-6,
+  .top-tastings-grid .col-md-4,
+  .top-tastings-grid .col-md-6,
+  .top-tastings-grid .col-sm-6,
+  .hosts-grid .col-md-4,
+  .hosts-grid .col-md-6,
+  .hosts-grid .col-sm-6 {
+    width: 100%;
+    float: none;
+  }
+
+  .host-card img {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  h1 { font-size: 28px; }
+  h2 { font-size: 22px; }
+  h3 { font-size: 18px; }
+
+  .glass-room-era {
+    padding-left: 12px;
+  }
+
+  #featured-episode .col-md-7,
+  #featured-episode .col-md-5 {
+    width: 100%;
+    float: none;
+  }
+
+  .featured-info {
+    padding: 20px !important;
+  }
+
+  .navbar-default .navbar-nav > li > a {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+}
+
+/* --- Small Mobile (max-width: 480px) --- */
+@media (max-width: 480px) {
+  .episode-card,
+  .top-tasting-card {
+    margin-bottom: 20px !important;
+  }
+
+  .btn-lg {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .glass-room-breadcrumb {
+    font-size: 12px;
+  }
+}

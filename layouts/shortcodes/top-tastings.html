@@ -22,65 +22,101 @@
 {{ $episodes := site.Data.episodes.episodes }}
 
 {{/* Get the right list based on type */}}
-{{ $rankedList := slice }}
 {{ if eq $type "seasonal" }}
-  {{ $rankedList = $toptastings.seasonal }}
-{{ else }}
-  {{ $rankedList = $toptastings.allTime }}
-{{ end }}
+  {{/* Seasonal: manually curated from toptastings.json */}}
+  {{ $rankedList := sort $toptastings.seasonal "rank" "asc" }}
+  {{ $rankedList = first $limit $rankedList }}
 
-{{/* Sort by rank and limit */}}
-{{ $rankedList = sort $rankedList "rank" "asc" }}
-{{ $rankedList = first $limit $rankedList }}
+  {{ if $rankedList }}
+  <p class="text-muted" style="margin-bottom: 20px;"><em>{{ $toptastings.currentSeason }} Picks</em></p>
 
-{{ if $rankedList }}
-{{ if eq $type "seasonal" }}
-<p class="text-muted" style="margin-bottom: 20px;"><em>{{ $toptastings.currentSeason }} Picks</em></p>
-{{ end }}
+  <div class="row top-tastings-grid">
+    {{ range $rankedList }}
+      {{ $episodeId := .episodeId }}
+      {{ $note := .note }}
+      {{ $rank := .rank }}
 
-<div class="row top-tastings-grid">
-  {{ range $rankedList }}
-    {{ $episodeId := .episodeId }}
-    {{ $note := .note }}
-    {{ $rank := .rank }}
+      {{/* Find matching episode */}}
+      {{ $episode := index (where $episodes "id" $episodeId) 0 }}
 
-    {{/* Find matching episode */}}
-    {{ $episode := index (where $episodes "id" $episodeId) 0 }}
-
-    {{ if $episode }}
-    <div class="col-md-{{ if eq $type "seasonal" }}4{{ else }}6{{ end }} col-sm-6">
-      <div class="top-tasting-card" style="margin-bottom: 30px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; position: relative;">
-        <span class="rank-badge" style="position: absolute; top: 10px; left: 10px; background: #D4AF37; color: #2c2c2c; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; z-index: 10;">{{ $rank }}</span>
-        <a href="https://www.youtube.com/watch?v={{ $episode.youtubeId }}" target="_blank" rel="noopener" style="display: block;">
-          <div class="episode-thumbnail" style="position: relative; padding-bottom: 56.25%; background: #eee;">
-            <img
-              src="{{ $episode.thumbnailUrl }}"
-              alt="{{ $episode.title }}"
-              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
-              loading="lazy"
-            >
-            <span class="episode-duration" style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
-              {{ $episode.duration }}
-            </span>
+      {{ if $episode }}
+      <div class="col-md-4 col-sm-6">
+        <div class="top-tasting-card" style="margin-bottom: 30px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; position: relative;">
+          <span class="rank-badge" style="position: absolute; top: 10px; left: 10px; background: #D4AF37; color: #2c2c2c; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; z-index: 10;">{{ $rank }}</span>
+          <a href="https://www.youtube.com/watch?v={{ $episode.youtubeId }}" target="_blank" rel="noopener" style="display: block;">
+            <div class="episode-thumbnail" style="position: relative; padding-bottom: 56.25%; background: #eee;">
+              <img
+                src="{{ $episode.thumbnailUrl }}"
+                alt="{{ $episode.title }}"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+                loading="lazy"
+              >
+              <span class="episode-duration" style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                {{ $episode.duration }}
+              </span>
+            </div>
+          </a>
+          <div class="episode-info" style="padding: 15px;">
+            <h4 style="margin: 0 0 8px 0; font-size: 15px; line-height: 1.3;">
+              <a href="https://www.youtube.com/watch?v={{ $episode.youtubeId }}" target="_blank" rel="noopener" style="color: #333; text-decoration: none;">
+                {{ $episode.title }}
+              </a>
+            </h4>
+            {{ if $note }}
+            <p style="margin: 0; font-size: 12px; color: #8B4513; font-style: italic;">{{ $note }}</p>
+            {{ end }}
           </div>
-        </a>
-        <div class="episode-info" style="padding: 15px;">
-          <h4 style="margin: 0 0 8px 0; font-size: 15px; line-height: 1.3;">
-            <a href="https://www.youtube.com/watch?v={{ $episode.youtubeId }}" target="_blank" rel="noopener" style="color: #333; text-decoration: none;">
-              {{ $episode.title }}
-            </a>
-          </h4>
-          {{ if $note }}
-          <p style="margin: 0; font-size: 12px; color: #8B4513; font-style: italic;">{{ $note }}</p>
-          {{ end }}
         </div>
       </div>
-    </div>
+      {{ end }}
     {{ end }}
+  </div>
+  {{ else }}
+  <div class="alert alert-info">
+    <p>No seasonal picks available yet. Check back soon!</p>
+  </div>
   {{ end }}
-</div>
+
 {{ else }}
-<div class="alert alert-info">
-  <p>No {{ if eq $type "seasonal" }}seasonal{{ else }}all-time{{ end }} picks available yet. Check back soon!</p>
-</div>
+  {{/* All-time: computed from episodes.json by popularity descending (FR-005b) */}}
+  {{ $allEpisodes := sort $episodes "popularity" "desc" }}
+  {{ $allEpisodes = first $limit $allEpisodes }}
+
+  {{ if $allEpisodes }}
+  <div class="row top-tastings-grid">
+    {{ range $index, $episode := $allEpisodes }}
+      {{ $rank := add $index 1 }}
+      <div class="col-md-6 col-sm-6">
+        <div class="top-tasting-card" style="margin-bottom: 30px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; position: relative;">
+          <span class="rank-badge" style="position: absolute; top: 10px; left: 10px; background: #D4AF37; color: #2c2c2c; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; z-index: 10;">{{ $rank }}</span>
+          <a href="https://www.youtube.com/watch?v={{ $episode.youtubeId }}" target="_blank" rel="noopener" style="display: block;">
+            <div class="episode-thumbnail" style="position: relative; padding-bottom: 56.25%; background: #eee;">
+              <img
+                src="{{ $episode.thumbnailUrl }}"
+                alt="{{ $episode.title }}"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+                loading="lazy"
+              >
+              <span class="episode-duration" style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                {{ $episode.duration }}
+              </span>
+            </div>
+          </a>
+          <div class="episode-info" style="padding: 15px;">
+            <h4 style="margin: 0 0 8px 0; font-size: 15px; line-height: 1.3;">
+              <a href="https://www.youtube.com/watch?v={{ $episode.youtubeId }}" target="_blank" rel="noopener" style="color: #333; text-decoration: none;">
+                {{ $episode.title }}
+              </a>
+            </h4>
+          </div>
+        </div>
+      </div>
+    {{ end }}
+  </div>
+  {{ else }}
+  <div class="alert alert-info">
+    <p>No all-time picks available yet. Check back soon!</p>
+  </div>
+  {{ end }}
+
 {{ end }}

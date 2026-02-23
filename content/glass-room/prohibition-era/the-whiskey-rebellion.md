@@ -6,6 +6,7 @@ author: "BottleBond Team"
 description: "Explore the dramatic story of the Whiskey Rebellion, when frontier farmers took up arms against a new federal tax on their beloved spirit."
 featured: true
 tags: ["history", "rebellion", "taxation"]
+draft: false
 ---
 
 # The Whiskey Rebellion: America's First Tax Revolt

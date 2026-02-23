@@ -1,221 +1,128 @@
-# Research: Hugo Markdown Refactor
+# Research: BottleBond Podcast Website
 
-**Date**: 2026-02-02 | **Branch**: `001-bottlebond-podcast-site`
+**Date**: 2026-02-15 | **Branch**: `001-bottlebond-podcast-site`
 
 ---
 
-## 1. Hugo Shortcodes with JSON Data Files
+## 1. Hugo Theme Installation
 
-### Decision: Use `.Site.Data` to access JSON files in the `data/` directory
+**Decision**: Install hugo-universal-theme as a Git submodule at `themes/hugo-universal-theme/`
 
-### Rationale
-Hugo provides direct access to data files through `.Site.Data.<filename>`. This is the standard approach for small to medium datasets that are frequently accessed during build time.
+**Rationale**: The theme directory exists but is empty (no `.gitmodules` file). Git submodules are the standard Hugo theme installation method, keep theme code separate, and allow pinning to a specific commit. The CI workflow uses `actions/checkout@v4` which supports `submodules: true`.
 
-### Implementation Pattern
+**Alternatives considered**:
+- Hugo Modules (go mod): Adds Go dependency complexity; theme doesn't officially support it
+- Direct copy: Bloats repo and makes updates harder
 
-```html
-<!-- layouts/shortcodes/hosts.html -->
-{{ $role := .Get "role" | default "all" }}
-{{ $hosts := .Site.Data.hosts.hosts }}
+**Action**: `git submodule add https://github.com/devcows/hugo-universal-theme.git themes/hugo-universal-theme` + update `deploy.yml` with `submodules: true`
 
-{{ if ne $role "all" }}
-  {{ $hosts = where $hosts "role" $role }}
-{{ end }}
+## 2. Theme Widget System for Homepage
 
-{{ range $hosts }}
-<div class="media">
-  {{ with .photo }}
-  <img src="{{ . }}" alt="{{ $.name }}" class="media-object">
-  {{ end }}
-  <div class="media-body">
-    <h4 class="media-heading">{{ .name }}</h4>
-    <p class="text-muted">{{ .role }}</p>
-    <p>{{ .bio }}</p>
-  </div>
-</div>
-{{ end }}
+**Decision**: Leverage theme's built-in widget system + repurpose disabled widgets for new homepage sections
+
+**Rationale**: The hugo-universal-theme provides homepage widgets controlled via `hugo.toml`:
+
+| Widget | Current State | Use For |
+|--------|---------------|---------|
+| `carouselHomepage` | Enabled | Hero banner / welcome |
+| `features` | Enabled | Content category highlights (Education, Tastings, Glass Room) |
+| `recent_posts` | Enabled | Latest Glass Room blog post preview |
+| `testimonials` | Disabled | **Repurpose** for host teaser section |
+| `see_more` | Disabled | **Repurpose** for newsletter CTA |
+| `clients` | Disabled | Not needed |
+
+Additional homepage content (featured episode) already handled by existing shortcode in `content/_index.md`.
+
+**Alternatives considered**:
+- Custom homepage template from scratch: More work, loses theme's responsive grid system
+- Only shortcodes in markdown: Limits layout control
+
+## 3. Glass Room Two-Tier Navigation
+
+**Decision**: Hugo nested sections with `_index.md` at each level + `.RegularPagesRecursive`
+
+**Rationale**: Hugo natively supports nested content sections:
+- `/content/glass-room/_index.md` → top-level listing ALL posts via `.RegularPagesRecursive`
+- `/content/glass-room/<era>/_index.md` → era listing via `.RegularPages`
+- `/content/glass-room/<era>/post.md` → individual post pages
+
+**Template strategy**:
+- `layouts/glass-room/list.html` — handles both levels; detects top-level vs. era via `.CurrentSection` / `.IsHome` / depth check
+- `.Sections` provides era index for top-level page
+- Breadcrumb navigation via `.Ancestors` for era → Glass Room back-link
+
+**Alternatives considered**:
+- Taxonomy-based eras: Less intuitive folder structure, separate taxonomy templates needed
+- Single flat list with frontmatter filtering: Loses Hugo's section hierarchy benefits
+
+## 4. Vintage Distillery CSS
+
+**Decision**: `static/css/bottlebond.css` with CSS custom properties, Google Fonts, CSS-only textures — layered on marsala theme
+
+**Rationale**: Marsala theme base provides warm tones. Custom CSS adds:
+
+**Design tokens**:
+```css
+:root {
+  --bb-burnt-sienna: #8B4513;
+  --bb-deep-brown: #654321;
+  --bb-gold: #D4AF37;
+  --bb-copper: #B87333;
+  --bb-brass: #C9AE5D;
+  --bb-cream: #F5F5F0;
+  --bb-charcoal: #2C2C2C;
+  --bb-radius: 8px;
+  --bb-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  --bb-transition: 200ms ease;
+}
 ```
 
-### Alternatives Considered
-- `resources.Get` + `transform.Unmarshal` - More flexible but overkill for our use case
-- Remote data sources - Not needed; all data is local
-- Hardcoded HTML in markdown - Less maintainable
+**Typography**: Playfair Display (headings) + Lora (body) via Google Fonts
+**Textures**: CSS-only patterns/gradients — no large image files (preserves <2s FCP)
 
-### Key Constraints
-- Data files MUST be in the `data/` directory
-- File extension determines parser (`.json` for JSON)
-- Access pattern: `.Site.Data.<filename>.<key>`
+**Alternatives considered**:
+- Full theme fork: Maintenance burden
+- Heavy texture images: Hurts mobile performance
 
----
+## 5. Featured Episode Randomization
 
-## 2. Shortcode Design Best Practices
+**Decision**: Keep existing client-side JavaScript approach (already implemented)
 
-### Decision: Use named parameters with defaults; keep shortcodes simple and focused
+**Rationale**: Current implementation (`featured-episode.html` + `featured-episode.js`) correctly: passes episode data as JSON data attribute, uses `Math.random()` per page load, includes `<noscript>` fallback. Satisfies FR-003.
 
-### Rationale
-Named parameters are self-documenting and easier to maintain. Each shortcode should do one thing well.
+## 6. Top 10 Computation
 
-### Best Practices Applied
+**Decision**: Hybrid — seasonal from `toptastings.json` (manual); all-time computed from `episodes.json` popularity in template
 
-```html
-<!-- Parameter validation pattern -->
-{{ $category := .Get "category" | default "all" }}
-{{ $limit := .Get "limit" | default 3 }}
+**Rationale**: Per spec clarification. Update `top-tastings.html` shortcode: for `type="alltime"`, sort all episodes by `popularity` descending, take top 10 (ignore `toptastings.json` all-time list).
 
-<!-- Conditional rendering -->
-{{ with .Get "title" }}
-<h3>{{ . }}</h3>
-{{ end }}
+## 7. Draft System
 
-<!-- Range with limit -->
-{{ range first $limit $items }}
-  <!-- render item -->
-{{ end }}
-```
+**Decision**: Hugo's built-in `draft: true` frontmatter
 
-### Shortcode Calling Syntax
+**Rationale**: Zero custom code. Hugo excludes drafts from production builds; `hugo server -D` shows them locally.
 
-In markdown content:
-```markdown
-## Our Hosts
+## 8. CI/CD
 
-{{</* hosts role="host" */>}}
+**Decision**: Add `submodules: true` to checkout step in `deploy.yml`
 
-## Co-Hosts
+**Rationale**: Required for fetching theme submodule during GitHub Actions build.
 
-{{</* hosts role="cohost" */>}}
+## 9. Footer
 
-## Episodes
+**Decision**: Use theme's built-in footer with existing `hugo.toml` configuration
 
-{{</* episodes category="education" limit="3" */>}}
-```
+**Rationale**: Theme footer renders social links (from `topbar` menu), `about_us` blurb, `copyright`, and `recent_posts`. All are already configured in `hugo.toml`. Override footer partial only if explicit page navigation links are needed beyond what the theme provides.
 
-### Key Constraints
-- Shortcodes MUST handle missing/empty data gracefully
-- Use Bootstrap classes from hugo-universal-theme for consistent styling
-- Keep logic minimal; complex transformations belong in data files
+## 10. Content Data Strategy
 
----
+**Decision**: Existing JSON data files (`data/`) are well-structured and match the spec entities
 
-## 3. Content Markdown Structure for hugo-universal-theme
+**Rationale**: Reviewed all 5 data files. They already contain:
+- `episodes.json`: 12 episodes with all required fields (id, title, youtubeId, playlistId, popularity, duration, etc.)
+- `hosts.json`: 2 hosts + 3 guests with bios, photos, social links, ordering
+- `faqs.json`: 10 FAQs across 5 categories with ordering
+- `playlists.json`: 5 playlist definitions with YouTube IDs
+- `toptastings.json`: 10 all-time + 5 seasonal rankings with curator notes
 
-### Decision: Use `type: "page"` frontmatter; embed shortcodes for dynamic content
-
-### Rationale
-The hugo-universal-theme expects `type: "page"` for standard pages. Markdown content is rendered via `{{ .Content }}` in the theme's templates, with shortcodes expanding inline.
-
-### Frontmatter Pattern
-
-```yaml
----
-title: "Page Title"
-description: "SEO description for the page"
-type: "page"
----
-
-# Heading
-
-Static markdown content here.
-
-{{</* shortcode-for-dynamic-data */>}}
-
-More markdown content...
-```
-
-### Theme-Specific Features
-
-The theme's `layouts/page/single.html` has special handling:
-- If frontmatter contains `id` parameter, it renders a partial with that name
-- Otherwise, it renders `{{ .Content }}` in a full-width container
-
-Example for contact page (uses theme partial):
-```yaml
----
-title: "Contact"
-id: "contact"
-type: "page"
----
-```
-
-### Content Guidelines
-1. Use standard markdown headers (##, ###) for sections
-2. Embed shortcodes inline where dynamic content is needed
-3. Keep static text in markdown, dynamic data in shortcodes
-4. Use HTML sparingly (only when markdown is insufficient)
-5. Theme provides Bootstrap 3 classes for styling
-
----
-
-## 4. Theme CSS Classes Reference
-
-### Decision: Use existing theme classes; minimize custom CSS
-
-### Bootstrap 3 Classes (from theme)
-```
-.container          - Standard Bootstrap container
-.row, .col-md-*     - Grid system
-.text-muted         - Muted text color
-.text-uppercase     - Uppercase text
-.text-center        - Center alignment
-.btn, .btn-template-main - Button styles
-.media, .media-body - Media object pattern (good for hosts)
-.panel, .panel-body - Panel styling (good for FAQ)
-```
-
-### Theme Custom Classes
-```
-.heading            - Section headings
-.box-image-text     - Image + text boxes (blog posts)
-.bar                - Section bars
-.background-white   - White background sections
-```
-
----
-
-## 5. Page Migration Strategy
-
-### Decision: Migrate pages incrementally, starting with simplest
-
-### Migration Order
-
-| Priority | Page | Complexity | Approach |
-|----------|------|------------|----------|
-| 1 | Contact | Low | Markdown + mailto link |
-| 2 | FAQ | Low | Markdown with ## headers |
-| 3 | About | Medium | Markdown + hosts shortcode |
-| 4 | Episodes | High | Markdown + episodes shortcode |
-| 5 | Homepage | Theme | Configure via hugo.toml |
-
-### Testing Checklist
-- [ ] `hugo server` runs without errors
-- [ ] Page renders with correct styling
-- [ ] Navigation works
-- [ ] Responsive on mobile
-- [ ] Content matches requirements
-
----
-
-## Summary: Hugo Markdown Refactor Decisions
-
-| Area | Decision | Key Reason |
-|------|----------|------------|
-| Data Access | `.Site.Data` | Built-in Hugo feature, simple |
-| Shortcodes | Named params with defaults | Self-documenting, maintainable |
-| Frontmatter | `type: "page"` | Theme requirement |
-| Styling | Bootstrap 3 classes | Theme provides them |
-| Migration | Incremental by page | Reduce risk, validate approach |
-
----
-
-## Sources
-
-- [Hugo Data Sources Documentation](https://gohugo.io/content-management/data-sources/)
-- [Using Data in Hugo - CloudCannon Tutorial](https://cloudcannon.com/tutorials/hugo-beginner-tutorial/using-data-in-hugo/)
-- [Data Shortcode for Hugo - Yury Zhauniarovich](https://zhauniarovich.com/post/2021/2021-09-data-shortcode-for-hugo/)
-- [Hugo Shortcode Collection on GitHub](https://github.com/squidfingers/hugo-shortcodes)
-
----
-
-## Next Steps
-
-All research questions resolved. Proceed to Phase 1: Create shortcodes and update content files.
+All entities have canonical IDs and timestamps per constitution requirements. No data model changes needed — the existing data files satisfy the spec.
