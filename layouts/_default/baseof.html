@@ -5,7 +5,7 @@
     {{ partial "head.html" . }}
   </head>
 
-  <body>
+  <body class="bb-body bb-grain">
 
     <div id="all">
 
@@ -22,6 +22,7 @@
 
     {{ partial "analytics.html" . }}
     {{ partial "scripts.html" . }}
+    <script src="{{ "js/color-toggle.js" | relURL }}" defer></script>
 
   </body>
 </html>
