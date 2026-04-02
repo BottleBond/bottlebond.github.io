@@ -56,6 +56,8 @@ hugo --minify
 - JSON files in Hugo `data/` directory (`episodes.json`, (002-youtube-playlist-sync)
 - Hugo (Go templates), CSS3 + hugo-universal-theme (marsala color variant) (003-branding-palette-update)
 - Static files (CSS, PNG images) (003-branding-palette-update)
+- Node.js 20 LTS (ESM modules, .mjs) + `@notionhq/client` (official Notion SDK), `notion-to-md` (Markdown conversion), `p-limit` (concurrency control) (004-notion-data-export)
+- Filesystem — Markdown files, JSON metadata, binary assets under `data/notion/` (004-notion-data-export)
 
 ## Recent Changes
 - 001-bottlebond-podcast-site: Added Hugo (Go-based static site generator); HTML templates (Go template language); CSS; JavaScript (vanilla ES6) + Hugo (extended edition, latest via GitHub Actions); hugo-universal-theme (Git submodule); Font Awesome (icons, bundled with theme)

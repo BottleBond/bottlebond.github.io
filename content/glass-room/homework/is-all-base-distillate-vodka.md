@@ -2,6 +2,7 @@
 title: "Is All Base Distillate Vodka?"
 date: "2026-02-02"
 era: "Homework"
+content_type: "era"
 author: "Adam Lathers"
 description: "Exploring the question of whether all spirits start as essentially the same neutral base before aging and flavoring."
 featured: false

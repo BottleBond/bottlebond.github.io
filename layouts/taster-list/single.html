@@ -1,0 +1,71 @@
+{{ define "main" }}
+
+{{ $bottleId := .Params.bottle_id | default .File.ContentBaseName }}
+{{ $bottle := index (where .Site.Data.tasterlist "id" $bottleId) 0 }}
+
+<div id="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+
+        {{ if $bottle }}
+        <div class="bottle-detail">
+
+          <div class="bottle-detail-card">
+            {{/* Header */}}
+            <div class="bottle-detail-header">
+              <div class="bottle-detail-brand">BottleBond</div>
+              <div class="bottle-detail-badge">Taster List</div>
+            </div>
+
+            {{/* Bottle info */}}
+            <div class="bottle-detail-info">
+              <h1 class="bottle-detail-name">{{ $bottle.name }}</h1>
+              <div class="bottle-detail-meta">{{ $bottle.distillery }} · {{ $bottle.proof }} pf · ${{ $bottle.price }}</div>
+            </div>
+
+            {{/* Host scores */}}
+            <div class="bottle-detail-scores">
+              {{ range $bottle.scores }}
+              <div class="bottle-detail-score">
+                <span class="grade-dot grade-dot--md grade-{{ .grade }}">{{ if eq .grade "green" }}GRN{{ else if eq .grade "blue" }}BLU{{ else if eq .grade "black" }}BLK{{ else }}RED{{ end }}</span>
+                <div class="bottle-detail-score-info">
+                  <span class="bottle-detail-score-host">{{ .host }}</span>
+                  {{ with .comment }}<span class="bottle-detail-score-comment">"{{ . }}"</span>{{ end }}
+                </div>
+              </div>
+              {{ end }}
+            </div>
+
+            {{/* Flavor notes */}}
+            <div class="bottle-detail-flavors">
+              {{ range $bottle.flavorNotes }}
+              <span class="flavor-tag flavor-tag--detail">{{ . }}</span>
+              {{ end }}
+            </div>
+
+            {{/* Episode link */}}
+            <div class="bottle-detail-episode">
+              Reviewed in: <strong>{{ $bottle.episodeTitle }}</strong>
+            </div>
+
+            {{/* Back link */}}
+            <div class="bottle-detail-actions">
+              <a href="/taster-list/" class="btn btn-template-main">
+                <i class="fas fa-arrow-left"></i> All Bottles
+              </a>
+            </div>
+          </div>
+        </div>
+        {{ else }}
+        <div class="alert alert-warning">
+          <p>Bottle not found. <a href="/taster-list/">Back to Taster List</a></p>
+        </div>
+        {{ end }}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ end }}

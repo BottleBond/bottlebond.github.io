@@ -26,15 +26,21 @@ pluralizelisttitles = false
   weight = 20
 
 [[menu.main]]
-  name = "About"
-  identifier = "about"
-  url = "/about/"
-  weight = 30
-
-[[menu.main]]
   name = "The Glass Room"
   identifier = "glass-room"
   url = "/glass-room/"
+  weight = 30
+
+[[menu.main]]
+  name = "Taster List"
+  identifier = "taster-list"
+  url = "/taster-list/"
+  weight = 35
+
+[[menu.main]]
+  name = "About"
+  identifier = "about"
+  url = "/about/"
   weight = 40
 
 [[menu.main]]
@@ -64,21 +70,27 @@ pluralizelisttitles = false
 
 [[menu.topbar]]
   weight = 3
-  name = "Facebook"
-  url = "https://facebook.com/bottlebond"
-  pre = "<i class='fab fa-2x fa-facebook'></i>"
+  name = "TikTok"
+  url = "https://tiktok.com/@bottlebond"
+  pre = "<i class='fab fa-2x fa-tiktok'></i>"
 
 [[menu.topbar]]
   weight = 4
-  name = "Patreon"
-  url = "https://patreon.com/bottlebond"
-  pre = "<i class='fab fa-2x fa-patreon'></i>"
+  name = "Discord"
+  url = "https://discord.gg/bottlebond"
+  pre = "<i class='fab fa-2x fa-discord'></i>"
 
 [[menu.topbar]]
   weight = 5
-  name = "Email"
-  url = "mailto:website@bottle.bond"
-  pre = "<i class='fas fa-2x fa-envelope'></i>"
+  name = "Buzzsprout"
+  url = "https://bottlebond.buzzsprout.com"
+  pre = "<i class='fas fa-2x fa-podcast'></i>"
+
+[[menu.topbar]]
+  weight = 6
+  name = "Patreon"
+  url = "https://patreon.com/bottlebond"
+  pre = "<i class='fab fa-2x fa-patreon'></i>"
 
 [params]
   author = "BottleBond"
@@ -121,8 +133,22 @@ pluralizelisttitles = false
   [params.social]
     youtube = "https://www.youtube.com/@BottleBond"
     instagram = "https://instagram.com/bottlebond"
-    facebook = "https://facebook.com/bottlebond"
+    tiktok = "https://tiktok.com/@bottlebond"
+    discord = "https://discord.gg/bottlebond"
+    buzzsprout = "https://bottlebond.buzzsprout.com"
     patreon = "https://patreon.com/bottlebond"
+
+  # Buzzsprout
+  [params.buzzsprout]
+    podcast_id = ""
+    feed_url = ""
+
+  # Analytics (populate IDs to enable tracking)
+  [params.analytics]
+    ga4_id = ""
+    meta_pixel_id = ""
+    tiktok_pixel_id = ""
+    consent_required = true
 
 # Top bar
 [params.topbar]

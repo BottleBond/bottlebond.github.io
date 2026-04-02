@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
-
-  <head>
-    {{ partial "headers.html" . }}
-    {{ partial "custom_headers.html" . }}
-  </head>
-
-  <body>
-
-    <div id="all">
-
-        {{ partial "top.html" . }}
-
-        {{ partial "nav.html" . }}
+{{ define "main" }}
 
         {{ partial "breadcrumbs.html" . }}
 
@@ -22,7 +8,6 @@
 
                     <div class="col-md-9" id="blog-post">
 
-                        {{/* Breadcrumb navigation */}}
                         <div class="glass-room-breadcrumb">
                           <a href="/glass-room/">The Glass Room</a> ›
                           {{ with .Parent }}
@@ -34,11 +19,16 @@
                         <h1>{{ .Title }}</h1>
 
                         <p class="glass-room-post-meta" style="margin-bottom: 30px;">
-                          {{ if .Params.era }}
-                          <span class="label" style="background: var(--bb-burnt-sienna); color: #fff; padding: 3px 10px; border-radius: 4px; font-size: 12px; margin-right: 10px;">{{ .Params.era }}</span>
+                          {{ if .Params.content_type }}
+                          <span class="content-type-badge content-type-badge--{{ .Params.content_type }}">{{ .Params.content_type }}</span>
+                          {{ else if .Params.era }}
+                          <span class="content-type-badge content-type-badge--era">era</span>
+                          {{ end }}
+                          {{ if .Params.level }}
+                          <span class="glass-room-level">Level {{ .Params.level }}</span>
                           {{ end }}
                           {{ if .Params.author }}
-                          <i class="fas fa-user" style="margin-right: 4px;"></i> {{ .Params.author }}
+                          <i class="fas fa-user" style="margin-right: 4px; margin-left: 10px;"></i> {{ .Params.author }}
                           {{ end }}
                           {{ if .Params.date }}
                           · <i class="far fa-calendar" style="margin-right: 4px;"></i> {{ .Date.Format .Site.Params.date_format }}
@@ -49,7 +39,6 @@
                           {{ .Content }}
                         </div>
 
-                        {{/* Tags */}}
                         {{ if .Params.tags }}
                         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(212,175,55,0.3);">
                           {{ range .Params.tags }}
@@ -58,7 +47,6 @@
                         </div>
                         {{ end }}
 
-                        {{/* Navigation back */}}
                         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(212,175,55,0.3);">
                           {{ with .Parent }}
                           <a href="{{ .Permalink }}" class="btn btn-template-main">
@@ -71,26 +59,13 @@
                         </div>
 
                     </div>
-                    <!-- /#blog-post -->
 
                     <div class="col-md-3">
                         {{ partial "sidebar.html" . }}
                     </div>
-                    <!-- /.col-md-3 -->
 
                 </div>
-                <!-- /.row -->
             </div>
-            <!-- /.container -->
         </div>
-        <!-- /#content -->
 
-        {{ partial "footer.html" . }}
-
-    </div>
-    <!-- /#all -->
-
-    {{ partial "scripts.html" . }}
-
-  </body>
-</html>
+{{ end }}

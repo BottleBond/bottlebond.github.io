@@ -51,6 +51,17 @@
           {{ .description | truncate 100 }}
         </p>
         {{ end }}
+        {{/* Buzzsprout listen badge */}}
+        {{ $ytId := .youtubeId }}
+        {{ with site.Data.buzzsprout }}
+          {{ range .episodes }}
+            {{ if eq .matchedEpisodeId $ytId }}
+            <a href="{{ .listenUrl }}" target="_blank" rel="noopener" class="buzzsprout-badge" style="margin-top: 8px;">
+              <i class="fas fa-podcast"></i> Listen
+            </a>
+            {{ end }}
+          {{ end }}
+        {{ end }}
       </div>
     </div>
   </div>

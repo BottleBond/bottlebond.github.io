@@ -1,5 +1,9 @@
 {
   "channelId": "UCxxxxxxxxxxxxxxxxxxxxxx",
   "blocklist": [],
-  "schedule": "daily"
+  "schedule": "daily",
+  "buzzsprout": {
+    "feedUrl": "",
+    "podcastId": ""
+  }
 }

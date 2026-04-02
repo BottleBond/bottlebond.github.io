@@ -2,6 +2,7 @@
 title: "The Rise of Craft Distilling in America"
 date: "2024-03-15"
 era: "Modern Craft"
+content_type: "era"
 author: "BottleBond Team"
 description: "How a new generation of distillers is reviving American whiskey traditions while pushing creative boundaries."
 featured: true

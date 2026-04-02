@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
-
-  <head>
-    {{ partial "headers.html" . }}
-    {{ partial "custom_headers.html" . }}
-  </head>
-
-  <body>
-
-    <div id="all">
-
-        {{ partial "top.html" . }}
-
-        {{ partial "nav.html" . }}
+{{ define "main" }}
 
         {{ partial "breadcrumbs.html" . }}
 
@@ -30,105 +16,102 @@
                         {{ end }}
 
                         {{ if .Sections }}
-                          {{/* Top-level Glass Room page: show eras + all posts */}}
+                          {{/* ===== Top-level Glass Room: tabbed landing page ===== */}}
 
-                          <h2>Browse by Era</h2>
-                          <div class="glass-room-toc">
-                            {{ range .Sections }}
-                            <div class="glass-room-era">
-                              <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
-                              <p class="text-muted">{{ .Description }}</p>
-                              <ul>
-                                {{ range .RegularPages.ByDate }}
-                                <li>
-                                  <a href="{{ .Permalink }}">{{ .Title }}</a>
-                                  <span class="glass-room-post-meta">
-                                    — {{ .Params.author }}, {{ .Date.Format $.Site.Params.date_format }}
-                                  </span>
-                                </li>
-                                {{ end }}
-                              </ul>
-                            </div>
-                            {{ end }}
+                          <div class="glass-room-tabs" role="tablist">
+                            <button class="glass-room-tab active" data-filter="all" role="tab" aria-selected="true">All</button>
+                            <button class="glass-room-tab" data-filter="era" role="tab" aria-selected="false">Eras</button>
+                            <button class="glass-room-tab" data-filter="guide" role="tab" aria-selected="false">Guides</button>
+                            <button class="glass-room-tab" data-filter="glossary" role="tab" aria-selected="false">Glossary</button>
+                            <button class="glass-room-tab" data-filter="how-to" role="tab" aria-selected="false">How-To</button>
                           </div>
 
-                          <hr>
+                          <div class="glass-room-feed">
+                            {{ range .Sections }}
+                              {{- $sectionType := .Params.content_type | default "era" -}}
 
-                          <h2>All Posts</h2>
-                          <div class="glass-room-all-posts">
-                            {{ range .RegularPagesRecursive.ByDate }}
-                            <div class="glass-room-post-summary" style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(212,175,55,0.2);">
-                              <h3 style="margin-bottom: 5px;">
-                                <a href="{{ .Permalink }}">{{ .Title }}</a>
-                              </h3>
-                              <p class="glass-room-post-meta">
-                                {{ .Params.era }} · {{ .Params.author }} · {{ .Date.Format $.Site.Params.date_format }}
-                              </p>
-                              {{ if .Description }}
-                              <p>{{ .Description }}</p>
-                              {{ else }}
-                              <p>{{ .Summary }}</p>
+                              <div class="glass-room-feed-item" data-content-type="{{ $sectionType }}">
+                                <div class="glass-room-feed-item-header">
+                                  <span class="content-type-badge content-type-badge--{{ $sectionType }}">{{ $sectionType }}</span>
+                                  <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                                </div>
+                                {{ if .Description }}
+                                <p class="glass-room-feed-item-desc">{{ .Description }}</p>
+                                {{ end }}
+                                <div class="glass-room-feed-item-meta">
+                                  <span>{{ len .RegularPages }} {{ if eq (len .RegularPages) 1 }}article{{ else }}articles{{ end }}</span>
+                                </div>
+                              </div>
+
+                              {{ range .RegularPages.ByDate.Reverse }}
+                              <div class="glass-room-feed-item" data-content-type="{{ .Params.content_type | default $sectionType }}">
+                                <div class="glass-room-feed-item-header">
+                                  <span class="content-type-badge content-type-badge--{{ .Params.content_type | default $sectionType }}">{{ .Params.content_type | default $sectionType }}</span>
+                                  <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                                </div>
+                                {{ if .Description }}
+                                <p class="glass-room-feed-item-desc">{{ .Description }}</p>
+                                {{ else if .Summary }}
+                                <p class="glass-room-feed-item-desc">{{ .Summary }}</p>
+                                {{ end }}
+                                <div class="glass-room-feed-item-meta">
+                                  {{ if .Params.author }}<span><i class="fas fa-user"></i> {{ .Params.author }}</span>{{ end }}
+                                  {{ if .Params.level }}<span class="glass-room-level">Level {{ .Params.level }}</span>{{ end }}
+                                  {{ if .Date }}<span><i class="far fa-calendar"></i> {{ .Date.Format $.Site.Params.date_format }}</span>{{ end }}
+                                </div>
+                                {{ if .Params.tags }}
+                                <div class="glass-room-feed-item-tags">
+                                  {{ range .Params.tags }}<span class="glass-room-tag">{{ . }}</span>{{ end }}
+                                </div>
+                                {{ end }}
+                              </div>
                               {{ end }}
-                              <a href="{{ .Permalink }}" class="btn btn-template-main btn-sm">Read More</a>
-                            </div>
                             {{ end }}
                           </div>
 
                         {{ else }}
-                          {{/* Era landing page: show posts in this era only */}}
-
+                          {{/* ===== Sub-section landing page ===== */}}
                           <div class="glass-room-breadcrumb">
-                            <a href="/glass-room/">← Back to The Glass Room</a>
+                            <a href="/glass-room/">&#8592; Back to The Glass Room</a>
                           </div>
 
                           {{ if .RegularPages }}
                           <div class="glass-room-era-posts">
-                            {{ range .RegularPages.ByDate }}
-                            <div class="glass-room-post-summary" style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(212,175,55,0.2);">
-                              <h3 style="margin-bottom: 5px;">
-                                <a href="{{ .Permalink }}">{{ .Title }}</a>
-                              </h3>
-                              <p class="glass-room-post-meta">
-                                {{ .Params.author }} · {{ .Date.Format $.Site.Params.date_format }}
-                              </p>
+                            {{ range .RegularPages.ByDate.Reverse }}
+                            <div class="glass-room-feed-item" data-content-type="{{ .Params.content_type | default "era" }}">
+                              <div class="glass-room-feed-item-header">
+                                <span class="content-type-badge content-type-badge--{{ .Params.content_type | default "era" }}">{{ .Params.content_type | default "era" }}</span>
+                                <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                              </div>
                               {{ if .Description }}
-                              <p>{{ .Description }}</p>
-                              {{ else }}
-                              <p>{{ .Summary }}</p>
+                              <p class="glass-room-feed-item-desc">{{ .Description }}</p>
+                              {{ else if .Summary }}
+                              <p class="glass-room-feed-item-desc">{{ .Summary }}</p>
                               {{ end }}
-                              <a href="{{ .Permalink }}" class="btn btn-template-main btn-sm">Read More</a>
+                              <div class="glass-room-feed-item-meta">
+                                {{ if .Params.author }}<span><i class="fas fa-user"></i> {{ .Params.author }}</span>{{ end }}
+                                {{ if .Params.level }}<span class="glass-room-level">Level {{ .Params.level }}</span>{{ end }}
+                                {{ if .Date }}<span><i class="far fa-calendar"></i> {{ .Date.Format $.Site.Params.date_format }}</span>{{ end }}
+                              </div>
                             </div>
                             {{ end }}
                           </div>
                           {{ else }}
                           <div class="alert alert-info">
-                            <p>No posts in this era yet. Check back soon!</p>
+                            <p>No posts in this section yet. Check back soon!</p>
                           </div>
                           {{ end }}
 
                         {{ end }}
 
                     </div>
-                    <!-- /.col-md-9 -->
-
                     <div class="col-md-3">
                         {{ partial "sidebar.html" . }}
                     </div>
-                    <!-- /.col-md-3 -->
-
                 </div>
-                <!-- /.row -->
             </div>
-            <!-- /.container -->
         </div>
-        <!-- /#content -->
 
-        {{ partial "footer.html" . }}
+<script src="{{ "js/glass-room.js" | relURL }}"></script>
 
-    </div>
-    <!-- /#all -->
-
-    {{ partial "scripts.html" . }}
-
-  </body>
-</html>
+{{ end }}

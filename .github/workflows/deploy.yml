@@ -41,6 +41,21 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: node tools/sync/sync.mjs
 
+      # - name: Install Buzzsprout sync dependencies
+      #   working-directory: tools/buzzsprout
+      #   run: npm ci
+      #
+      # - name: Sync Buzzsprout data
+      #   continue-on-error: true
+      #   run: node tools/buzzsprout/sync.mjs
+
+      - name: Generate taster list pages
+        continue-on-error: true
+        run: |
+          if [ -f tools/tasterlist/generate-pages.mjs ]; then
+            node tools/tasterlist/generate-pages.mjs
+          fi
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:

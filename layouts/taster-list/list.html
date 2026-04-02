@@ -1,0 +1,116 @@
+{{ define "main" }}
+
+<div id="content">
+  <div class="container">
+
+    <h1>{{ .Title }}</h1>
+    {{ if .Description }}<p class="text-muted">{{ .Description }}</p>{{ end }}
+
+    {{/* Color Scale Legend */}}
+    <div class="taster-list-legend">
+      <span class="taster-list-legend-title">Color Scale</span>
+      <div class="taster-list-legend-items">
+        <div class="taster-list-legend-item">
+          <span class="grade-dot grade-dot--sm grade-green">GRN</span>
+          <span class="legend-label">Approachable</span>
+        </div>
+        <div class="taster-list-legend-item">
+          <span class="grade-dot grade-dot--sm grade-blue">BLU</span>
+          <span class="legend-label">Complex</span>
+        </div>
+        <div class="taster-list-legend-item">
+          <span class="grade-dot grade-dot--sm grade-black">BLK</span>
+          <span class="legend-label">Expert</span>
+        </div>
+        <div class="taster-list-legend-item">
+          <span class="grade-dot grade-dot--sm grade-red">RED</span>
+          <span class="legend-label">No-Go</span>
+        </div>
+      </div>
+    </div>
+
+    {{/* Filter Bar */}}
+    <div class="taster-list-filters">
+      <div class="taster-list-filter-grades">
+        <button class="grade-filter active" data-grade="all" title="All grades">All</button>
+        <button class="grade-filter" data-grade="green" title="Green — Approachable"><span class="grade-dot grade-dot--sm grade-green"></span></button>
+        <button class="grade-filter" data-grade="blue" title="Blue — Complex"><span class="grade-dot grade-dot--sm grade-blue"></span></button>
+        <button class="grade-filter" data-grade="black" title="Black — Expert"><span class="grade-dot grade-dot--sm grade-black"></span></button>
+        <button class="grade-filter" data-grade="red" title="Red — No-Go"><span class="grade-dot grade-dot--sm grade-red"></span></button>
+      </div>
+      <select id="tl-host-filter" class="taster-list-select">
+        <option value="all">All Hosts</option>
+      </select>
+      <select id="tl-distillery-filter" class="taster-list-select">
+        <option value="all">All Distilleries</option>
+      </select>
+      <select id="tl-price-filter" class="taster-list-select">
+        <option value="all">Any Price</option>
+        <option value="0-30">Under $30</option>
+        <option value="30-60">$30 – $60</option>
+        <option value="60-100">$60 – $100</option>
+        <option value="100-9999">$100+</option>
+      </select>
+      <input type="text" id="tl-search" class="taster-list-search" placeholder="Search bottles...">
+    </div>
+
+    {{/* Bottle Card Grid */}}
+    <div id="tl-grid" class="taster-list-grid">
+      {{ range .Site.Data.tasterlist }}
+      <div class="bottle-card"
+           data-id="{{ .id }}"
+           data-distillery="{{ .distillery }}"
+           data-price="{{ .price }}"
+           data-grades="{{ range .scores }}{{ .grade }} {{ end }}"
+           data-hosts="{{ range .scores }}{{ .host }} {{ end }}"
+           data-search="{{ .name | lower }} {{ .distillery | lower }} {{ delimit .flavorNotes " " | lower }}">
+
+        {{/* Header: name, details, share */}}
+        <div class="bottle-card-header">
+          <div class="bottle-card-info">
+            <div class="bottle-card-name">{{ .name }}</div>
+            <div class="bottle-card-details">{{ .distillery }} · {{ .proof }} pf · ${{ .price }}</div>
+          </div>
+          <a href="/taster-list/{{ .id }}/" class="bottle-card-share" title="Share">&#8599;</a>
+        </div>
+
+        {{/* Flavor tags */}}
+        <div class="bottle-card-flavors">
+          {{ range .flavorNotes }}
+          <span class="flavor-tag">{{ . }}</span>
+          {{ end }}
+        </div>
+
+        {{/* Host scores */}}
+        <div class="bottle-card-scores">
+          <span class="bottle-card-scores-label">Scores</span>
+          {{ range .scores }}
+          <div class="bottle-card-score">
+            <span class="grade-dot grade-dot--sm grade-{{ .grade }}">{{ if eq .grade "green" }}GRN{{ else if eq .grade "blue" }}BLU{{ else if eq .grade "black" }}BLK{{ else }}RED{{ end }}</span>
+            <span class="bottle-card-score-host">{{ .host }}</span>
+          </div>
+          {{ end }}
+        </div>
+
+        {{/* Episode link */}}
+        <div class="bottle-card-episode">
+          <span class="bottle-card-episode-label">{{ .episodeTitle }}</span>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+
+    <div id="tl-empty" class="taster-list-empty" style="display:none;">
+      <p>No bottles match your filters. Try adjusting your search.</p>
+    </div>
+
+  </div>
+</div>
+
+{{/* Embed data for client-side filtering */}}
+<script>
+  window.bbTasterList = {{ .Site.Data.tasterlist | jsonify }};
+</script>
+<script src="{{ "js/tasterlist.js" | relURL }}" defer></script>
+
+{{ end }}

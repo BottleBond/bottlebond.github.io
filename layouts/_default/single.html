@@ -1,0 +1,38 @@
+{{ define "main" }}
+
+        {{ partial "breadcrumbs.html" . }}
+
+        <div id="content">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-9" id="blog-post">
+
+                        <h1>{{ .Title }}</h1>
+
+                        <p>
+                          {{ if .Params.author }}
+                          <i class="fas fa-user"></i> {{ .Params.author }}
+                          {{ end }}
+                          {{ if .Date }}
+                          · <i class="far fa-calendar"></i> {{ .Date.Format .Site.Params.date_format }}
+                          {{ end }}
+                        </p>
+
+                        <div id="post-content">
+                          {{ .Content }}
+                        </div>
+
+                    </div>
+                    <!-- /#blog-post -->
+
+                    <div class="col-md-3">
+                        {{ partial "sidebar.html" . }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- /#content -->
+
+{{ end }}

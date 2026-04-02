@@ -3,11 +3,19 @@
    Custom styles layered on marsala theme base
    ============================================================ */
 
-/* --- Google Fonts --- */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+/* Google Fonts loaded via head.html <link> for performance */
 
 /* --- Design Tokens --- */
 :root {
+  /* Color Scale (BottleBond Grading System) */
+  --bb-grade-green: #2E7D32;
+  --bb-grade-green-border: #4CAF50;
+  --bb-grade-blue: #1565C0;
+  --bb-grade-blue-border: #42A5F5;
+  --bb-grade-black: #1a1a1a;
+  --bb-grade-black-border: #555555;
+  --bb-grade-red: #B71C1C;
+  --bb-grade-red-border: #EF5350;
   --bb-navy: #2B4F73;
   --bb-steel-blue: #35678A;
   --bb-slate: #2C3E50;
@@ -523,3 +531,1050 @@ section.bar {
     font-size: 12px;
   }
 }
+
+/* ============================================================
+   Consent Banner
+   ============================================================ */
+.bb-consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bb-charcoal);
+  border-top: 2px solid var(--bb-gold);
+  z-index: 9999;
+  padding: 16px 0;
+}
+
+.bb-consent-inner {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.bb-consent-inner p {
+  color: var(--bb-cream);
+  margin: 0;
+  font-size: 14px;
+}
+
+.bb-consent-buttons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .bb-consent-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .bb-consent-inner p {
+    font-size: 13px;
+  }
+}
+
+/* ============================================================
+   Color Scale Grade Badges
+   ============================================================ */
+.grade-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.grade-dot--sm {
+  width: 22px;
+  height: 22px;
+  font-size: 7px;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.grade-dot--md {
+  width: 36px;
+  height: 36px;
+  font-size: 9px;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.grade-dot--lg {
+  width: 56px;
+  height: 56px;
+  font-size: 13px;
+  border-width: 3px;
+  border-style: solid;
+}
+
+.grade-green { background: var(--bb-grade-green); border-color: var(--bb-grade-green-border); }
+.grade-blue { background: var(--bb-grade-blue); border-color: var(--bb-grade-blue-border); }
+.grade-black { background: var(--bb-grade-black); border-color: var(--bb-grade-black-border); color: #aaa; }
+.grade-red { background: var(--bb-grade-red); border-color: var(--bb-grade-red-border); }
+
+/* ============================================================
+   Taster List
+   ============================================================ */
+
+/* Legend */
+.taster-list-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bb-charcoal);
+  border-radius: var(--bb-radius);
+  padding: 10px 20px;
+  margin-bottom: 20px;
+}
+
+.taster-list-legend-title {
+  color: var(--bb-gold);
+  font-family: 'Playfair Display', serif;
+  font-weight: bold;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.taster-list-legend-items {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.taster-list-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-label {
+  color: #999;
+  font-size: 11px;
+}
+
+/* Filters */
+.taster-list-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: var(--bb-charcoal);
+  border-radius: var(--bb-radius);
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+
+.taster-list-filter-grades {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.grade-filter {
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: var(--bb-cream);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--bb-transition);
+}
+
+.grade-filter:hover {
+  border-color: var(--bb-gold);
+}
+
+.grade-filter.active {
+  background: var(--bb-navy);
+  border-color: var(--bb-gold);
+  color: var(--bb-gold);
+}
+
+.taster-list-select {
+  background: #333;
+  color: var(--bb-cream);
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.taster-list-search {
+  flex: 1;
+  min-width: 100px;
+  background: #333;
+  color: var(--bb-cream);
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.taster-list-search::placeholder {
+  color: #888;
+}
+
+/* Bottle Card Grid */
+.taster-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+/* Bottle Card */
+.bottle-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, var(--bb-charcoal) 100%);
+  border-radius: 12px;
+  border: 1px solid #333;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transition: transform var(--bb-transition), box-shadow var(--bb-transition);
+}
+
+.bottle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+}
+
+.bottle-card-header {
+  padding: 14px 18px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bottle-card-name {
+  color: var(--bb-cream);
+  font-size: 17px;
+  font-weight: bold;
+  font-family: 'Playfair Display', Georgia, serif;
+  line-height: 1.2;
+}
+
+.bottle-card-details {
+  color: var(--bb-gold);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.bottle-card-share {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 13px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.bottle-card-share:hover {
+  color: var(--bb-gold);
+  background: #444;
+}
+
+.bottle-card-flavors {
+  padding: 0 18px 10px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.flavor-tag {
+  background: var(--bb-deep-brown);
+  color: var(--bb-cream);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+.flavor-tag--detail {
+  background: rgba(184,150,90,0.2);
+  color: var(--bb-gold);
+  border: 1px solid rgba(184,150,90,0.3);
+  padding: 3px 10px;
+  font-size: 11px;
+}
+
+.bottle-card-scores {
+  padding: 8px 18px;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px solid #333;
+}
+
+.bottle-card-scores-label {
+  color: #888;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.bottle-card-score {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bottle-card-score-host {
+  color: #ccc;
+  font-size: 11px;
+}
+
+.bottle-card-episode {
+  padding: 6px 18px;
+  border-top: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bottle-card-episode-label {
+  color: var(--bb-gold);
+  font-size: 11px;
+}
+
+/* Empty state */
+.taster-list-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+/* Bottle Detail Page */
+.bottle-detail {
+  padding: 40px 0;
+}
+
+.bottle-detail-card {
+  background: linear-gradient(135deg, var(--bb-navy), #1a2a3e);
+  border-radius: 16px;
+  border: 1px solid var(--bb-gold);
+  overflow: hidden;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.bottle-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.bottle-detail-brand {
+  color: var(--bb-gold);
+  font-size: 14px;
+  font-weight: bold;
+  font-family: 'Playfair Display', serif;
+}
+
+.bottle-detail-badge {
+  color: var(--bb-gold);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.bottle-detail-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.bottle-detail-name {
+  color: var(--bb-cream);
+  font-size: 28px;
+}
+
+.bottle-detail-meta {
+  color: var(--bb-gold);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.bottle-detail-scores {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.bottle-detail-score {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bottle-detail-score-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottle-detail-score-host {
+  color: var(--bb-cream);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.bottle-detail-score-comment {
+  color: #ccc;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.bottle-detail-flavors {
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bottle-detail-episode {
+  text-align: center;
+  color: #ccc;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.bottle-detail-episode strong {
+  color: var(--bb-gold);
+}
+
+.bottle-detail-actions {
+  text-align: center;
+}
+
+/* Taster List Responsive */
+@media (max-width: 768px) {
+  .taster-list-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .taster-list-legend {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .taster-list-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .taster-list-filter-grades {
+    justify-content: center;
+  }
+
+  .bottle-detail-scores {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .bottle-card-scores {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+
+/* ============================================================
+   Glass Room — Learning Hub Expansion
+   ============================================================ */
+
+/* --- Tab Navigation --- */
+.glass-room-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+  margin-bottom: 30px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.glass-room-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.glass-room-tab {
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  color: var(--bb-dusty-blue);
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color var(--bb-transition), border-color var(--bb-transition);
+}
+
+.glass-room-tab:hover {
+  color: var(--bb-deep-brown);
+}
+
+.glass-room-tab.active {
+  color: var(--bb-deep-brown);
+  border-bottom-color: var(--bb-gold);
+  font-weight: 700;
+}
+
+.glass-room-tab:focus {
+  outline: 2px solid var(--bb-gold);
+  outline-offset: -2px;
+}
+
+/* --- Content Type Badges --- */
+.content-type-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.content-type-badge--era {
+  background-color: var(--bb-copper);
+}
+
+.content-type-badge--guide {
+  background-color: #2E7D32;
+}
+
+.content-type-badge--glossary {
+  background-color: #B8965A;
+}
+
+.content-type-badge--how-to {
+  background-color: var(--bb-navy);
+}
+
+/* --- Feed Items --- */
+.glass-room-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.glass-room-feed-item {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.glass-room-feed-item:last-child {
+  border-bottom: none;
+}
+
+.glass-room-feed-item-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.glass-room-feed-item-header h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.glass-room-feed-item-header h3 a {
+  color: var(--bb-deep-brown);
+  text-decoration: none;
+  transition: color var(--bb-transition);
+}
+
+.glass-room-feed-item-header h3 a:hover {
+  color: var(--bb-steel-blue);
+}
+
+.glass-room-feed-item-desc {
+  color: var(--bb-charcoal);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.glass-room-feed-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: var(--bb-dusty-blue);
+  font-size: 13px;
+}
+
+.glass-room-feed-item-meta i {
+  margin-right: 4px;
+}
+
+.glass-room-level {
+  display: inline-block;
+  background: rgba(43, 79, 115, 0.1);
+  color: var(--bb-navy);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.glass-room-feed-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.glass-room-tag {
+  display: inline-block;
+  background: var(--bb-cream);
+  color: var(--bb-dusty-blue);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  border: 1px solid rgba(43, 79, 115, 0.15);
+}
+
+/* --- Mobile: horizontal scroll for tabs --- */
+@media (max-width: 768px) {
+  .glass-room-tabs {
+    gap: 0;
+    padding-bottom: 2px;
+  }
+
+  .glass-room-tab {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .glass-room-feed-item-header h3 {
+    font-size: 17px;
+  }
+
+  .glass-room-feed-item-desc {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-room-tab {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
+
+
+/* ============================================================
+   Quiz — Find Your Bourbon
+   ============================================================ */
+
+/* --- Quiz Container --- */
+.quiz-container {
+  max-width: 100%;
+}
+
+/* --- Progress Bar --- */
+.quiz-progress {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  height: 8px;
+  overflow: hidden;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.quiz-progress-bar {
+  background: var(--bb-gold);
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+/* --- Question --- */
+.quiz-question {
+  text-align: center;
+}
+
+.quiz-question-text {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-cream);
+  font-size: 28px;
+  margin-bottom: 32px;
+  line-height: 1.3;
+}
+
+/* --- Answer Buttons --- */
+.quiz-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.quiz-answer {
+  display: block;
+  width: 100%;
+  padding: 18px 24px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(212, 175, 55, 0.25);
+  border-radius: var(--bb-radius);
+  color: var(--bb-cream);
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.quiz-answer:hover {
+  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--bb-gold);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.quiz-answer:active {
+  transform: translateY(0);
+}
+
+.quiz-answer.selected {
+  background: var(--bb-gold);
+  border-color: var(--bb-gold);
+  color: var(--bb-charcoal);
+  font-weight: 600;
+}
+
+.quiz-answer:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.quiz-answer:disabled:hover {
+  transform: none;
+}
+
+/* --- Result Card --- */
+.quiz-result {
+  position: relative;
+}
+
+/* --- Grade Badge with Glow --- */
+.grade-badge-glow {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--grade-color, #4CAF50);
+  box-shadow:
+    0 0 30px var(--grade-color, #4CAF50),
+    0 0 60px var(--grade-color, #4CAF50),
+    0 0 90px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  animation: badge-pulse 2.5s ease-in-out infinite;
+}
+
+.grade-badge-label {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 18px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 30px var(--grade-color), 0 0 60px var(--grade-color); }
+  50% { box-shadow: 0 0 40px var(--grade-color), 0 0 80px var(--grade-color); }
+}
+
+/* --- Recommended Bottles --- */
+.quiz-recommendations {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.quiz-rec-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--bb-radius);
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quiz-rec-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.quiz-rec-thumbnail {
+  position: relative;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+}
+
+.quiz-rec-thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quiz-rec-duration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(44, 44, 44, 0.85);
+  color: var(--bb-cream);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Lora', serif;
+}
+
+.quiz-rec-info {
+  padding: 16px;
+}
+
+.quiz-rec-info h4 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-cream);
+  font-size: 15px;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.quiz-rec-info p {
+  color: var(--bb-light-steel);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- Share Buttons --- */
+.quiz-share {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quiz-share .btn:hover {
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+/* --- Quiz Widget (shortcode embed) --- */
+.quiz-widget {
+  background: linear-gradient(135deg, var(--bb-charcoal) 0%, #1a1a1a 100%);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  margin: 30px 0;
+}
+
+.quiz-widget-inner {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.quiz-widget-icon {
+  font-size: 42px;
+  color: var(--bb-gold);
+  margin-bottom: 16px;
+}
+
+.quiz-widget h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--bb-gold);
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+
+.quiz-widget p {
+  color: var(--bb-cream);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  opacity: 0.85;
+}
+
+.quiz-widget-btn {
+  background: var(--bb-gold);
+  color: var(--bb-charcoal);
+  border: 2px solid var(--bb-gold);
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 12px 32px;
+  border-radius: var(--bb-radius);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+.quiz-widget-btn:hover {
+  background: transparent;
+  color: var(--bb-gold);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   Quiz — Responsive Styles
+   ============================================================ */
+
+/* --- Tablet --- */
+@media (max-width: 1024px) {
+  .quiz-recommendations {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+/* --- Mobile --- */
+@media (max-width: 768px) {
+  .quiz-question-text {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+
+  .quiz-answer {
+    padding: 16px 20px;
+    font-size: 15px;
+  }
+
+  .quiz-recommendations {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .quiz-rec-card {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .quiz-rec-thumbnail {
+    width: 140px;
+    min-width: 140px;
+    padding-bottom: 0;
+    height: auto;
+  }
+
+  .quiz-rec-thumbnail img {
+    position: static;
+    width: 100%;
+    height: 100%;
+  }
+
+  .grade-badge-glow {
+    width: 100px;
+    height: 100px;
+  }
+
+  .grade-badge-label {
+    font-size: 15px;
+  }
+
+  .quiz-widget {
+    padding: 28px 20px;
+  }
+
+  .quiz-widget h3 {
+    font-size: 22px;
+  }
+
+  .quiz-share {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .quiz-share .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* --- Small Mobile --- */
+@media (max-width: 480px) {
+  .quiz-question-text {
+    font-size: 20px;
+  }
+
+  .quiz-answer {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+
+  .quiz-rec-card {
+    flex-direction: column;
+  }
+
+  .quiz-rec-thumbnail {
+    width: 100%;
+    padding-bottom: 56.25%;
+  }
+
+  .quiz-rec-thumbnail img {
+    position: absolute;
+  }
+}
+
+
+/* ============================================================
+   Buzzsprout Listen Badge
+   ============================================================ */
+.buzzsprout-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bb-charcoal);
+  color: var(--bb-gold);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-decoration: none;
+  border: 1px solid #444;
+  transition: all var(--bb-transition);
+}
+.buzzsprout-badge:hover {
+  background: #333;
+  color: var(--bb-gold);
+  border-color: var(--bb-gold);
+}
+.buzzsprout-badge i { font-size: 12px; }

@@ -10,7 +10,9 @@
         { "platform": "youtube", "url": "https://youtube.com/@BottleBond" },
         { "platform": "instagram", "url": "https://instagram.com/bottlebond" },
         { "platform": "facebook", "url": "https://facebook.com/bottlebond" },
-        { "platform": "patreon", "url": "https://patreon.com/bottlebond" }
+        { "platform": "patreon", "url": "https://patreon.com/bottlebond" },
+        { "platform": "tiktok", "url": "https://tiktok.com/@bottlebond" },
+        { "platform": "discord", "url": "" }
       ],
       "featured": true,
       "order": 1

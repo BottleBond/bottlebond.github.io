@@ -1,0 +1,14 @@
+{{/*
+  Social Clip Shortcode (v1 placeholder)
+  Embed a TikTok, Instagram, or other social media clip.
+  For v1 this renders nothing. Ready for future implementation.
+
+  Parameters:
+    - platform: Social platform (tiktok, instagram, etc.)
+    - id: Video or post ID on the platform
+*/}}
+{{ $platform := .Get "platform" | default "" }}
+{{ $id := .Get "id" | default "" }}
+{{ if and $platform $id }}
+{{/* v1: no output. Future versions will embed platform-specific players here. */}}
+{{ end }}

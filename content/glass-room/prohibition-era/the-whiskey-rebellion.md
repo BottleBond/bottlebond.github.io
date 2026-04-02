@@ -2,6 +2,7 @@
 title: "The Whiskey Rebellion: America's First Tax Revolt"
 date: "1794-07-15"
 era: "Prohibition Era"
+content_type: "era"
 author: "BottleBond Team"
 description: "Explore the dramatic story of the Whiskey Rebellion, when frontier farmers took up arms against a new federal tax on their beloved spirit."
 featured: true

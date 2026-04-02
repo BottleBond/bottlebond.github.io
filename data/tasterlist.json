@@ -1,0 +1,162 @@
+[
+  {
+    "id": "eagle-rare-10",
+    "name": "Eagle Rare 10 Year",
+    "distillery": "Buffalo Trace",
+    "proof": 90,
+    "price": 35,
+    "type": "bourbon",
+    "flavorNotes": ["toffee", "oak", "vanilla", "cherry", "leather"],
+    "scores": [
+      { "host": "Adam", "grade": "blue", "comment": "Great depth for the price" },
+      { "host": "Sarah", "grade": "green", "comment": "Super smooth and approachable" }
+    ],
+    "episodeId": "ep-007",
+    "episodeTitle": "Buffalo Trace Deep Dive",
+    "reviewedAt": "2025-11-15"
+  },
+  {
+    "id": "blantons-single-barrel",
+    "name": "Blanton's Single Barrel",
+    "distillery": "Buffalo Trace",
+    "proof": 93,
+    "price": 65,
+    "type": "bourbon",
+    "flavorNotes": ["caramel", "citrus", "spice", "honey"],
+    "scores": [
+      { "host": "Adam", "grade": "black", "comment": "Layers on layers" },
+      { "host": "Sarah", "grade": "blue", "comment": "Complex but rewarding" }
+    ],
+    "episodeId": "ep-003",
+    "episodeTitle": "The Blanton's Hype Train",
+    "reviewedAt": "2025-09-20"
+  },
+  {
+    "id": "makers-mark",
+    "name": "Maker's Mark",
+    "distillery": "Maker's Mark",
+    "proof": 90,
+    "price": 28,
+    "type": "bourbon",
+    "flavorNotes": ["wheat", "caramel", "fruit", "vanilla"],
+    "scores": [
+      { "host": "Adam", "grade": "green", "comment": "Classic beginner bourbon" },
+      { "host": "Sarah", "grade": "green", "comment": "Soft and easy" }
+    ],
+    "episodeId": "ep-001",
+    "episodeTitle": "Bourbon 101: Understanding the Basics",
+    "reviewedAt": "2025-08-01"
+  },
+  {
+    "id": "woodford-reserve",
+    "name": "Woodford Reserve",
+    "distillery": "Woodford Reserve",
+    "proof": 90,
+    "price": 38,
+    "type": "bourbon",
+    "flavorNotes": ["dried fruit", "vanilla", "chocolate", "spice", "tobacco"],
+    "scores": [
+      { "host": "Adam", "grade": "blue", "comment": "A refined sipper" },
+      { "host": "Sarah", "grade": "blue", "comment": "Beautiful balance" }
+    ],
+    "episodeId": "ep-004",
+    "episodeTitle": "Kentucky Classics Showdown",
+    "reviewedAt": "2025-10-05"
+  },
+  {
+    "id": "wild-turkey-101",
+    "name": "Wild Turkey 101",
+    "distillery": "Wild Turkey",
+    "proof": 101,
+    "price": 25,
+    "type": "bourbon",
+    "flavorNotes": ["honey", "cinnamon", "vanilla", "caramel", "pepper"],
+    "scores": [
+      { "host": "Adam", "grade": "green", "comment": "Best value bourbon out there" },
+      { "host": "Sarah", "grade": "blue", "comment": "More complexity than expected" }
+    ],
+    "episodeId": "ep-002",
+    "episodeTitle": "Best Bourbons Under $30",
+    "reviewedAt": "2025-08-15"
+  },
+  {
+    "id": "four-roses-single-barrel",
+    "name": "Four Roses Single Barrel",
+    "distillery": "Four Roses",
+    "proof": 100,
+    "price": 45,
+    "type": "bourbon",
+    "flavorNotes": ["plum", "cocoa", "maple", "baking spice"],
+    "scores": [
+      { "host": "Adam", "grade": "blue", "comment": "One of the best mid-range bottles" },
+      { "host": "Sarah", "grade": "black", "comment": "You need a few pours to really get it" }
+    ],
+    "episodeId": "ep-005",
+    "episodeTitle": "Single Barrel Showdown",
+    "reviewedAt": "2025-10-20"
+  },
+  {
+    "id": "elijah-craig-barrel-proof",
+    "name": "Elijah Craig Barrel Proof",
+    "distillery": "Heaven Hill",
+    "proof": 131,
+    "price": 60,
+    "type": "bourbon",
+    "flavorNotes": ["dark chocolate", "cherry", "oak", "brown sugar", "heat"],
+    "scores": [
+      { "host": "Adam", "grade": "black", "comment": "A beast — not for the faint of heart" },
+      { "host": "Sarah", "grade": "black", "comment": "Intense but absolutely worth it" }
+    ],
+    "episodeId": "ep-006",
+    "episodeTitle": "Barrel Proof: Handle With Care",
+    "reviewedAt": "2025-11-01"
+  },
+  {
+    "id": "bulleit-bourbon",
+    "name": "Bulleit Bourbon",
+    "distillery": "Bulleit",
+    "proof": 90,
+    "price": 30,
+    "type": "bourbon",
+    "flavorNotes": ["spice", "oak", "maple", "nutmeg"],
+    "scores": [
+      { "host": "Adam", "grade": "green", "comment": "Solid everyday sipper" },
+      { "host": "Sarah", "grade": "green", "comment": "Good for cocktails too" }
+    ],
+    "episodeId": "ep-001",
+    "episodeTitle": "Bourbon 101: Understanding the Basics",
+    "reviewedAt": "2025-08-01"
+  },
+  {
+    "id": "hudson-baby-bourbon",
+    "name": "Hudson Baby Bourbon",
+    "distillery": "Tuthilltown Spirits",
+    "proof": 92,
+    "price": 50,
+    "type": "bourbon",
+    "flavorNotes": ["corn", "vanilla", "butter", "young oak"],
+    "scores": [
+      { "host": "Adam", "grade": "red", "comment": "Not worth the price" },
+      { "host": "Sarah", "grade": "red", "comment": "Too young, too rough" }
+    ],
+    "episodeId": "ep-008",
+    "episodeTitle": "Craft Distillery Roulette",
+    "reviewedAt": "2025-12-01"
+  },
+  {
+    "id": "bookers-bourbon",
+    "name": "Booker's Bourbon",
+    "distillery": "Jim Beam",
+    "proof": 126,
+    "price": 90,
+    "type": "bourbon",
+    "flavorNotes": ["vanilla", "tobacco", "dark fruit", "smoke", "toffee"],
+    "scores": [
+      { "host": "Adam", "grade": "black", "comment": "Premium experience every time" },
+      { "host": "Sarah", "grade": "blue", "comment": "Big flavor, big reward" }
+    ],
+    "episodeId": "ep-009",
+    "episodeTitle": "Top Shelf Showdown",
+    "reviewedAt": "2025-12-15"
+  }
+]
