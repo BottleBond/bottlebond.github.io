@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+
+  <head>
+    {{ partial "head.html" . }}
+  </head>
+
+  <body class="bb-body bb-grain">
+
+    <div id="all">
+
+        {{ partial "top.html" . }}
+
+        {{ partial "nav.html" . }}
+
+        {{ block "main" . }}{{ end }}
+
+        {{ partial "footer.html" . }}
+
+    </div>
+    <!-- /#all -->
+
+    {{ partial "analytics.html" . }}
+    {{ partial "scripts.html" . }}
+    <script src="{{ "js/color-toggle.js" | relURL }}" defer></script>
+
+  </body>
+</html>

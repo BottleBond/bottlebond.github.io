@@ -1,0 +1,44 @@
+{{ define "main" }}
+
+        <div id="content">
+
+            <section class="quiz-hero" style="background: linear-gradient(135deg, var(--bb-warm-dark) 0%, var(--bb-warm-black) 100%); padding: 80px 0 40px; text-align: center;">
+                <div class="container">
+                    <h1 style="font-family: var(--bb-font-display); color: var(--bb-gold); font-size: 42px; margin-bottom: 12px;">
+                        <i class="fas fa-glass-whiskey" style="margin-right: 10px;"></i>Find Your Bourbon
+                    </h1>
+                    <p style="color: var(--bb-cream); font-size: 18px; max-width: 600px; margin: 0 auto; opacity: 0.85;">
+                        Answer 7 quick questions and we'll match you to your bourbon color grade.
+                    </p>
+                </div>
+            </section>
+
+            <div class="quiz-progress-wrapper" style="background: var(--bb-warm-black); padding: 0 0 40px;">
+                <div class="container">
+                    <div class="quiz-progress">
+                        <div class="quiz-progress-bar" id="quiz-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <p class="quiz-progress-label" id="quiz-progress-label" style="color: var(--bb-gold); text-align: center; margin-top: 8px; font-size: 14px; font-family: var(--bb-font-ui);">
+                        Question 1 of 7
+                    </p>
+                </div>
+            </div>
+
+            <section class="quiz-container" id="quiz-container" style="background: var(--bb-warm-black); padding: 0 0 80px;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div id="quiz-question-area"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+<script>
+  window.bbQuizData = {{ site.Data.quiz | jsonify | safeJS }};
+</script>
+<script src="{{ "js/quiz.js" | relURL }}"></script>
+
+{{ end }}

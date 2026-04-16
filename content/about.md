@@ -38,12 +38,17 @@ Want to be part of the BottleBond community? Here's how you can connect with us:
 
 - **YouTube**: Subscribe to our channel for new episodes every week
 - **Instagram**: Behind-the-scenes content and daily bourbon inspiration
+- **TikTok**: Short-form clips, quick tastings, and bourbon moments
+- **Discord**: Join our community server for live discussions and events
 - **Patreon**: Support the show and get exclusive content
 - **Email**: Reach out with questions, suggestions, or just to say hello
 
 <div style="margin-top: 20px;">
   <a href="https://www.youtube.com/@BottleBond" target="_blank" rel="noopener" class="btn btn-primary" style="margin-right: 10px;">
     <i class="fab fa-youtube"></i> Subscribe on YouTube
+  </a>
+  <a href="https://tiktok.com/@bottlebond" target="_blank" rel="noopener" class="btn btn-default" style="margin: 5px;">
+    <i class="fab fa-tiktok"></i> TikTok
   </a>
   <a href="/contact/" class="btn btn-default">
     <i class="fas fa-envelope"></i> Contact Us

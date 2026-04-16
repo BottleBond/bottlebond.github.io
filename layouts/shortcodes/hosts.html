@@ -54,17 +54,23 @@
       {{ end }}
       <h3 style="margin: 0 0 5px 0; color: #654321;">{{ .name }}</h3>
       <p style="margin: 0 0 15px 0; color: #8B4513; font-style: italic; text-transform: capitalize;">{{ .role }}</p>
-      <p style="margin: 0; color: #666; line-height: 1.6;">{{ .bio }}</p>
+      <p style="margin: 0; color: var(--bb-text-secondary); line-height: 1.6;">{{ .bio }}</p>
       {{ if .socialLinks }}
       <div class="host-social" style="margin-top: 15px;">
         {{ range .socialLinks }}
+        {{ if .url }}
         <a href="{{ .url }}" target="_blank" rel="noopener" style="margin: 0 8px; color: #654321; font-size: 20px;">
           {{ if eq .platform "youtube" }}<i class="fab fa-youtube"></i>{{ end }}
           {{ if eq .platform "instagram" }}<i class="fab fa-instagram"></i>{{ end }}
           {{ if eq .platform "facebook" }}<i class="fab fa-facebook"></i>{{ end }}
           {{ if eq .platform "patreon" }}<i class="fab fa-patreon"></i>{{ end }}
           {{ if eq .platform "twitter" }}<i class="fab fa-twitter"></i>{{ end }}
+          {{ if eq .platform "tiktok" }}<i class="fab fa-tiktok"></i>{{ end }}
+          {{ if eq .platform "discord" }}<i class="fab fa-discord"></i>{{ end }}
+          {{ if eq .platform "buzzsprout" }}<i class="fas fa-podcast"></i>{{ end }}
+          {{ if eq .platform "podcast" }}<i class="fas fa-podcast"></i>{{ end }}
         </a>
+        {{ end }}
         {{ end }}
       </div>
       {{ end }}

@@ -55,6 +55,9 @@ Follow us for daily bourbon inspiration, behind-the-scenes content, and communit
   <a href="https://facebook.com/bottlebond" target="_blank" rel="noopener" class="btn btn-default" style="margin: 5px;">
     <i class="fab fa-facebook"></i> Facebook
   </a>
+  <a href="https://tiktok.com/@bottlebond" target="_blank" rel="noopener" class="btn btn-default" style="margin: 5px;">
+    <i class="fab fa-tiktok"></i> TikTok
+  </a>
   <a href="https://patreon.com/bottlebond" target="_blank" rel="noopener" class="btn btn-default" style="margin: 5px;">
     <i class="fab fa-patreon"></i> Patreon
   </a>

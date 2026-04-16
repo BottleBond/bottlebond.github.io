@@ -16,6 +16,12 @@
   const episodesData = featuredContainer.dataset.episodes;
   if (!episodesData) return;
 
+  // Get Buzzsprout data (map of youtubeId -> listenUrl)
+  let buzzsproutMap = {};
+  try {
+    buzzsproutMap = JSON.parse(featuredContainer.dataset.buzzsprout || '{}');
+  } catch (_) { /* ignore */ }
+
   try {
     const episodes = JSON.parse(episodesData);
     if (!episodes || episodes.length === 0) return;
@@ -45,11 +51,12 @@
               <span class="featured-label" style="display: inline-block; background: #D4AF37; color: #2c2c2c; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">Featured Episode</span>
               <h3 style="margin: 0 0 15px 0; color: #fff; font-size: 24px; line-height: 1.3;">${episode.title}</h3>
               <p style="margin: 0 0 20px 0; color: #ccc; line-height: 1.6;">${episode.description}</p>
-              <div style="display: flex; align-items: center; gap: 20px;">
+              <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                 <span style="color: #D4AF37;"><i class="fas fa-clock"></i> ${episode.duration}</span>
                 <a href="https://www.youtube.com/watch?v=${episode.youtubeId}" target="_blank" rel="noopener" class="btn btn-primary" style="background: #D4AF37; border-color: #D4AF37; color: #2c2c2c;">
                   <i class="fas fa-external-link-alt"></i> Watch on YouTube
                 </a>
+                ${buzzsproutMap[episode.youtubeId] ? `<a href="${buzzsproutMap[episode.youtubeId]}" target="_blank" rel="noopener" class="buzzsprout-badge"><i class="fas fa-podcast"></i> Listen</a>` : ''}
               </div>
             </div>
           </div>

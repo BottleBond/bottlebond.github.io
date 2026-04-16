@@ -1,0 +1,13 @@
+{
+  "name": "bottlebond-buzzsprout-sync",
+  "version": "1.0.0",
+  "description": "Sync Buzzsprout RSS feed data for BottleBond podcast",
+  "type": "module",
+  "scripts": {
+    "sync": "node sync.mjs",
+    "sync:dry-run": "node sync.mjs --dry-run"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.3.0"
+  }
+}

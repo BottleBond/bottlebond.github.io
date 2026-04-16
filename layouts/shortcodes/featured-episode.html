@@ -15,7 +15,17 @@
   {{ $episodeData = $episodeData | append $ep }}
 {{ end }}
 
-<div id="featured-episode" data-episodes='{{ $episodeData | jsonify }}' style="margin-bottom: 40px;">
+{{/* Prepare Buzzsprout lookup map for JS */}}
+{{ $buzzsproutMap := dict }}
+{{ with site.Data.buzzsprout }}
+  {{ range .episodes }}
+    {{ if .matchedEpisodeId }}
+      {{ $buzzsproutMap = merge $buzzsproutMap (dict .matchedEpisodeId .listenUrl) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<div id="featured-episode" data-episodes='{{ $episodeData | jsonify }}' data-buzzsprout='{{ $buzzsproutMap | jsonify }}' style="margin-bottom: 40px;">
   {{/* Fallback content while JavaScript loads */}}
   <noscript>
     {{ $firstEpisode := index $mainEpisodes 0 }}

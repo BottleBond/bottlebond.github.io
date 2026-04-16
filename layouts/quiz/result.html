@@ -1,0 +1,124 @@
+{{ define "main" }}
+
+        {{ partial "breadcrumbs.html" . }}
+
+        <div id="content">
+
+            {{ $grade := .Params.grade }}
+            {{ $result := index site.Data.quiz.results $grade }}
+
+            {{ $gradeColor := "#4CAF50" }}
+            {{ if eq $grade "blue" }}{{ $gradeColor = "#2196F3" }}{{ end }}
+            {{ if eq $grade "black" }}{{ $gradeColor = "#333333" }}{{ end }}
+            {{ if eq $grade "red" }}{{ $gradeColor = "#E53935" }}{{ end }}
+
+            <section class="quiz-result" style="background: linear-gradient(135deg, var(--bb-warm-dark) 0%, #1a1a1a 100%); padding: 80px 0 60px; text-align: center;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+
+                            <div class="grade-badge-glow" style="--grade-color: {{ $gradeColor }};">
+                                <span class="grade-badge-label">{{ upper $grade }}</span>
+                            </div>
+
+                            <h1 style="font-family: 'Playfair Display', serif; color: var(--bb-gold); font-size: 36px; margin: 30px 0 20px;">
+                                {{ $result.title }}
+                            </h1>
+
+                            <p style="color: var(--bb-cream); font-size: 18px; line-height: 1.8; max-width: 650px; margin: 0 auto 40px; opacity: 0.9;">
+                                {{ $result.description }}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section style="background: var(--bb-warm-dark); padding: 0 0 60px;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+
+                            <h2 style="font-family: 'Playfair Display', serif; color: var(--bb-gold); text-align: center; margin-bottom: 30px; font-size: 24px;">
+                                <i class="fas fa-glass-whiskey" style="margin-right: 8px;"></i>Recommended For You
+                            </h2>
+
+                            <div class="quiz-recommendations">
+                                {{ $episodes := site.Data.episodes.episodes }}
+                                {{ range $result.recommendedBottles }}
+                                    {{ $bottleId := . }}
+                                    {{ range $episodes }}
+                                        {{ if eq .id $bottleId }}
+                                        <div class="quiz-rec-card">
+                                            <div class="quiz-rec-info">
+                                                <h4>{{ .title }}</h4>
+                                                <p>{{ .description | truncate 100 }}</p>
+                                                {{ with .youtubeId }}
+                                                <a href="https://www.youtube.com/watch?v={{ . }}" target="_blank" rel="noopener" class="btn btn-sm" style="background: var(--bb-gold); color: var(--bb-warm-dark); border: none; font-size: 12px; margin-top: 8px;">
+                                                    <i class="fas fa-play"></i> Watch
+                                                </a>
+                                                {{ end }}
+                                            </div>
+                                        </div>
+                                        {{ end }}
+                                    {{ end }}
+                                {{ end }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section style="background: var(--bb-warm-dark); padding: 0 0 80px;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="quiz-share" style="text-align: center;">
+                                <a href="/quiz/" class="btn btn-lg" style="background: transparent; border: 2px solid var(--bb-gold); color: var(--bb-gold); margin: 5px; padding: 12px 30px;">
+                                    <i class="fas fa-redo"></i> Retake Quiz
+                                </a>
+                                <button class="btn btn-lg quiz-share-btn" id="share-btn" style="background: var(--bb-gold); border: 2px solid var(--bb-gold); color: var(--bb-warm-dark); margin: 5px; padding: 12px 30px;">
+                                    <i class="fas fa-share-alt"></i> Share Result
+                                </button>
+                            </div>
+                            <p style="text-align: center; margin-top: 20px;">
+                                <a href="/quiz/" style="color: var(--bb-gold); font-size: 14px;">
+                                    <i class="fas fa-arrow-left"></i> Back to Quiz
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+<script>
+(function() {
+  var shareBtn = document.getElementById('share-btn');
+  if (!shareBtn) return;
+  shareBtn.addEventListener('click', function() {
+    var url = window.location.href;
+    var title = document.title;
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(function() {});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        shareBtn.textContent = 'Link Copied!';
+        setTimeout(function() {
+          shareBtn.textContent = '';
+          var icon = document.createElement('i');
+          icon.className = 'fas fa-share-alt';
+          shareBtn.appendChild(icon);
+          shareBtn.appendChild(document.createTextNode(' Share Result'));
+        }, 2000);
+      });
+    } else {
+      prompt('Copy this link to share your result:', url);
+    }
+  });
+})();
+</script>
+
+{{ end }}

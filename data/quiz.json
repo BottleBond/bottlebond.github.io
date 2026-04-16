@@ -1,0 +1,99 @@
+{
+  "questions": [
+    {
+      "id": "coffee",
+      "text": "How do you take your coffee?",
+      "answers": [
+        { "text": "Cream & sugar — keep it smooth", "grade": "green" },
+        { "text": "Black with a splash of cream", "grade": "blue" },
+        { "text": "Straight espresso, no chaser", "grade": "black" },
+        { "text": "I don't drink coffee — give me sweet tea", "grade": "red" }
+      ]
+    },
+    {
+      "id": "friday",
+      "text": "What's your ideal Friday night?",
+      "answers": [
+        { "text": "Backyard bonfire with close friends", "grade": "green" },
+        { "text": "Nice dinner and a craft cocktail bar", "grade": "blue" },
+        { "text": "Solo night with a book and a pour", "grade": "black" },
+        { "text": "Live music and dancing until late", "grade": "red" }
+      ]
+    },
+    {
+      "id": "music",
+      "text": "Pick a music genre.",
+      "answers": [
+        { "text": "Country & Americana", "grade": "green" },
+        { "text": "Jazz & Blues", "grade": "blue" },
+        { "text": "Classical & Instrumental", "grade": "black" },
+        { "text": "Rock & Roll", "grade": "red" }
+      ]
+    },
+    {
+      "id": "steak",
+      "text": "How do you like your steak?",
+      "answers": [
+        { "text": "Medium-well — no pink for me", "grade": "green" },
+        { "text": "Medium — just a touch of pink", "grade": "blue" },
+        { "text": "Rare — barely kissed by the grill", "grade": "black" },
+        { "text": "I'll take a smoked brisket instead", "grade": "red" }
+      ]
+    },
+    {
+      "id": "vacation",
+      "text": "Choose a vacation destination.",
+      "answers": [
+        { "text": "A cabin in the Smoky Mountains", "grade": "green" },
+        { "text": "A European city tour", "grade": "blue" },
+        { "text": "A remote Scottish distillery village", "grade": "black" },
+        { "text": "New Orleans during Mardi Gras", "grade": "red" }
+      ]
+    },
+    {
+      "id": "cocktail",
+      "text": "What's your go-to cocktail?",
+      "answers": [
+        { "text": "Whiskey Sour — sweet meets tart", "grade": "green" },
+        { "text": "Old Fashioned — simple and balanced", "grade": "blue" },
+        { "text": "Neat pour — no cocktail needed", "grade": "black" },
+        { "text": "Mint Julep — bring on the derby", "grade": "red" }
+      ]
+    },
+    {
+      "id": "movie",
+      "text": "Pick a movie genre.",
+      "answers": [
+        { "text": "Feel-good comedy", "grade": "green" },
+        { "text": "Thriller or mystery", "grade": "blue" },
+        { "text": "Slow-burn drama or documentary", "grade": "black" },
+        { "text": "Action-packed adventure", "grade": "red" }
+      ]
+    }
+  ],
+  "results": {
+    "green": {
+      "title": "Green Label — The Social Sipper",
+      "description": "You're approachable, easygoing, and always the one holding the group together. You prefer smooth, mellow pours that go down easy at a cookout or around a campfire. You value flavor without fuss and believe bourbon is best when shared with friends. Your palate gravitates toward sweeter, lighter profiles with notes of caramel, vanilla, and honey.",
+      "recommendedBottles": ["ep_main_001", "ep_tst_003", "ep_season_001"]
+    },
+    "blue": {
+      "title": "Blue Label — The Refined Explorer",
+      "description": "Curious and cultured, you're always looking for the next great pour. You appreciate craftsmanship and love exploring how different mash bills and aging techniques shape flavor. You enjoy a well-made cocktail as much as a neat pour, and you're the one your friends come to for bottle recommendations. Your palate runs toward complex, balanced profiles with fruit, spice, and oak.",
+      "recommendedBottles": ["ep_edu_002", "ep_tst_001", "ep_main_002"]
+    },
+    "black": {
+      "title": "Black Label — The Purist",
+      "description": "Intense, deliberate, and uncompromising — you know what you like and you don't apologize for it. You prefer your bourbon neat or with a single rock, and you savor every sip. You appreciate barrel-proof expressions and cask-strength character. Your palate favors bold, full-bodied profiles with deep oak, dark chocolate, leather, and tobacco notes.",
+      "recommendedBottles": ["ep_top_001", "ep_edu_003", "ep_tst_002"]
+    },
+    "red": {
+      "title": "Red Label — The Bold Adventurer",
+      "description": "Life's too short for boring bourbon. You love big flavors, unexpected finishes, and bottles with a story to tell. You're drawn to limited releases, single barrels, and anything with a twist — finished in port casks, rye-heavy mash bills, or craft experiments. Your palate craves heat, spice, and the thrill of discovery.",
+      "recommendedBottles": ["ep_top_002", "ep_edu_001", "ep_main_003"]
+    }
+  },
+  "shortQuiz": {
+    "questions": ["coffee", "cocktail", "movie"]
+  }
+}

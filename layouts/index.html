@@ -6,7 +6,7 @@
     {{ partial "custom_headers.html" . }}
   </head>
 
-  <body>
+  <body class="bb-body">
 
     <div id="all">
 
@@ -14,30 +14,154 @@
 
         {{ partial "nav.html" . }}
 
-        {{ partial "carousel.html" . }}
-
-        {{/* Page content from content/_index.md (featured episode shortcode) */}}
-        {{ if .Content }}
-        <section class="bar no-mb">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ .Content }}
-                    </div>
-                </div>
+        {{/* Hero Section — Cinematic dark */}}
+        <section class="bb-hero">
+          <div class="bb-hero-inner">
+            <div class="bb-hero-badge">Premium Bourbon Education</div>
+            <h1>Where Every Sip<br>Tells a <em>Story</em></h1>
+            <div class="bb-hero-rule"></div>
+            <p class="bb-hero-sub">Expert tasting notes, deep-dive history, and honest reviews of America's native spirit.</p>
+            <div class="bb-hero-actions">
+              <a href="/quiz/" class="btn btn-bb-primary">Find Your Bourbon</a>
+              <a href="/episodes/" class="btn btn-bb-ghost">Latest Episode</a>
             </div>
+          </div>
         </section>
+
+        {{/* Color Scale Introduction */}}
+        <section class="bb-section fade-in-section">
+          <div class="container">
+            <div class="bb-section-label">The BottleBond Color Scale</div>
+            <h2>Know Your <em>Color</em></h2>
+            <p class="bb-section-desc">Our unique grading system for every bottle we review.</p>
+            <div class="bb-color-scale-showcase">
+              <div class="bb-grade-card">
+                <div class="grade-dot grade-dot--lg grade-green" style="box-shadow: 0 0 24px rgba(76,175,80,0.4);">GRN</div>
+                <div class="bb-grade-name" style="color: #4CAF50;">Green</div>
+                <div class="bb-grade-meaning">Approachable</div>
+              </div>
+              <div class="bb-grade-card">
+                <div class="grade-dot grade-dot--lg grade-blue" style="box-shadow: 0 0 24px rgba(66,165,245,0.4);">BLU</div>
+                <div class="bb-grade-name" style="color: #42A5F5;">Blue</div>
+                <div class="bb-grade-meaning">Complex</div>
+              </div>
+              <div class="bb-grade-card">
+                <div class="grade-dot grade-dot--lg grade-black" style="box-shadow: 0 0 24px rgba(85,85,85,0.4);">BLK</div>
+                <div class="bb-grade-name" style="color: #888;">Black</div>
+                <div class="bb-grade-meaning">Expert</div>
+              </div>
+              <div class="bb-grade-card">
+                <div class="grade-dot grade-dot--lg grade-red" style="box-shadow: 0 0 24px rgba(239,83,80,0.4);">RED</div>
+                <div class="bb-grade-name" style="color: #EF5350;">Red</div>
+                <div class="bb-grade-meaning">No-Go</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="gold-rule"></div>
+
+        {{/* Featured Episodes — Horizontal Carousel */}}
+        <section class="bb-section fade-in-section">
+          <div class="container">
+            <div class="bb-section-label">Latest Episodes</div>
+            <h2>Recently on <em>BottleBond</em></h2>
+          </div>
+          <div class="bb-carousel-wrapper">
+            <div class="bb-carousel-track">
+              {{ range first 8 .Site.Data.episodes.episodes }}
+              <div class="bb-episode-card">
+                <div class="bb-episode-thumb">
+                  {{ if .thumbnailUrl }}
+                  <img src="{{ .thumbnailUrl }}" alt="{{ .title }}" loading="lazy">
+                  {{ end }}
+                  <span class="bb-episode-duration">{{ .duration }}</span>
+                  <div class="bb-episode-play">&#9654;</div>
+                </div>
+                <div class="bb-episode-info">
+                  <h4>{{ .title }}</h4>
+                  <p>{{ .description | truncate 80 }}</p>
+                </div>
+              </div>
+              {{ end }}
+            </div>
+          </div>
+        </section>
+
+        <div class="gold-rule"></div>
+
+        {{/* Featured Taster List Picks */}}
+        {{ with .Site.Data.tasterlist }}
+        <section class="bb-section fade-in-section">
+          <div class="container">
+            <div class="bb-section-label">Taster List</div>
+            <h2>Latest <em>Reviews</em></h2>
+            <p class="bb-section-desc">Every bottle rated by our hosts using the Color Scale.</p>
+            <div class="bb-taster-preview">
+              {{ range first 3 . }}
+              <div class="bottle-card">
+                <div class="bottle-card-header">
+                  <div class="bottle-card-info">
+                    <div class="bottle-card-name">{{ .name }}</div>
+                    <div class="bottle-card-details">{{ .distillery }} · {{ .proof }} pf · ${{ .price }}</div>
+                  </div>
+                </div>
+                <div class="bottle-card-flavors">
+                  {{ range .flavorNotes }}<span class="flavor-tag">{{ . }}</span>{{ end }}
+                </div>
+                <div class="bottle-card-scores">
+                  <span class="bottle-card-scores-label">Scores</span>
+                  {{ range .scores }}
+                  <div class="bottle-card-score">
+                    <span class="grade-dot grade-dot--sm grade-{{ .grade }}">{{ if eq .grade "green" }}GRN{{ else if eq .grade "blue" }}BLU{{ else if eq .grade "black" }}BLK{{ else }}RED{{ end }}</span>
+                    <span class="bottle-card-score-host">{{ .host }}</span>
+                  </div>
+                  {{ end }}
+                </div>
+              </div>
+              {{ end }}
+            </div>
+            <div style="text-align: center; margin-top: 32px;">
+              <a href="/taster-list/" class="btn btn-bb-ghost">View All Bottles</a>
+            </div>
+          </div>
+        </section>
+
+        <div class="gold-rule"></div>
         {{ end }}
 
-        {{ partial "features.html" . }}
+        {{/* Glass Room Preview — Cream cards */}}
+        <section class="bb-section fade-in-section">
+          <div class="container">
+            <div class="bb-section-label">The Glass Room</div>
+            <h2>From the <em>Glass Room</em></h2>
+            <p class="bb-section-desc">Deep dives into bourbon and whiskey history, production, and appreciation.</p>
+            <div class="bb-glassroom-preview">
+              {{ range first 3 (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
+              <a href="{{ .Permalink }}" class="bb-cream-card">
+                {{ with .Params.content_type }}<span class="content-type-badge content-type-badge--{{ . }}">{{ . }}</span>{{ end }}
+                <h3>{{ .Title }}</h3>
+                <p>{{ if .Description }}{{ .Description }}{{ else }}{{ .Summary | truncate 120 }}{{ end }}</p>
+              </a>
+              {{ end }}
+            </div>
+            <div style="text-align: center; margin-top: 32px;">
+              <a href="/glass-room/" class="btn btn-bb-ghost">Explore the Glass Room</a>
+            </div>
+          </div>
+        </section>
 
-        {{ partial "testimonials.html" . }}
+        <div class="gold-rule"></div>
 
-        {{ partial "see_more.html" . }}
-
-        {{ partial "recent_posts.html" . }}
-
-        {{ partial "clients.html" . }}
+        {{/* Quiz CTA */}}
+        <section class="bb-section bb-quiz-cta fade-in-section">
+          <div class="container" style="text-align: center;">
+            <div class="bb-section-label">Take the Quiz</div>
+            <h2>What's Your <em>Color?</em></h2>
+            <p class="bb-section-desc" style="margin: 0 auto 32px;">Answer 7 quick questions and we'll match you to your bourbon color grade.</p>
+            <a href="/quiz/" class="btn btn-bb-primary btn-lg">Find Your Bourbon</a>
+          </div>
+        </section>
 
         {{ partial "footer.html" . }}
 
@@ -45,6 +169,25 @@
     <!-- /#all -->
 
     {{ partial "scripts.html" . }}
+
+    <!-- Color Toggle -->
+    <script src="{{ "js/color-toggle.js" | relURL }}"></script>
+
+    <!-- Scroll animation -->
+    <script>
+    (function() {
+      var sections = document.querySelectorAll('.fade-in-section');
+      if (!sections.length) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      sections.forEach(function(s) { observer.observe(s); });
+    })();
+    </script>
 
   </body>
 </html>
