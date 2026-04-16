@@ -1212,3 +1212,185 @@ section.bar {
     align-items: center;
   }
 }
+
+/* ============================================================
+   Dark-First Overrides — Theme elements
+   ============================================================ */
+
+/* Breadcrumb / page heading bar — remove light texture */
+#heading-breadcrumbs {
+  background: var(--bb-bg-card) !important;
+  border-bottom: 1px solid rgba(184, 150, 90, 0.15);
+}
+
+#heading-breadcrumbs h1 {
+  color: var(--bb-text-primary) !important;
+  font-family: var(--bb-font-display);
+}
+
+/* #content area — transparent, not white */
+#content {
+  background: transparent !important;
+}
+
+/* Top bar */
+#top {
+  background: var(--bb-bg-card) !important;
+  border-bottom: 1px solid rgba(184, 150, 90, 0.1);
+}
+
+#top p, #top a {
+  color: var(--bb-text-secondary) !important;
+}
+
+#top a:hover {
+  color: var(--bb-gold) !important;
+}
+
+/* Breadcrumb list */
+.breadcrumb {
+  background: transparent !important;
+  color: var(--bb-text-muted);
+}
+
+.breadcrumb a {
+  color: var(--bb-gold) !important;
+}
+
+/* Episode card thumbnails — dark placeholder instead of white */
+.episode-card .box-image,
+.episode-card .img-responsive,
+.top-tasting-card .box-image,
+.top-tasting-card .img-responsive {
+  background: var(--bb-bg-elevated);
+}
+
+/* Sidebar widgets */
+.sidebar .widget {
+  background: var(--bb-bg-card);
+  border-color: rgba(184, 150, 90, 0.15) !important;
+}
+
+.sidebar .widget h4 {
+  color: var(--bb-gold) !important;
+  font-family: var(--bb-font-display);
+}
+
+.sidebar .widget a {
+  color: var(--bb-text-secondary) !important;
+}
+
+.sidebar .widget a:hover {
+  color: var(--bb-gold) !important;
+}
+
+/* Search widget */
+.sidebar .form-control {
+  background: var(--bb-bg-elevated) !important;
+  border-color: rgba(184, 150, 90, 0.2) !important;
+  color: var(--bb-text-primary) !important;
+}
+
+/* Tag cloud */
+.sidebar .tag-cloud a {
+  background: var(--bb-bg-elevated) !important;
+  color: var(--bb-text-secondary) !important;
+  border-color: rgba(184, 150, 90, 0.15) !important;
+}
+
+.sidebar .tag-cloud a:hover {
+  background: var(--bb-gold) !important;
+  color: var(--bb-bg-primary) !important;
+}
+
+/* Host card photos — dark border */
+.host-card img {
+  border-color: var(--bb-gold) !important;
+}
+
+.host-card h3 {
+  color: var(--bb-text-primary) !important;
+}
+
+.host-card p {
+  color: var(--bb-text-secondary) !important;
+}
+
+/* About page social links */
+.host-card .social-links a {
+  color: var(--bb-gold) !important;
+}
+
+/* Episode rank badges */
+.rank-badge {
+  background: var(--bb-gold) !important;
+  color: var(--bb-bg-primary) !important;
+  font-family: var(--bb-font-ui);
+}
+
+/* Alert/info boxes */
+.alert-info {
+  background: var(--bb-bg-elevated) !important;
+  border-color: rgba(184, 150, 90, 0.2) !important;
+  color: var(--bb-text-secondary) !important;
+}
+
+/* Copyright bar */
+#copyright {
+  background: var(--bb-bg-primary) !important;
+  border-top: 1px solid rgba(184, 150, 90, 0.1);
+}
+
+#copyright p {
+  color: var(--bb-text-muted) !important;
+}
+
+#copyright a {
+  color: var(--bb-text-secondary) !important;
+}
+
+/* Tables */
+.table > thead > tr > th,
+.table > tbody > tr > td {
+  border-color: rgba(184, 150, 90, 0.15) !important;
+  color: var(--bb-text-primary);
+}
+
+/* Text selection */
+::selection {
+  background: var(--bb-gold);
+  color: var(--bb-bg-primary);
+}
+
+/* Strong/bold text on dark */
+strong, b {
+  color: var(--bb-text-primary);
+}
+
+/* Horizontal rules */
+hr {
+  border-color: rgba(184, 150, 90, 0.2);
+}
+
+/* Blockquotes */
+blockquote {
+  border-left-color: var(--bb-gold);
+  color: var(--bb-text-secondary);
+  background: var(--bb-bg-card);
+  padding: 16px 20px;
+  border-radius: 0 var(--bb-radius) var(--bb-radius) 0;
+}
+
+/* Lists in content */
+#post-content ul, #post-content ol {
+  color: var(--bb-text-secondary);
+}
+
+/* Inline code */
+code {
+  background: var(--bb-bg-elevated);
+  color: var(--bb-gold);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}

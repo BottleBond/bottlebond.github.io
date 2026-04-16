@@ -54,7 +54,7 @@
       {{ end }}
       <h3 style="margin: 0 0 5px 0; color: #654321;">{{ .name }}</h3>
       <p style="margin: 0 0 15px 0; color: #8B4513; font-style: italic; text-transform: capitalize;">{{ .role }}</p>
-      <p style="margin: 0; color: #666; line-height: 1.6;">{{ .bio }}</p>
+      <p style="margin: 0; color: var(--bb-text-secondary); line-height: 1.6;">{{ .bio }}</p>
       {{ if .socialLinks }}
       <div class="host-social" style="margin-top: 15px;">
         {{ range .socialLinks }}

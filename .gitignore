@@ -23,3 +23,4 @@ Thumbs.db
 # Node.js (sync tool)
 node_modules/
 *.tmp
+.gstack/

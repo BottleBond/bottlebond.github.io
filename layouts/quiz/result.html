@@ -12,7 +12,7 @@
             {{ if eq $grade "black" }}{{ $gradeColor = "#333333" }}{{ end }}
             {{ if eq $grade "red" }}{{ $gradeColor = "#E53935" }}{{ end }}
 
-            <section class="quiz-result" style="background: linear-gradient(135deg, var(--bb-charcoal) 0%, #1a1a1a 100%); padding: 80px 0 60px; text-align: center;">
+            <section class="quiz-result" style="background: linear-gradient(135deg, var(--bb-warm-dark) 0%, #1a1a1a 100%); padding: 80px 0 60px; text-align: center;">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2">
@@ -34,7 +34,7 @@
                 </div>
             </section>
 
-            <section style="background: var(--bb-charcoal); padding: 0 0 60px;">
+            <section style="background: var(--bb-warm-dark); padding: 0 0 60px;">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2">
@@ -54,7 +54,7 @@
                                                 <h4>{{ .title }}</h4>
                                                 <p>{{ .description | truncate 100 }}</p>
                                                 {{ with .youtubeId }}
-                                                <a href="https://www.youtube.com/watch?v={{ . }}" target="_blank" rel="noopener" class="btn btn-sm" style="background: var(--bb-gold); color: var(--bb-charcoal); border: none; font-size: 12px; margin-top: 8px;">
+                                                <a href="https://www.youtube.com/watch?v={{ . }}" target="_blank" rel="noopener" class="btn btn-sm" style="background: var(--bb-gold); color: var(--bb-warm-dark); border: none; font-size: 12px; margin-top: 8px;">
                                                     <i class="fas fa-play"></i> Watch
                                                 </a>
                                                 {{ end }}
@@ -70,7 +70,7 @@
                 </div>
             </section>
 
-            <section style="background: var(--bb-charcoal); padding: 0 0 80px;">
+            <section style="background: var(--bb-warm-dark); padding: 0 0 80px;">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2">
@@ -78,12 +78,12 @@
                                 <a href="/quiz/" class="btn btn-lg" style="background: transparent; border: 2px solid var(--bb-gold); color: var(--bb-gold); margin: 5px; padding: 12px 30px;">
                                     <i class="fas fa-redo"></i> Retake Quiz
                                 </a>
-                                <button class="btn btn-lg quiz-share-btn" id="share-btn" style="background: var(--bb-gold); border: 2px solid var(--bb-gold); color: var(--bb-charcoal); margin: 5px; padding: 12px 30px;">
+                                <button class="btn btn-lg quiz-share-btn" id="share-btn" style="background: var(--bb-gold); border: 2px solid var(--bb-gold); color: var(--bb-warm-dark); margin: 5px; padding: 12px 30px;">
                                     <i class="fas fa-share-alt"></i> Share Result
                                 </button>
                             </div>
                             <p style="text-align: center; margin-top: 20px;">
-                                <a href="/quiz/" style="color: var(--bb-brass); font-size: 14px;">
+                                <a href="/quiz/" style="color: var(--bb-gold); font-size: 14px;">
                                     <i class="fas fa-arrow-left"></i> Back to Quiz
                                 </a>
                             </p>

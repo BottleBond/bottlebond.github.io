@@ -1,0 +1,5 @@
+---
+title: "Pallette"
+source: "notion"
+---
+
